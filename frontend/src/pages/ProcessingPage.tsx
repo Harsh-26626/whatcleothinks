@@ -25,7 +25,6 @@ export const ProcessingPage: React.FC = () => {
         setReport(data);
 
         if (data.status === 'done') {
-          // Finished!
           navigate(`/reports/${id}`, { replace: true });
           return;
         }
@@ -44,7 +43,6 @@ export const ProcessingPage: React.FC = () => {
         if (err instanceof ApiRequestError && err.status === 404) {
           setErrorMsg('Report not found or not owned by your account.');
         } else {
-          // Retry on transient poll error
           timer = setTimeout(() => {
             setPollCount((prev) => prev + 1);
           }, 3000);
@@ -60,146 +58,152 @@ export const ProcessingPage: React.FC = () => {
     };
   }, [id, pollCount, navigate]);
 
-  const getStageMessage = (stage: string = '') => {
-    switch (stage) {
-      case 'queued':
-        return {
-          title: 'Opening the reading room...',
-          desc: 'Queuing your chat lines for Cleo.',
-          step: 1,
-        };
-      case 'parsing':
-        return {
-          title: 'Reading your chat...',
-          desc: 'Cleaning up timestamps, Hinglish expressions, and organizing lines.',
-          step: 2,
-        };
-      case 'computing_stats':
-        return {
-          title: 'Calculating rhythms and silences...',
-          desc: 'Measuring share of voice, late night activity, response times, and streaks.',
-          step: 3,
-        };
-      case 'reading_months':
-        return {
-          title: 'Looking at how it changed month to month...',
-          desc: 'Tracing shifts in closeness, energy peaks, and milestones.',
-          step: 4,
-        };
-      case 'writing_report':
-        return {
-          title: 'Cleo is writing your report...',
-          desc: 'Drafting your personalized narrative with authentic chat quotes.',
-          step: 5,
-        };
-      case 'done':
-        return {
-          title: 'Report complete!',
-          desc: 'Redirecting to your sanctuary...',
-          step: 6,
-        };
-      default:
-        return {
-          title: 'Reflecting on your conversation...',
-          desc: 'Analyzing message patterns and warmth.',
-          step: 3,
-        };
-    }
-  };
+  // Derive checklist stage states
+  // Stages: 'queued' -> 'parsing' -> 'computing_stats' -> 'reading_months' -> 'writing_report' -> 'done'
+  const stage = report?.stage || 'queued';
 
-  const currentStageInfo = getStageMessage(report?.stage);
+  const step1State: 'done' | 'current' | 'waiting' =
+    stage === 'reading_months' || stage === 'writing_report' || stage === 'done'
+      ? 'done'
+      : stage === 'parsing' || stage === 'computing_stats' || stage === 'queued'
+      ? 'current'
+      : 'waiting';
+
+  const step2State: 'done' | 'current' | 'waiting' =
+    stage === 'writing_report' || stage === 'done'
+      ? 'done'
+      : stage === 'reading_months'
+      ? 'current'
+      : 'waiting';
+
+  const step3State: 'done' | 'current' | 'waiting' =
+    stage === 'done' ? 'done' : stage === 'writing_report' ? 'current' : 'waiting';
 
   return (
-    <div className="flex-1 flex items-center justify-center px-gutter py-space-xl">
-      <div className="w-full max-w-xl bg-surface-container-lowest p-space-xl rounded-2xl shadow-xl border border-outline-variant/20 flex flex-col items-center text-center gap-space-lg">
-        {errorMsg ? (
-          <div className="flex flex-col items-center gap-space-md py-4">
-            <div className="w-16 h-16 rounded-full bg-error-container text-error flex items-center justify-center">
-              <span className="material-symbols-outlined text-3xl">error_outline</span>
-            </div>
+    <div className="w-full max-w-[540px] mx-auto py-16 md:py-24">
+      {errorMsg ? (
+        <div className="flex flex-col items-start gap-4">
+          <h1 className="text-[28px] font-bold text-[#1A1A1A]">Report could not be finished</h1>
+          <p className="text-base text-[#5F5F5A]">
+            {errorMsg}
+          </p>
+          <p className="text-sm text-[#1A1A1A] font-medium p-3 bg-[#F6F6F4] rounded-lg border border-[#E5E5E1] w-full">
+            Your chat file was still deleted.
+          </p>
+          <div className="flex gap-4 mt-4">
+            <Link
+              to="/new"
+              className="min-h-[44px] px-5 py-2.5 bg-[#F2B01E] text-[#1A1A1A] font-semibold text-base rounded-lg hover:opacity-90 inline-flex items-center"
+            >
+              Try another chat
+            </Link>
+            <Link
+              to="/dashboard"
+              className="min-h-[44px] px-5 py-2.5 border border-[#E5E5E1] text-[#1A1A1A] font-semibold text-base rounded-lg hover:bg-[#F6F6F4] inline-flex items-center"
+            >
+              Reports list
+            </Link>
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-6">
+          <div>
+            <h1 className="text-[28px] font-bold text-[#1A1A1A]">Creating your report</h1>
+            <p className="text-base text-[#5F5F5A] mt-2">
+              This usually takes under a minute.
+            </p>
+          </div>
 
-            <div>
-              <h2 className="font-headline-lg text-on-surface">Something interrupted the analysis</h2>
-              <p className="text-body-md text-on-surface-variant mt-2 max-w-md">
-                We encountered an issue while processing your report ({errorMsg}).
-              </p>
-            </div>
-
-            {/* Privacy Reassurance even on failure */}
-            <div className="bg-surface-container-low p-space-md rounded-xl text-body-sm text-on-surface-variant flex items-start gap-2 text-left border border-outline-variant/20">
-              <span className="material-symbols-outlined text-primary text-[18px] shrink-0 mt-0.5">lock</span>
-              <span>
-                <strong>Your privacy remains protected:</strong> your chat file has been purged from memory and is not stored on our servers.
+          {/* Plain Checklist */}
+          <div className="flex flex-col gap-4 py-4 border-y border-[#E5E5E1]">
+            {/* Step 1 */}
+            <div className="flex items-center gap-3">
+              <span className="w-5 text-center text-sm font-bold">
+                {step1State === 'done' ? (
+                  <span className="text-[#1F7A4D]">✓</span>
+                ) : step1State === 'current' ? (
+                  <span className="inline-block w-2.5 h-2.5 rounded-full bg-[#1A1A1A]" />
+                ) : (
+                  <span className="inline-block w-2.5 h-2.5 rounded-full border border-[#E5E5E1]" />
+                )}
+              </span>
+              <span
+                className={`text-base ${
+                  step1State === 'current'
+                    ? 'font-semibold text-[#1A1A1A]'
+                    : step1State === 'done'
+                    ? 'text-[#5F5F5A]'
+                    : 'text-[#8E8E87]'
+                }`}
+              >
+                Reading your chat
               </span>
             </div>
 
-            <div className="flex gap-space-sm mt-2">
-              <Link
-                to="/new"
-                className="bg-primary hover:bg-primary-container text-on-primary px-space-lg py-3 rounded-xl font-label-md transition-colors"
+            {/* Step 2 */}
+            <div className="flex items-center gap-3">
+              <span className="w-5 text-center text-sm font-bold">
+                {step2State === 'done' ? (
+                  <span className="text-[#1F7A4D]">✓</span>
+                ) : step2State === 'current' ? (
+                  <span className="inline-block w-2.5 h-2.5 rounded-full bg-[#1A1A1A]" />
+                ) : (
+                  <span className="inline-block w-2.5 h-2.5 rounded-full border border-[#E5E5E1]" />
+                )}
+              </span>
+              <span
+                className={`text-base ${
+                  step2State === 'current'
+                    ? 'font-semibold text-[#1A1A1A]'
+                    : step2State === 'done'
+                    ? 'text-[#5F5F5A]'
+                    : 'text-[#8E8E87]'
+                }`}
               >
-                Try Another Export
-              </Link>
-              <Link
-                to="/dashboard"
-                className="bg-surface-container-high hover:bg-surface-container text-on-surface px-space-lg py-3 rounded-xl font-label-md transition-colors"
+                Working out the month-by-month changes
+              </span>
+            </div>
+
+            {/* Step 3 */}
+            <div className="flex items-center gap-3">
+              <span className="w-5 text-center text-sm font-bold">
+                {step3State === 'done' ? (
+                  <span className="text-[#1F7A4D]">✓</span>
+                ) : step3State === 'current' ? (
+                  <span className="inline-block w-2.5 h-2.5 rounded-full bg-[#1A1A1A]" />
+                ) : (
+                  <span className="inline-block w-2.5 h-2.5 rounded-full border border-[#E5E5E1]" />
+                )}
+              </span>
+              <span
+                className={`text-base ${
+                  step3State === 'current'
+                    ? 'font-semibold text-[#1A1A1A]'
+                    : step3State === 'done'
+                    ? 'text-[#5F5F5A]'
+                    : 'text-[#8E8E87]'
+                }`}
               >
-                Back to Dashboard
-              </Link>
+                Writing your report
+              </span>
             </div>
           </div>
-        ) : (
-          <>
-            {/* Cleo Avatar Breathing Animation */}
-            <div className="relative">
-              <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center animate-pulse">
-                <div className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center">
-                  <div className="w-16 h-16 rounded-full bg-primary text-on-primary flex items-center justify-center font-serif text-3xl font-bold shadow-md">
-                    C
-                  </div>
-                </div>
-              </div>
-              <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-surface-container-lowest border border-outline-variant/30 flex items-center justify-center text-primary shadow-sm">
-                <span className="material-symbols-outlined text-[16px] animate-spin">sync</span>
-              </div>
-            </div>
 
-            <div>
-              <span className="text-label-sm font-medium text-primary uppercase tracking-wider">
-                Step {currentStageInfo.step} of 5
-              </span>
-              <h2 className="font-headline-lg text-on-surface mt-1">
-                {currentStageInfo.title}
-              </h2>
-              <p className="text-body-md text-on-surface-variant mt-2 max-w-md">
-                {currentStageInfo.desc}
-              </p>
-            </div>
+          {/* Reassurance text */}
+          <p className="text-sm text-[#5F5F5A] leading-normal">
+            Your chat file is deleted when this finishes. You can close this tab; the report will be in your reports list.
+          </p>
 
-            {/* Stage Progress Bar */}
-            <div className="w-full bg-surface-container-high h-2.5 rounded-full overflow-hidden">
-              <div
-                className="bg-primary h-full transition-all duration-700 rounded-full"
-                style={{ width: `${Math.min(100, Math.max(15, currentStageInfo.step * 20))}%` }}
-              ></div>
-            </div>
-
-            {/* Reassurance Banner */}
-            <div className="bg-surface-container-low p-space-md rounded-xl text-body-sm text-on-surface-variant flex items-start gap-space-xs text-left border border-outline-variant/15 w-full">
-              <span className="material-symbols-outlined text-primary text-[18px] shrink-0 mt-0.5">lock</span>
-              <p>
-                <strong>You can safely close this tab.</strong> Your chat file is deleted immediately when this finishes, and your report will be waiting in your dashboard.
-              </p>
-            </div>
-
-            <div className="flex items-center gap-space-md text-body-sm text-on-surface-variant">
-              <Link to="/dashboard" className="hover:text-primary transition-colors underline">
-                Go to Dashboard now
-              </Link>
-            </div>
-          </>
-        )}
-      </div>
+          <div>
+            <Link
+              to="/dashboard"
+              className="text-sm text-[#1A1A1A] underline underline-offset-4 hover:text-[#5F5F5A]"
+            >
+              Go to reports list
+            </Link>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

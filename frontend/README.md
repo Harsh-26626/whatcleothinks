@@ -1,32 +1,18 @@
-# whatcleothinks — Frontend (`/frontend`)
+# Cleo — Frontend (`/frontend`)
 
-React 18 + Vite + TypeScript + Tailwind CSS application for **whatcleothinks**, an honest, gentle, mobile-first WhatsApp chat relationship reflection guide powered by the Cleo persona.
+React 18 + Vite + TypeScript + Tailwind CSS application for **Cleo**, a clean, easy-to-read web app that shows how your WhatsApp chat changed month by month.
 
 ---
 
-## Features
+## Design System
 
-- **Cozy, tactile design system**: Designed with warm cream backgrounds (`#FBF6EF`), soft terracotta accents (`#C96B5C`), pure white cards (`#FFFFFF`), organic brown-ink text (`#2B2320`), and generous rounded geometry (16–24px).
-- **Typography hierarchy**: Editorial serif headlines with `Playfair Display` + `Lora` (with `Noto Serif Devanagari` fallback for Hindi/Hinglish) and clean rounded geometric UI with `Plus Jakarta Sans` (`Noto Sans Devanagari` fallback).
-- **The Five Core Privacy Truths**: Prominently featured verbatim across the landing and privacy pages.
-- **5-Step New Report Stepper**:
-  1. Chat type selection (Romance, Close Friends, Group Chat)
-  2. Platform export guide (Android & iPhone instructions for exporting "Without Media")
-  3. Upload dropzone with in-memory preview, automatic participant extraction, "Which one is you?" selector, and required consent checkbox
-  4. Persona guide selection (Cleo active, locked future personas)
-  5. Live processing status with warm breathing animation and 3-second polling
-- **Rich Report Page**:
-  - **Daily Activity Rhythm Heatmap**: Compact grid with message density scaling
-  - **Initiation & Share of Voice Balance**: Reciprocity indicators and median reply times
-  - **Peak Days & Silence Tracking**: Streaks, silences, and 24-hour hourly distributions (with late-night 10 PM - 4 AM highlights)
-  - **Frequent Lexicon & Emojis**: Top Hinglish/English words and emoji reactions per person
-  - **Monthly Closeness Trajectory**: Smooth area curve with turning point markers and milestone cards
-  - **Cleo's Editorial Perspective**: Warm, insightful prose paired with authentic WhatsApp-style message bubbles
-  - **Pause & Breathe Modal**: Affordance to pause and reflect
-  - **PDF Export via `window.print()`**: Tailored `@media print` clean stylesheet
-  - **Quiet Permanent Deletion**: Reassuring modal with hard-delete guarantees
-- **Settings & Account Management**: Report deletion, bulk deletion, and permanent account removal.
-- **Mock Mode Support**: Runs completely offline or decoupled from backend when `VITE_USE_MOCK=true`.
+- **Clean & Calm**: Pure white background (`#FFFFFF`), subtle surface (`#F6F6F4`), border (`#E5E5E1`), dark text (`#1A1A1A`), and marigold accent (`#F2B01E`).
+- **Typography**: Single family **Figtree** (with `Noto Sans Devanagari` fallback for Hinglish and Hindi).
+- **Geometry**: Strict 8px and 12px radii; 1px borders instead of drop shadows.
+- **Reading-Focused Layout**: Long-form narrative and privacy pages capped at a comfortable 680px reading column.
+- **Brand Constant**: Product name managed in one single source of truth in `src/brand.ts` (`BRAND_NAME = "Cleo"`).
+- **The Five Privacy Statements**: Displayed verbatim across landing and privacy pages.
+- **Fictional Sample Data**: Sample reports and fixtures use fictional participants (Aarav and Meera).
 
 ---
 
@@ -58,4 +44,3 @@ Open `http://localhost:5173` in your browser.
 npm run build
 ```
 Builds optimized production assets to `dist/`.
-

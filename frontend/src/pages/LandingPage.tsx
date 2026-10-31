@@ -6,234 +6,171 @@ export const LandingPage: React.FC = () => {
   const { user } = useAuth();
 
   return (
-    <div className="flex flex-col w-full">
+    <div className="w-full flex flex-col py-12 md:py-[72px]">
       {/* Hero Section */}
-      <section className="relative px-gutter pt-space-xl pb-16 max-w-7xl mx-auto w-full flex flex-col lg:flex-row items-center gap-space-xl">
-        <div className="flex flex-col items-start max-w-2xl flex-1 z-10">
-          <div className="inline-flex items-center gap-space-xs bg-surface-container-lowest px-space-sm py-1 rounded-full text-label-sm text-on-surface-variant mb-space-md shadow-sm border border-outline-variant/30">
-            <span className="material-symbols-outlined text-[16px] text-primary">verified_user</span>
-            <span>Private & confidential WhatsApp chat analysis</span>
-          </div>
-
-          <h1 className="font-headline-xl text-headline-xl text-on-surface mb-space-md tracking-tight">
-            Upload a chat. Cleo tells you what's really going on.
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start pb-16 md:pb-24 border-b border-[#E5E5E1]">
+        {/* Left Column: Heading, Subtitle, Actions */}
+        <div className="flex flex-col items-start max-w-[520px]">
+          <h1 className="text-[30px] md:text-[40px] font-bold leading-tight text-[#1A1A1A] tracking-tight">
+            See how your chat changed, month by month.
           </h1>
-
-          <p className="font-body-lg text-body-lg text-on-surface-variant mb-space-xl leading-relaxed">
-            Sometimes you're too close to see the full picture. Let Cleo read between the lines of your WhatsApp export with honest warmth, monthly evolution, and zero judgment.
+          <p className="text-base md:text-lg text-[#5F5F5A] mt-4 leading-normal">
+            Upload a WhatsApp chat. Cleo reads it and tells you what she notices, honestly and kindly.
           </p>
-
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-space-md w-full sm:w-auto">
+          <div className="flex flex-wrap items-center gap-6 mt-8">
             <Link
               to={user ? "/new" : "/signup"}
-              className="bg-primary hover:bg-primary-container text-on-primary px-space-xl py-space-md rounded-lg font-label-md text-label-md text-center transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center gap-space-sm"
+              className="min-h-[44px] px-6 py-3 bg-[#F2B01E] text-[#1A1A1A] font-semibold text-base rounded-lg hover:opacity-90 transition-opacity duration-150 inline-flex items-center justify-center"
             >
-              <span>{user ? "Create a report" : "Start your report"}</span>
-              <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+              Upload a chat
             </Link>
-
-            <div className="flex items-center justify-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container-lowest shadow-sm text-body-sm text-on-surface-variant border border-outline-variant/20">
-              <span className="material-symbols-outlined text-[16px] text-primary">lock</span>
-              <span>Deleted right after analysis</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Hero Visual: Interactive Card Preview */}
-        <div className="flex-1 w-full max-w-lg lg:max-w-none relative">
-          <div className="absolute -inset-4 bg-gradient-to-tr from-primary/15 via-amber-500/10 to-transparent rounded-3xl blur-2xl -z-10"></div>
-          <div className="bg-surface-container-lowest p-space-lg rounded-xl shadow-xl flex flex-col gap-space-md border border-outline-variant/20">
-            <div className="flex items-center justify-between pb-space-sm border-b border-surface-container-high">
-              <div className="flex items-center gap-space-sm">
-                <div className="w-3 h-3 rounded-full bg-rose-300"></div>
-                <div className="w-3 h-3 rounded-full bg-amber-200"></div>
-                <div className="w-3 h-3 rounded-full bg-primary"></div>
-              </div>
-              <span className="text-label-sm text-on-surface-variant font-mono">WhatsApp Chat with Vanshika.txt</span>
-            </div>
-
-            <div className="bg-surface-container-low p-space-md rounded-lg flex flex-col gap-space-sm">
-              <div className="flex items-center justify-between">
-                <span className="text-label-sm text-on-surface font-medium">8-month evolution analysis</span>
-                <span className="text-label-sm text-primary font-medium">Done</span>
-              </div>
-              <div className="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
-                <div className="bg-primary h-full w-full rounded-full"></div>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-space-md p-space-md rounded-lg bg-surface-container-lowest shadow-sm border border-outline-variant/15">
-              <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0 font-serif font-bold">
-                C
-              </div>
-              <div>
-                <h4 className="font-headline-sm text-headline-sm text-on-surface">Cleo's Perspective</h4>
-                <p className="text-body-sm text-on-surface-variant mt-1">
-                  "Neither of you became the sole keeper of the conversation. You initiated 51% and Vanshika brought 56% of the messages—a rare, effortless balance."
-                </p>
-              </div>
-            </div>
-
-            {/* Simulated Quote Bubble */}
-            <div className="bg-surface-container-low p-space-sm rounded-lg flex flex-col gap-2">
-              <div className="self-start bg-surface-container-lowest border border-outline-variant/20 p-2.5 rounded-xl rounded-tl-none max-w-[85%] text-body-sm text-on-surface">
-                "Tu soyi nahi abhi tak? 2 baj rahe"
-                <div className="text-[10px] text-on-surface-variant text-right mt-0.5">02:04 AM</div>
-              </div>
-              <div className="self-end bg-primary text-on-primary p-2.5 rounded-xl rounded-tr-none max-w-[85%] text-body-sm">
-                "Nahi, bas reading kar rahi thi ✨"
-                <div className="text-[10px] text-on-primary/80 text-right mt-0.5">02:05 AM</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Prominent Privacy Section (Placed high on page) */}
-      <section className="px-gutter py-space-lg max-w-7xl mx-auto w-full">
-        <div className="bg-surface-container-lowest rounded-xl p-space-xl shadow-md border border-outline-variant/20 flex flex-col lg:flex-row items-center justify-between gap-space-xl relative overflow-hidden">
-          <div className="absolute right-0 top-0 translate-x-12 -translate-y-12 w-64 h-64 rounded-full bg-primary/5 blur-3xl pointer-events-none"></div>
-
-          <div className="flex flex-col max-w-xl">
-            <div className="inline-flex items-center gap-space-xs text-primary text-label-sm font-medium mb-space-xs">
-              <span className="material-symbols-outlined text-[16px]">verified</span>
-              <span>Absolute Sanctuary</span>
-            </div>
-            <h2 className="font-headline-lg text-headline-lg text-on-surface mb-space-sm">
-              Your words belong only to you.
-            </h2>
-            <p className="text-body-md text-on-surface-variant leading-relaxed">
-              We built whatcleothinks as a private room of your own. Here are the 5 core truths of how we protect your privacy:
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-space-sm w-full lg:w-96">
-            <div className="bg-surface-container-low p-space-sm rounded-lg text-body-sm text-on-surface flex items-start gap-space-xs">
-              <span className="material-symbols-outlined text-primary text-[18px] mt-0.5 shrink-0">check_circle</span>
-              <span>The chat file is deleted right after the report is created.</span>
-            </div>
-            <div className="bg-surface-container-low p-space-sm rounded-lg text-body-sm text-on-surface flex items-start gap-space-xs">
-              <span className="material-symbols-outlined text-primary text-[18px] mt-0.5 shrink-0">check_circle</span>
-              <span>The report is saved to your account until you delete it.</span>
-            </div>
-            <div className="bg-surface-container-low p-space-sm rounded-lg text-body-sm text-on-surface flex items-start gap-space-xs">
-              <span className="material-symbols-outlined text-primary text-[18px] mt-0.5 shrink-0">check_circle</span>
-              <span>The report can include short quotes from the chat.</span>
-            </div>
-            <div className="bg-surface-container-low p-space-sm rounded-lg text-body-sm text-on-surface flex items-start gap-space-xs">
-              <span className="material-symbols-outlined text-primary text-[18px] mt-0.5 shrink-0">check_circle</span>
-              <span>You can delete any report, or your whole account, at any time.</span>
-            </div>
-            <div className="bg-surface-container-low p-space-sm rounded-lg text-body-sm text-on-surface flex items-start gap-space-xs">
-              <span className="material-symbols-outlined text-primary text-[18px] mt-0.5 shrink-0">check_circle</span>
-              <span>Nothing is shared with the people in the chat and nothing is sold.</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works in 3 Simple Steps */}
-      <section className="px-gutter py-space-xl max-w-7xl mx-auto w-full">
-        <div className="text-center max-w-xl mx-auto mb-space-xl">
-          <span className="text-label-sm font-medium text-primary uppercase tracking-wider">Simple Process</span>
-          <h2 className="font-headline-lg text-headline-lg text-on-surface mt-space-xs">How Cleo works for you</h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-space-lg">
-          {/* Step 1 */}
-          <div className="bg-surface-container-lowest rounded-xl p-space-lg flex flex-col justify-between shadow-md border border-outline-variant/20 relative group hover:shadow-lg transition-shadow">
-            <div className="absolute top-space-lg right-space-lg font-headline-xl text-surface-dim font-bold select-none">01</div>
-            <div className="flex flex-col gap-space-md z-10">
-              <div className="w-12 h-12 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
-                <span className="material-symbols-outlined text-[24px]">ios_share</span>
-              </div>
-              <h3 className="font-headline-md text-headline-md text-on-surface">Export your WhatsApp chat</h3>
-              <p className="text-body-md text-on-surface-variant leading-relaxed">
-                Open any chat in WhatsApp, tap settings, choose "Export Chat", and select <span className="font-medium text-on-surface">"Without Media"</span>. Takes less than 10 seconds.
-              </p>
-            </div>
-            <div className="mt-space-lg pt-space-md border-t border-surface-container-low flex items-center gap-space-xs text-label-sm text-primary font-medium">
-              <span>Quick & effortless</span>
-              <span className="material-symbols-outlined text-[16px]">east</span>
-            </div>
-          </div>
-
-          {/* Step 2 */}
-          <div className="bg-surface-container-lowest rounded-xl p-space-lg flex flex-col justify-between shadow-md border border-outline-variant/20 relative group hover:shadow-lg transition-shadow">
-            <div className="absolute top-space-lg right-space-lg font-headline-xl text-surface-dim font-bold select-none">02</div>
-            <div className="flex flex-col gap-space-md z-10">
-              <div className="w-12 h-12 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
-                <span className="material-symbols-outlined text-[24px]">cloud_upload</span>
-              </div>
-              <h3 className="font-headline-md text-headline-md text-on-surface">Upload & choose who you are</h3>
-              <p className="text-body-md text-on-surface-variant leading-relaxed">
-                Drop your `.txt` or `.zip` export. Cleo previews the participants and asks <span className="font-medium text-on-surface">"Which one is you?"</span> so insights speak to you directly.
-              </p>
-            </div>
-            <div className="mt-space-lg pt-space-md border-t border-surface-container-low flex items-center gap-space-xs text-label-sm text-primary font-medium">
-              <span>Memory-only processing</span>
-              <span className="material-symbols-outlined text-[16px]">east</span>
-            </div>
-          </div>
-
-          {/* Step 3 */}
-          <div className="bg-surface-container-lowest rounded-xl p-space-lg flex flex-col justify-between shadow-md border border-outline-variant/20 relative group hover:shadow-lg transition-shadow">
-            <div className="absolute top-space-lg right-space-lg font-headline-xl text-surface-dim font-bold select-none">03</div>
-            <div className="flex flex-col gap-space-md z-10">
-              <div className="w-12 h-12 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
-                <span className="material-symbols-outlined text-[24px]">auto_stories</span>
-              </div>
-              <h3 className="font-headline-md text-headline-md text-on-surface">Receive your monthly story</h3>
-              <p className="text-body-md text-on-surface-variant leading-relaxed">
-                Explore an interactive heatmap, month-by-month closeness trajectory, turning points, and real chat quotes wrapped in Cleo's thoughtful editorial voice.
-              </p>
-            </div>
-            <div className="mt-space-lg pt-space-md border-t border-surface-container-low flex items-center gap-space-xs text-label-sm text-primary font-medium">
-              <span>Permanently deletable</span>
-              <span className="material-symbols-outlined text-[16px]">east</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Blurred Sample Report Preview */}
-      <section className="px-gutter py-space-xl max-w-7xl mx-auto w-full">
-        <div className="text-center max-w-xl mx-auto mb-space-lg">
-          <span className="text-label-sm font-medium text-primary uppercase tracking-wider">Preview</span>
-          <h2 className="font-headline-lg text-headline-lg text-on-surface mt-space-xs">The kind of clarity you get</h2>
-        </div>
-
-        <div className="relative rounded-2xl overflow-hidden p-space-lg bg-surface-container-lowest border border-outline-variant/25 shadow-lg">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-space-md filter blur-[1px] opacity-75 pointer-events-none select-none">
-            <div className="bg-surface-container-low p-space-md rounded-xl">
-              <div className="text-label-sm text-primary font-medium">Activity Rhythm</div>
-              <div className="h-24 bg-primary/10 rounded-lg mt-2"></div>
-            </div>
-            <div className="bg-surface-container-low p-space-md rounded-xl">
-              <div className="text-label-sm text-primary font-medium">Monthly Closeness (May-Dec)</div>
-              <div className="h-24 bg-secondary-container/40 rounded-lg mt-2"></div>
-            </div>
-            <div className="bg-surface-container-low p-space-md rounded-xl">
-              <div className="text-label-sm text-primary font-medium">Initiation Balance</div>
-              <div className="h-24 bg-tertiary-fixed/30 rounded-lg mt-2"></div>
-            </div>
-          </div>
-
-          <div className="absolute inset-0 bg-background/60 backdrop-blur-xs flex flex-col items-center justify-center p-6 text-center">
-            <h3 className="font-headline-md text-on-surface mb-2">Ready to discover your chat's story?</h3>
-            <p className="text-body-md text-on-surface-variant max-w-md mb-6">
-              Takes less than a minute. Your file is deleted right after the report is generated.
-            </p>
             <Link
-              to={user ? "/new" : "/signup"}
-              className="bg-primary hover:bg-primary-container text-on-primary px-space-lg py-space-sm rounded-lg font-label-md shadow-md transition-all"
+              to="/privacy"
+              className="text-base text-[#1A1A1A] underline underline-offset-4 hover:text-[#5F5F5A] transition-colors duration-150 font-medium"
             >
-              Start a new report
+              How privacy works
             </Link>
           </div>
         </div>
+
+        {/* Right Column: Clean static sample of a real report section */}
+        <div className="w-full bg-[#F6F6F4] border border-[#E5E5E1] rounded-xl p-6 flex flex-col gap-4">
+          <div className="text-xs text-[#5F5F5A] font-medium uppercase tracking-wider">
+            Sample report · Aarav and Meera
+          </div>
+
+          <div>
+            <div className="text-sm font-semibold text-[#1A1A1A]">Monthly closeness (Jul – Dec)</div>
+            <div className="text-xs text-[#5F5F5A] mt-0.5">Scale from 0 to 100 based on message volume and reply speed</div>
+          </div>
+
+          {/* Simple static SVG closeness line chart */}
+          <div className="w-full h-32 pt-2">
+            <svg viewBox="0 0 400 100" className="w-full h-full overflow-visible">
+              {/* Reference line */}
+              <line x1="20" y1="90" x2="380" y2="90" stroke="#E5E5E1" strokeWidth="1" />
+              {/* Line path for sampleMonthly */}
+              <path
+                d="M 30,50 L 100,20 L 170,75 L 240,40 L 310,30 L 370,12"
+                fill="none"
+                stroke="#F2B01E"
+                strokeWidth="2.5"
+              />
+              {/* Points with labels */}
+              {[
+                { x: 30, y: 50, month: 'Jul', val: 72 },
+                { x: 100, y: 20, month: 'Aug', val: 86 },
+                { x: 170, y: 75, month: 'Sep', val: 58 },
+                { x: 240, y: 40, month: 'Oct', val: 75 },
+                { x: 310, y: 30, month: 'Nov', val: 82 },
+                { x: 370, y: 12, month: 'Dec', val: 91 },
+              ].map((pt, i) => (
+                <g key={i}>
+                  <circle cx={pt.x} cy={pt.y} r="3.5" fill="#FFFFFF" stroke="#F2B01E" strokeWidth="2" />
+                  <text x={pt.x} y="98" textAnchor="middle" className="text-[10px] fill-[#5F5F5A]">
+                    {pt.month}
+                  </text>
+                </g>
+              ))}
+            </svg>
+          </div>
+
+          {/* One chat bubble quote */}
+          <div className="border-t border-[#E5E5E1] pt-3 flex flex-col gap-2">
+            <div className="text-xs text-[#5F5F5A]">18 Aug 2024 · 02:04 AM</div>
+            <div className="self-end bg-[#2F5BEA] text-white px-3 py-2 rounded-lg text-sm max-w-[85%]">
+              <span className="text-[11px] block font-semibold text-white/80">You</span>
+              Tu soyi nahi abhi tak? 2 baj rahe
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works (3 steps in a row, numbered 1-3 in plain bold text) */}
+      <section className="py-16 md:py-20 border-b border-[#E5E5E1]">
+        <h2 className="text-[28px] font-bold text-[#1A1A1A] mb-8">How it works</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+          <div>
+            <div className="text-xl font-bold text-[#1A1A1A] mb-2">1. Export your chat</div>
+            <p className="text-base text-[#5F5F5A]">
+              In WhatsApp, tap your chat options and select Export Chat without media. It produces a plain text file.
+            </p>
+          </div>
+          <div>
+            <div className="text-xl font-bold text-[#1A1A1A] mb-2">2. Upload it and pick who you are</div>
+            <p className="text-base text-[#5F5F5A]">
+              Select your export file and choose your name so Cleo speaks directly to you.
+            </p>
+          </div>
+          <div>
+            <div className="text-xl font-bold text-[#1A1A1A] mb-2">3. Read your report</div>
+            <p className="text-base text-[#5F5F5A]">
+              Get your daily heatmap, reply times, month-by-month changes, and written observations with quotes.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* What's in your report (plain two-column list) */}
+      <section className="py-16 md:py-20 border-b border-[#E5E5E1]">
+        <h2 className="text-[28px] font-bold text-[#1A1A1A] mb-8">What is in your report</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-12 text-base text-[#1A1A1A]">
+          <div className="py-2 border-b border-[#E5E5E1]">
+            <strong>Heatmap of every day:</strong> see busy weeks and quiet stretches across the entire conversation.
+          </div>
+          <div className="py-2 border-b border-[#E5E5E1]">
+            <strong>Who starts and who replies faster:</strong> simple metrics on conversation balance and median response speed.
+          </div>
+          <div className="py-2 border-b border-[#E5E5E1]">
+            <strong>Late-night patterns:</strong> message totals between 10 PM and 4 AM compared to daytime hours.
+          </div>
+          <div className="py-2 border-b border-[#E5E5E1]">
+            <strong>Month-by-month closeness:</strong> track when the conversation sped up or dipped over time.
+          </div>
+          <div className="py-2 border-b border-[#E5E5E1]">
+            <strong>Turning points:</strong> specific months where message habits noticeably shifted.
+          </div>
+          <div className="py-2 border-b border-[#E5E5E1]">
+            <strong>Cleo's written read with real quotes:</strong> an honest, friendly summary quoting exact messages from your chat.
+          </div>
+        </div>
+      </section>
+
+      {/* Your privacy (the five statements as a numbered list) */}
+      <section className="py-16 md:py-20 border-b border-[#E5E5E1]">
+        <h2 className="text-[28px] font-bold text-[#1A1A1A] mb-6">Your privacy</h2>
+        <ol className="list-decimal pl-5 space-y-3 text-base text-[#1A1A1A] max-w-[680px]">
+          <li>Your chat file is deleted right after your report is created.</li>
+          <li>Your report is saved to your account until you delete it.</li>
+          <li>Reports can include short quotes from your chat.</li>
+          <li>You can delete any report, or your whole account, at any time.</li>
+          <li>Nothing is shared with the people in the chat, and nothing is sold.</li>
+        </ol>
+        <div className="mt-6">
+          <Link
+            to="/privacy"
+            className="text-base text-[#1A1A1A] underline underline-offset-4 hover:text-[#5F5F5A] transition-colors duration-150 font-medium"
+          >
+            Read the full privacy page
+          </Link>
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="pt-16 md:pt-20 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+        <div>
+          <h2 className="text-[28px] font-bold text-[#1A1A1A]">Ready to see your chat?</h2>
+          <p className="text-base text-[#5F5F5A] mt-1">
+            Export a chat without media and upload it to start.
+          </p>
+        </div>
+        <Link
+          to={user ? "/new" : "/signup"}
+          className="min-h-[44px] px-6 py-3 bg-[#F2B01E] text-[#1A1A1A] font-semibold text-base rounded-lg hover:opacity-90 transition-opacity duration-150 inline-flex items-center justify-center self-start sm:self-auto"
+        >
+          Upload a chat
+        </Link>
       </section>
     </div>
   );
 };
-

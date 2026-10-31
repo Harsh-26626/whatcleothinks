@@ -2,55 +2,48 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color-bg: #FFFFFF;
+  --color-surface: #F6F6F4;
+  --color-border: #E5E5E1;
+  --color-text: #1A1A1A;
+  --color-muted: #5F5F5A;
+  --color-accent: #F2B01E;
+  --color-you: #2F5BEA;
+  --color-them: #F2B01E;
+  --color-danger: #B42318;
+  --color-success: #1F7A4D;
+}
+
 @layer base {
   html, body {
     margin: 0;
     padding: 0;
-    background-color: #FBF6EF;
-    color: #2B2320;
-    font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', system-ui, sans-serif;
+    background-color: #FFFFFF;
+    color: #1A1A1A;
+    font-family: 'Figtree', 'Noto Sans Devanagari', system-ui, sans-serif;
+    line-height: 1.5;
+  }
+
+  /* Default visible focus ring on interactive elements */
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #1A1A1A;
   }
 }
 
-.material-symbols-outlined {
-  font-family: 'Material Symbols Outlined';
-  font-weight: normal;
-  font-style: normal;
-  font-size: 20px;
-  line-height: 1;
-  letter-spacing: normal;
-  text-transform: none;
-  display: inline-block;
-  white-space: nowrap;
-  word-wrap: normal;
-  direction: ltr;
-  -webkit-font-feature-settings: 'liga';
-  -webkit-font-smoothing: antialiased;
-}
-
-/* Print Stylesheet for Report PDF download via window.print() */
+/* Print Stylesheet */
 @media print {
   header, footer, nav, .no-print, button {
     display: none !important;
   }
   
   body {
-    background: #ffffff !important;
-    color: #111111 !important;
-    font-size: 12pt !important;
+    background: #FFFFFF !important;
+    color: #000000 !important;
   }
   
   main {
     padding-top: 0 !important;
   }
-
-  .print-page-break {
-    page-break-before: always;
-  }
-  
-  .shadow-md, .shadow-xl, .shadow-sm, .shadow-lg {
-    box-shadow: none !important;
-    border: 1px solid #e2e8f0 !important;
-  }
 }
-

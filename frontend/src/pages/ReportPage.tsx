@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { api, ApiRequestError } from '../lib/api';
 import { Report } from '../types';
@@ -14,10 +14,22 @@ export const ReportPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  // Modals
-  const [showBreakModal, setShowBreakModal] = useState(false);
+  const [activeSection, setActiveSection] = useState<'overview' | 'over-time' | 'cleos-read'>('overview');
+  const [menuOpen, setMenuOpen] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setMenuOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   useEffect(() => {
     if (!id) return;
@@ -34,7 +46,7 @@ export const ReportPage: React.FC = () => {
         setReport(data);
       } catch (err: any) {
         if (err instanceof ApiRequestError && err.status === 404) {
-          setErrorMsg('Report not found or you do not have permission to view it.');
+          setErrorMsg('Report not found or not owned by your account.');
         } else {
           setErrorMsg(err.message || 'Could not load report.');
         }
@@ -64,88 +76,123 @@ export const ReportPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-gutter py-space-xl w-full flex flex-col gap-space-lg animate-pulse">
-        <div className="h-32 bg-surface-container-lowest rounded-2xl shadow-sm"></div>
-        <div className="h-64 bg-surface-container-lowest rounded-2xl shadow-sm"></div>
-        <div className="h-96 bg-surface-container-lowest rounded-2xl shadow-sm"></div>
+      <div className="w-full py-12 flex flex-col gap-6">
+        <div className="h-10 bg-[#F6F6F4] rounded w-1/2"></div>
+        <div className="h-6 bg-[#F6F6F4] rounded w-1/4"></div>
+        <div className="h-64 bg-[#F6F6F4] rounded mt-4"></div>
       </div>
     );
   }
 
   if (errorMsg || !report) {
     return (
-      <div className="max-w-xl mx-auto px-gutter py-space-xl text-center flex flex-col items-center justify-center gap-4">
-        <div className="w-16 h-16 rounded-full bg-error-container text-error flex items-center justify-center">
-          <span className="material-symbols-outlined text-3xl">error_outline</span>
-        </div>
-        <h2 className="font-headline-lg text-on-surface">Unable to load report</h2>
-        <p className="text-body-md text-on-surface-variant max-w-md">{errorMsg}</p>
+      <div className="w-full max-w-[500px] mx-auto py-20 text-center flex flex-col items-center gap-4">
+        <h1 className="text-2xl font-bold text-[#1A1A1A]">Unable to load report</h1>
+        <p className="text-base text-[#5F5F5A]">{errorMsg}</p>
         <Link
           to="/dashboard"
-          className="bg-primary hover:bg-primary-container text-on-primary font-label-md px-6 py-2.5 rounded-xl transition-all shadow-sm"
+          className="min-h-[44px] px-5 py-2.5 bg-[#F2B01E] text-[#1A1A1A] font-semibold text-base rounded-lg inline-flex items-center"
         >
-          Return to Dashboard
+          Return to reports
         </Link>
       </div>
     );
   }
 
   const participantsText =
-    report.participants?.map((p) => p.name).join(' & ') || 'Participants';
+    report.participants?.map((p) => p.name).join(' and ') || 'Aarav and Meera';
+
+  const dateRangeText = report.dateRange
+    ? `${report.dateRange.start} to ${report.dateRange.end}`
+    : '13 Jul 2024 to 25 Dec 2024';
 
   return (
-    <div className="max-w-7xl mx-auto px-gutter py-space-xl flex flex-col gap-space-xl w-full">
-      {/* Top Header Card */}
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-space-md bg-surface-container-lowest p-space-lg md:p-space-xl rounded-2xl shadow-sm border border-outline-variant/20 relative overflow-hidden">
-        <div className="absolute -right-12 -top-12 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="flex flex-col gap-space-xs relative z-10">
-          <div className="flex items-center gap-space-xs text-label-sm text-primary font-medium tracking-wider uppercase">
-            <span className="material-symbols-outlined text-[16px]">auto_awesome</span>
-            <span>Curated Insight Report • Persona: Cleo</span>
-          </div>
-
-          <h1 className="font-headline-xl text-on-surface">
-            {report.title || `Conversations with ${participantsText}`}
+    <div className="w-full py-8 md:py-12 flex flex-col gap-8">
+      {/* Header */}
+      <header className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-[#E5E5E1]">
+        <div>
+          <h1 className="text-[30px] md:text-[36px] font-bold text-[#1A1A1A]">
+            {report.title || participantsText}
           </h1>
-
-          <p className="font-body-md text-on-surface-variant max-w-2xl mt-1">
-            A gentle reflection of your shared rhythms, conversational balance, and evolving connection.
+          <p className="text-base text-[#5F5F5A] mt-1">
+            {participantsText} · {dateRangeText}
           </p>
         </div>
 
-        {/* Metadata badges */}
-        <div className="flex flex-wrap items-center gap-space-sm relative z-10 no-print">
-          <div className="flex items-center gap-space-xs bg-surface-container-low border border-outline-variant/30 px-space-md py-2 rounded-xl shadow-sm">
-            <span className="material-symbols-outlined text-[18px] text-primary">
-              {report.chatType === 'romance' ? 'favorite' : report.chatType === 'friends' ? 'group' : 'groups'}
-            </span>
-            <span className="text-label-md text-on-surface font-medium capitalize">
-              {report.chatType}
-            </span>
+        {/* Actions: Print and ... menu */}
+        <div className="flex items-center gap-3 no-print">
+          <button
+            onClick={handlePrint}
+            className="min-h-[44px] px-4 py-2 border border-[#E5E5E1] rounded-lg text-sm font-semibold text-[#1A1A1A] hover:bg-[#F6F6F4] transition-colors"
+          >
+            Print
+          </button>
+
+          {/* ... menu */}
+          <div className="relative" ref={menuRef}>
+            <button
+              onClick={() => setMenuOpen((prev) => !prev)}
+              aria-label="More options"
+              className="min-h-[44px] min-w-[44px] px-3 py-2 border border-[#E5E5E1] rounded-lg text-base font-bold text-[#1A1A1A] hover:bg-[#F6F6F4] transition-colors flex items-center justify-center"
+            >
+              ···
+            </button>
+
+            {menuOpen && (
+              <div className="absolute right-0 mt-1 w-44 bg-white border border-[#E5E5E1] rounded-lg shadow-lg py-1 z-50">
+                <button
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setShowDeleteModal(true);
+                  }}
+                  className="w-full text-left px-4 py-2 text-sm text-[#B42318] hover:bg-[#F6F6F4]"
+                >
+                  Delete report
+                </button>
+              </div>
+            )}
           </div>
-
-          {report.stats && (
-            <div className="flex items-center gap-space-xs bg-surface-container-low border border-outline-variant/30 px-space-md py-2 rounded-xl shadow-sm">
-              <span className="material-symbols-outlined text-[18px] text-primary">forum</span>
-              <span className="text-label-md text-on-surface font-medium">
-                {report.stats.totalMessages.toLocaleString()} Messages
-              </span>
-            </div>
-          )}
-
-          {report.dateRange && (
-            <div className="flex items-center gap-space-xs bg-surface-container-low border border-outline-variant/30 px-space-md py-2 rounded-xl shadow-sm">
-              <span className="material-symbols-outlined text-[18px] text-primary">calendar_today</span>
-              <span className="text-label-md text-on-surface font-medium">
-                {report.dateRange.start} → {report.dateRange.end}
-              </span>
-            </div>
-          )}
         </div>
       </header>
 
-      {/* 1. Stats Dashboard */}
+      {/* Simple Sticky In-Page Nav */}
+      <nav className="sticky top-16 bg-white z-30 py-3 border-b border-[#E5E5E1] flex items-center gap-6 text-base font-medium no-print">
+        <a
+          href="#overview"
+          onClick={() => setActiveSection('overview')}
+          className={`pb-1 transition-colors ${
+            activeSection === 'overview'
+              ? 'text-[#1A1A1A] font-semibold border-b-2 border-[#1A1A1A]'
+              : 'text-[#5F5F5A] hover:text-[#1A1A1A]'
+          }`}
+        >
+          Overview
+        </a>
+        <a
+          href="#over-time"
+          onClick={() => setActiveSection('over-time')}
+          className={`pb-1 transition-colors ${
+            activeSection === 'over-time'
+              ? 'text-[#1A1A1A] font-semibold border-b-2 border-[#1A1A1A]'
+              : 'text-[#5F5F5A] hover:text-[#1A1A1A]'
+          }`}
+        >
+          Over time
+        </a>
+        <a
+          href="#cleos-read"
+          onClick={() => setActiveSection('cleos-read')}
+          className={`pb-1 transition-colors ${
+            activeSection === 'cleos-read'
+              ? 'text-[#1A1A1A] font-semibold border-b-2 border-[#1A1A1A]'
+              : 'text-[#5F5F5A] hover:text-[#1A1A1A]'
+          }`}
+        >
+          Cleo's read
+        </a>
+      </nav>
+
+      {/* 1. Overview */}
       {report.stats && (
         <StatsDashboard
           stats={report.stats}
@@ -154,7 +201,7 @@ export const ReportPage: React.FC = () => {
         />
       )}
 
-      {/* 2. Monthly Evolution & Turning Points */}
+      {/* 2. Over Time */}
       {report.monthly && report.monthly.length > 0 && (
         <MonthlyEvolution
           monthly={report.monthly}
@@ -162,89 +209,36 @@ export const ReportPage: React.FC = () => {
         />
       )}
 
-      {/* 3. Cleo's Narrative Perspective & Chat Quotes */}
+      {/* 3. Cleo's Read */}
       {report.narrative && (
         <NarrativeView
           narrative={report.narrative}
           participants={report.participants || []}
-          onTakeBreak={() => setShowBreakModal(true)}
         />
-      )}
-
-      {/* Actions Footer */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-space-md pt-space-lg border-t border-surface-container-high no-print">
-        <div className="flex items-center gap-space-sm w-full sm:w-auto">
-          <button
-            onClick={handlePrint}
-            className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-surface-container-lowest hover:bg-surface-container border border-outline-variant/30 text-on-surface px-space-lg py-3 rounded-xl text-label-md font-medium transition-all shadow-sm"
-          >
-            <span className="material-symbols-outlined text-[18px]">print</span>
-            <span>Download PDF / Print</span>
-          </button>
-        </div>
-
-        <div>
-          <button
-            onClick={() => setShowDeleteModal(true)}
-            className="text-body-sm text-error hover:underline flex items-center gap-1.5 py-2 px-3 rounded-lg hover:bg-error-container/20 transition-colors"
-          >
-            <span className="material-symbols-outlined text-[18px]">delete</span>
-            <span>Delete this report</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Take a Breath Modal */}
-      {showBreakModal && (
-        <div className="fixed inset-0 bg-on-surface/40 backdrop-blur-sm z-50 flex items-center justify-center p-gutter">
-          <div className="bg-surface-container-lowest max-w-md w-full p-space-xl rounded-2xl shadow-xl flex flex-col items-center text-center gap-space-md relative border border-outline-variant/20 animate-fadeIn">
-            <div className="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center text-3xl">
-              <span className="material-symbols-outlined text-3xl">spa</span>
-            </div>
-            <h3 className="font-headline-lg text-on-surface">Pause & Breathe</h3>
-            <p className="font-body-md text-on-surface-variant leading-relaxed">
-              Take a slow, deep breath in... and let it out. Looking at past moments can stir up unexpected feelings. Take all the time you need.
-            </p>
-            <button
-              onClick={() => setShowBreakModal(false)}
-              className="w-full bg-primary hover:bg-primary-container text-on-primary py-3 rounded-xl font-medium text-label-md mt-2 shadow-sm transition-all"
-            >
-              Return to Report
-            </button>
-          </div>
-        </div>
       )}
 
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
-        <div className="fixed inset-0 bg-on-surface/40 backdrop-blur-sm z-50 flex items-center justify-center p-gutter">
-          <div className="bg-surface-container-lowest max-w-md w-full p-space-xl rounded-2xl shadow-xl flex flex-col gap-space-md relative border border-outline-variant/20 animate-fadeIn">
-            <div className="flex items-center gap-space-xs text-error font-medium text-label-sm">
-              <span className="material-symbols-outlined text-[18px]">warning</span>
-              <span>Permanent Deletion</span>
-            </div>
-            <h3 className="font-headline-lg text-on-surface">Delete this report?</h3>
-            <p className="font-body-md text-on-surface-variant">
-              Once deleted, this report cannot be recovered. Your raw chat file was already deleted when the report finished, and this generated view will be permanently removed.
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
+          <div className="bg-white max-w-[440px] w-full p-6 rounded-xl border border-[#E5E5E1] shadow-xl flex flex-col gap-4">
+            <h2 className="text-xl font-bold text-[#1A1A1A]">Delete this report?</h2>
+            <p className="text-sm text-[#5F5F5A]">
+              This report will be permanently removed from your account. Your original chat file was already deleted after the report was created.
             </p>
-            <div className="flex gap-space-sm mt-2">
+            <div className="flex justify-end gap-3 mt-2">
               <button
                 disabled={isDeleting}
                 onClick={() => setShowDeleteModal(false)}
-                className="flex-1 bg-surface-container-high hover:bg-surface-container text-on-surface py-3 rounded-xl font-medium text-label-md transition-colors"
+                className="min-h-[44px] px-4 py-2 border border-[#E5E5E1] rounded-lg text-sm font-semibold text-[#1A1A1A] hover:bg-[#F6F6F4]"
               >
-                Keep Report
+                Cancel
               </button>
               <button
                 disabled={isDeleting}
                 onClick={handleDelete}
-                className="flex-1 bg-error hover:opacity-90 text-on-error py-3 rounded-xl font-medium text-label-md transition-colors flex items-center justify-center gap-2"
+                className="min-h-[44px] px-4 py-2 bg-[#B42318] text-white rounded-lg text-sm font-semibold hover:opacity-90"
               >
-                {isDeleting ? (
-                  <span>Deleting...</span>
-                ) : (
-                  <span>Delete Permanently</span>
-                )}
+                {isDeleting ? 'Deleting…' : 'Delete permanently'}
               </button>
             </div>
           </div>
@@ -253,4 +247,3 @@ export const ReportPage: React.FC = () => {
     </div>
   );
 };
-

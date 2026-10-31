@@ -8,9 +8,8 @@ export const ProtectedRoute: React.FC<{ children: React.ReactElement }> = ({ chi
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 text-center">
-        <div className="w-12 h-12 rounded-full border-2 border-primary border-t-transparent animate-spin mb-4" />
-        <p className="text-body-md text-on-surface-variant">Opening your sanctuary...</p>
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6 text-center">
+        <p className="text-base text-[#5F5F5A]">Loading…</p>
       </div>
     );
   }

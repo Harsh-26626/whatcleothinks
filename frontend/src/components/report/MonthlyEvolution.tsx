@@ -10,157 +10,118 @@ export const MonthlyEvolution: React.FC<MonthlyEvolutionProps> = ({
   monthly,
   turningPoints,
 }) => {
-  if (!monthly || monthly.length === 0) {
-    return null;
-  }
+  if (!monthly || monthly.length === 0) return null;
 
-  // Format month names (e.g. "2023-05" -> "May 23")
   const formatMonth = (m: string) => {
     try {
       const parts = m.split('-');
       const date = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, 1);
-      return date.toLocaleDateString([], { month: 'short', year: '2-digit' });
+      return date.toLocaleDateString([], { month: 'short', year: 'numeric' });
     } catch {
       return m;
     }
   };
 
-  // Max messages for secondary scaling
   const maxMessages = Math.max(1, ...monthly.map((m) => m.messages));
 
-  // Compute SVG coordinates for the closeness curve
   const width = 800;
-  const height = 180;
+  const height = 220;
   const paddingX = 40;
-  const paddingY = 25;
+  const paddingY = 30;
   const plotWidth = width - paddingX * 2;
   const plotHeight = height - paddingY * 2;
 
   const points = monthly.map((item, index) => {
     const x = paddingX + (index / Math.max(1, monthly.length - 1)) * plotWidth;
-    // Closeness is 0-100 (null defaults to 50 for rendering)
     const closenessVal = item.closeness ?? 50;
     const y = paddingY + (1 - closenessVal / 100) * plotHeight;
-    return { x, y, item };
+    return { x, y, item, index };
   });
 
-  // Construct SVG Path
   const linePath = points.reduce((acc, p, i) => {
     return i === 0 ? `M ${p.x},${p.y}` : `${acc} L ${p.x},${p.y}`;
   }, '');
 
-  const areaPath = `${linePath} L ${points[points.length - 1].x},${height - 10} L ${points[0].x},${height - 10} Z`;
-
   return (
-    <section className="bg-surface-container-lowest p-space-lg md:p-space-xl rounded-2xl shadow-sm border border-outline-variant/20 flex flex-col gap-space-lg w-full">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-        <div>
-          <div className="inline-flex items-center gap-1 text-label-sm font-medium text-primary uppercase tracking-wider mb-1">
-            <span className="material-symbols-outlined text-[16px]">show_chart</span>
-            <span>Month-by-Month Evolution</span>
-          </div>
-          <h3 className="font-headline-lg text-on-surface">Closeness & Rhythms Over Time</h3>
-          <p className="font-body-sm text-on-surface-variant">
-            How warmth, unhurried ease, and communication frequency evolved across {monthly.length} months
-          </p>
-        </div>
-
-        <div className="flex items-center gap-space-sm text-label-sm">
-          <div className="flex items-center gap-1.5 bg-surface-container-low px-3 py-1 rounded-full border border-outline-variant/30">
-            <span className="w-2.5 h-2.5 rounded-full bg-primary"></span>
-            <span className="text-on-surface font-medium">Closeness (0–100)</span>
-          </div>
-          <div className="flex items-center gap-1.5 bg-surface-container-low px-3 py-1 rounded-full border border-outline-variant/30">
-            <span className="w-2.5 h-2.5 rounded-full bg-secondary-container"></span>
-            <span className="text-on-surface-variant">Volume</span>
-          </div>
-        </div>
+    <section id="over-time" className="p-6 bg-white border border-[#E5E5E1] rounded-xl flex flex-col gap-6 scroll-mt-20">
+      <div>
+        <h2 className="text-[28px] font-bold text-[#1A1A1A]">Closeness over time</h2>
+        <p className="text-base text-[#5F5F5A] mt-1">
+          Month-by-month changes in connection, shown with monthly message volume bars.
+        </p>
       </div>
 
-      {/* Interactive Responsive SVG Area Chart */}
-      <div className="w-full relative overflow-hidden pt-4 pb-2">
-        <svg
-          viewBox={`0 0 ${width} ${height}`}
-          className="w-full h-auto overflow-visible select-none"
-        >
-          <defs>
-            <linearGradient id="closenessGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#C96B5C" stopOpacity="0.35" />
-              <stop offset="100%" stopColor="#C96B5C" stopOpacity="0.02" />
-            </linearGradient>
-          </defs>
+      {/* SVG Chart */}
+      <div className="w-full relative overflow-hidden pt-2 pb-2">
+        <svg viewBox={`0 0 ${width} ${height + 20}`} className="w-full h-auto overflow-visible">
+          {/* Baseline axis */}
+          <line
+            x1={paddingX}
+            y1={height - paddingY + 10}
+            x2={width - paddingX}
+            y2={height - paddingY + 10}
+            stroke="#E5E5E1"
+            strokeWidth="1"
+          />
 
-          {/* Secondary Volume Bars */}
+          {/* Volume Bars */}
           {points.map((p, i) => {
             const barHeight = (p.item.messages / maxMessages) * (plotHeight * 0.7);
-            const barY = height - 10 - barHeight;
+            const barY = height - paddingY + 10 - barHeight;
             return (
               <rect
                 key={`bar-${i}`}
-                x={p.x - 12}
+                x={p.x - 14}
                 y={barY}
-                width={24}
+                width={28}
                 height={barHeight}
-                rx={4}
-                fill="#E3D7FE"
-                opacity={0.65}
+                fill="#E5E5E1"
+                rx={2}
               />
             );
           })}
 
-          {/* Area fill */}
-          <path d={areaPath} fill="url(#closenessGrad)" />
-
-          {/* Line stroke */}
+          {/* Closeness Line */}
           <path
             d={linePath}
             fill="none"
-            stroke="#C96B5C"
-            strokeWidth="3.5"
+            stroke="#F2B01E"
+            strokeWidth="3"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
 
-          {/* Points & Turning Point Highlights */}
-          {points.map((p, i) => {
-            const isTurningPoint = turningPoints.some((tp) => tp.month === p.item.month);
+          {/* Points & Numbered Turning Point Markers */}
+          {points.map((p) => {
+            const tpIndex = turningPoints.findIndex((tp) => tp.month === p.item.month);
+            const isTurningPoint = tpIndex !== -1;
+
             return (
-              <g key={`pt-${i}`} className="group cursor-pointer">
+              <g key={`pt-${p.index}`}>
                 <circle
                   cx={p.x}
                   cy={p.y}
-                  r={isTurningPoint ? 7 : 5}
-                  fill="#FBF6EF"
-                  stroke="#C96B5C"
-                  strokeWidth={isTurningPoint ? 3.5 : 2.5}
+                  r={isTurningPoint ? 7 : 4}
+                  fill="#FFFFFF"
+                  stroke="#F2B01E"
+                  strokeWidth={isTurningPoint ? 3 : 2}
                 />
                 {isTurningPoint && (
-                  <circle
-                    cx={p.x}
-                    cy={p.y}
-                    r={12}
-                    fill="none"
-                    stroke="#C96B5C"
-                    strokeWidth="1.5"
-                    strokeDasharray="2,2"
-                    className="animate-spin"
-                  />
+                  <text
+                    x={p.x}
+                    y={p.y - 12}
+                    textAnchor="middle"
+                    className="text-[12px] font-bold fill-[#1A1A1A]"
+                  >
+                    #{tpIndex + 1}
+                  </text>
                 )}
-                {/* Closeness label above point */}
+                {/* Month label on x-axis */}
                 <text
                   x={p.x}
-                  y={p.y - 12}
+                  y={height + 15}
                   textAnchor="middle"
-                  className="text-[11px] font-bold fill-current text-primary"
-                >
-                  {p.item.closeness ?? ''}
-                </text>
-                {/* Month label below */}
-                <text
-                  x={p.x}
-                  y={height + 2}
-                  textAnchor="middle"
-                  className="text-[11px] fill-current text-on-surface-variant font-medium"
+                  className="text-[12px] fill-[#5F5F5A]"
                 >
                   {formatMonth(p.item.month)}
                 </text>
@@ -170,47 +131,40 @@ export const MonthlyEvolution: React.FC<MonthlyEvolutionProps> = ({
         </svg>
       </div>
 
-      {/* Turning Point Milestone Cards */}
-      {turningPoints && turningPoints.length > 0 && (
-        <div className="mt-space-xs">
-          <div className="text-label-sm font-semibold uppercase tracking-wider text-on-surface mb-3 flex items-center gap-1.5">
-            <span className="material-symbols-outlined text-[18px] text-primary">flag</span>
-            <span>Key Turning Points Identified by Cleo</span>
+      {/* Legend & Tiny Note */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-[#5F5F5A] pt-3 border-t border-[#E5E5E1]">
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-0.5 bg-[#F2B01E]" />
+            <span>Closeness (0–100)</span>
           </div>
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-3 bg-[#E5E5E1] rounded-[2px]" />
+            <span>Message volume</span>
+          </div>
+        </div>
+        <div className="text-[#5F5F5A]">
+          Closeness is an estimate based on message volume, reply speed and tone.
+        </div>
+      </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-space-md">
-            {turningPoints.map((tp, index) => {
-              const matchedMonth = monthly.find((m) => m.month === tp.month);
-              return (
-                <div
-                  key={index}
-                  className="bg-surface-container-low p-space-md rounded-2xl flex flex-col justify-between gap-2 border border-outline-variant/20 shadow-sm hover:shadow-md transition-shadow"
-                >
-                  <div>
-                    <div className="flex items-center justify-between text-label-sm text-primary font-medium">
-                      <span>{formatMonth(tp.month)}</span>
-                      <span className="text-[11px] bg-primary/10 px-2 py-0.5 rounded-full">
-                        Turning Point {index + 1}
-                      </span>
-                    </div>
-                    <h4 className="font-headline-sm text-on-surface mt-1">{tp.title}</h4>
-                    <p className="text-body-sm text-on-surface-variant mt-1.5 leading-relaxed">
-                      {tp.note}
-                    </p>
-                  </div>
-
-                  {matchedMonth?.mood && (
-                    <div className="text-[11px] text-on-surface-variant/90 italic pt-2 border-t border-surface-container-high">
-                      Mood: "{matchedMonth.mood}"
-                    </div>
-                  )}
+      {/* Turning Points List */}
+      {turningPoints && turningPoints.length > 0 && (
+        <div className="mt-4 pt-6 border-t border-[#E5E5E1]">
+          <h3 className="text-xl font-bold text-[#1A1A1A] mb-4">Turning points</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {turningPoints.map((tp, index) => (
+              <div key={index} className="p-4 bg-[#F6F6F4] rounded-lg border border-[#E5E5E1]">
+                <div className="text-xs font-semibold text-[#5F5F5A]">
+                  #{index + 1} · {formatMonth(tp.month)}
                 </div>
-              );
-            })}
+                <div className="text-base font-bold text-[#1A1A1A] mt-1">{tp.title}</div>
+                <p className="text-sm text-[#5F5F5A] mt-1.5 leading-normal">{tp.note}</p>
+              </div>
+            ))}
           </div>
         </div>
       )}
     </section>
   );
 };
-

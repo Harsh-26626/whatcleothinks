@@ -7,7 +7,6 @@ interface ChatBubbleProps {
 }
 
 export const ChatBubble: React.FC<ChatBubbleProps> = ({ quote, isMe }) => {
-  // Format timestamp (naive local time)
   const formatTime = (ts: string) => {
     try {
       const date = new Date(ts);
@@ -19,33 +18,26 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({ quote, isMe }) => {
   };
 
   return (
-    <div
-      className={`flex flex-col my-1 max-w-[85%] sm:max-w-[75%] ${
-        isMe ? 'self-end items-end' : 'self-start items-start'
-      }`}
-    >
+    <div className={`flex flex-col my-1 max-w-[85%] ${isMe ? 'self-end items-end' : 'self-start items-start'}`}>
       <div
-        className={`p-space-sm sm:p-space-md rounded-2xl shadow-sm text-body-md transition-all ${
+        className={`px-3.5 py-2.5 rounded-lg text-base leading-normal ${
           isMe
-            ? 'bg-primary text-on-primary rounded-tr-none'
-            : 'bg-surface-container-high text-on-surface rounded-tl-none border border-outline-variant/20'
+            ? 'bg-[#2F5BEA] text-white'
+            : 'bg-[#F6F6F4] border border-[#E5E5E1] text-[#1A1A1A]'
         }`}
       >
-        {!isMe && (
-          <div className="text-[11px] font-semibold tracking-wide text-primary mb-1 uppercase">
-            {quote.sender}
-          </div>
-        )}
-        <p className="leading-relaxed whitespace-pre-wrap select-text">{quote.text}</p>
-        <div
-          className={`text-[10px] text-right mt-1.5 font-mono ${
-            isMe ? 'text-on-primary/80' : 'text-on-surface-variant'
+        <span className={`block text-xs font-semibold mb-0.5 ${isMe ? 'text-white/80' : 'text-[#5F5F5A]'}`}>
+          {isMe ? 'You' : quote.sender}
+        </span>
+        <p className="whitespace-pre-wrap">{quote.text}</p>
+        <span
+          className={`block text-[11px] text-right mt-1 font-mono ${
+            isMe ? 'text-white/70' : 'text-[#5F5F5A]'
           }`}
         >
           {formatTime(quote.ts)}
-        </div>
+        </span>
       </div>
     </div>
   );
 };
-

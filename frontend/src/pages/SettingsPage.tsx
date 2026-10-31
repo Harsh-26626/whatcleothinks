@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../lib/api';
 import { ReportSummary } from '../types';
@@ -12,7 +12,6 @@ export const SettingsPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   // Modals
-  const [reportToDelete, setReportToDelete] = useState<ReportSummary | null>(null);
   const [showDeleteAllModal, setShowDeleteAllModal] = useState(false);
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -30,20 +29,6 @@ export const SettingsPage: React.FC = () => {
     }
     loadReports();
   }, []);
-
-  const handleDeleteSingle = async () => {
-    if (!reportToDelete) return;
-    setIsDeleting(true);
-    try {
-      await api.deleteReport(reportToDelete.id);
-      setReports((prev) => prev.filter((r) => r.id !== reportToDelete.id));
-      setReportToDelete(null);
-    } catch (err: any) {
-      alert(err.message || 'Could not delete report.');
-    } finally {
-      setIsDeleting(false);
-    }
-  };
 
   const handleDeleteAll = async () => {
     setIsDeleting(true);
@@ -73,226 +58,100 @@ export const SettingsPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-gutter py-space-xl flex flex-col gap-space-xl w-full">
-      {/* Title */}
-      <div>
-        <span className="text-label-sm font-medium text-primary uppercase tracking-wider">Account Control</span>
-        <h1 className="font-headline-xl text-on-surface mt-1">Settings & Data Control</h1>
-        <p className="font-body-md text-on-surface-variant mt-1">
-          Complete transparency over your stored credentials, generated reports, and permanent deletion controls.
-        </p>
-      </div>
+    <div className="w-full max-w-[680px] mx-auto py-12 md:py-16 flex flex-col gap-8 text-[#1A1A1A]">
+      <h1 className="text-[30px] md:text-[40px] font-bold tracking-tight">Settings</h1>
 
-      {/* Account Info */}
-      <div className="bg-surface-container-lowest p-space-lg md:p-space-xl rounded-2xl shadow-sm border border-outline-variant/20 flex flex-col gap-space-md">
-        <h2 className="font-headline-md text-on-surface">Your Account</h2>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-space-md bg-surface-container-low p-space-md rounded-xl">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-lg">
-              {user?.email?.charAt(0).toUpperCase()}
-            </div>
-            <div>
-              <div className="text-label-md font-semibold text-on-surface">{user?.email}</div>
-              <div className="text-body-sm text-on-surface-variant">Authenticated via secure JWT bearer session</div>
-            </div>
-          </div>
+      {/* Account Section */}
+      <section className="pt-6 border-t border-[#E5E5E1] flex flex-col gap-2">
+        <h2 className="text-xl font-bold">Account</h2>
+        <div className="text-base text-[#5F5F5A]">
+          Signed in as <strong className="text-[#1A1A1A]">{user?.email}</strong>
+        </div>
+      </section>
+
+      {/* Reports Section */}
+      <section className="pt-6 border-t border-[#E5E5E1] flex flex-col gap-3">
+        <h2 className="text-xl font-bold">Reports</h2>
+        <p className="text-base text-[#5F5F5A]">
+          You have {loading ? '…' : reports.length} saved report{reports.length === 1 ? '' : 's'}.
+        </p>
+        <div>
           <button
-            onClick={() => {
-              logout();
-              navigate('/');
-            }}
-            className="text-body-sm font-medium text-primary hover:underline self-start sm:self-auto"
+            disabled={reports.length === 0 || loading}
+            onClick={() => setShowDeleteAllModal(true)}
+            className="min-h-[44px] px-4 py-2 border border-[#B42318] text-[#B42318] text-sm font-semibold rounded-lg hover:bg-[#B42318]/5 transition-colors disabled:opacity-40"
           >
-            Sign out
+            Delete all reports
           </button>
         </div>
-      </div>
+      </section>
 
-      {/* Manage Reports List & Deletion */}
-      <div className="bg-surface-container-lowest p-space-lg md:p-space-xl rounded-2xl shadow-sm border border-outline-variant/20 flex flex-col gap-space-md">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <div>
-            <h2 className="font-headline-md text-on-surface">Your Stored Reports ({reports.length})</h2>
-            <p className="text-body-sm text-on-surface-variant">
-              Reports are saved only to your account until you delete them.
-            </p>
-          </div>
-
-          {reports.length > 0 && (
-            <button
-              onClick={() => setShowDeleteAllModal(true)}
-              className="text-label-sm text-error hover:bg-error-container/30 px-3 py-1.5 rounded-lg transition-colors border border-error/30 self-start sm:self-auto"
-            >
-              Delete All Reports
-            </button>
-          )}
-        </div>
-
-        {loading ? (
-          <div className="py-8 text-center text-body-sm text-on-surface-variant animate-pulse">
-            Loading your reports...
-          </div>
-        ) : reports.length === 0 ? (
-          <div className="bg-surface-container-low p-space-lg rounded-xl text-center text-body-sm text-on-surface-variant">
-            You currently have no saved reports.{' '}
-            <Link to="/new" className="text-primary font-medium hover:underline">
-              Create a new report
-            </Link>
-          </div>
-        ) : (
-          <div className="flex flex-col divide-y divide-surface-container-high border border-surface-container-high rounded-xl overflow-hidden">
-            {reports.map((report) => (
-              <div
-                key={report.id}
-                className="p-space-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-surface-container-lowest hover:bg-surface-container-low transition-colors"
-              >
-                <div>
-                  <h4 className="font-headline-sm text-on-surface">
-                    {report.title || report.participants?.map((p) => p.name).join(' & ') || 'Report'}
-                  </h4>
-                  <div className="text-body-sm text-on-surface-variant flex items-center gap-2 mt-0.5">
-                    <span className="capitalize">{report.chatType}</span>
-                    <span>•</span>
-                    <span>Created {new Date(report.createdAt).toLocaleDateString()}</span>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <Link
-                    to={`/reports/${report.id}`}
-                    className="text-label-sm font-medium text-primary hover:bg-primary/10 px-3 py-1.5 rounded-lg transition-colors"
-                  >
-                    View
-                  </Link>
-                  <button
-                    onClick={() => setReportToDelete(report)}
-                    className="text-label-sm font-medium text-error hover:bg-error-container/40 px-3 py-1.5 rounded-lg transition-colors"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Danger Zone: Permanent Account Deletion */}
-      <div className="bg-surface-container-lowest p-space-lg md:p-space-xl rounded-2xl shadow-sm border border-error/20 flex flex-col gap-space-md">
+      {/* Delete Account Section */}
+      <section className="pt-6 border-t border-[#E5E5E1] flex flex-col gap-3">
+        <h2 className="text-xl font-bold text-[#B42318]">Delete account</h2>
+        <p className="text-base text-[#5F5F5A]">
+          Permanently delete your account, email address, password, and all associated reports.
+        </p>
         <div>
-          <h2 className="font-headline-md text-error flex items-center gap-2">
-            <span className="material-symbols-outlined text-[22px]">warning</span>
-            <span>Permanent Account Deletion</span>
-          </h2>
-          <p className="text-body-sm text-on-surface-variant mt-1">
-            Permanently remove your account credentials, email, and all associated reports from the database.
-          </p>
-        </div>
-
-        <div className="bg-error-container/30 p-space-md rounded-xl border border-error/20 flex flex-col sm:flex-row sm:items-center justify-between gap-space-md">
-          <p className="text-body-sm text-on-error-container max-w-lg">
-            This action cannot be undone. All your reports will be hard-deleted immediately.
-          </p>
           <button
             onClick={() => setShowDeleteAccountModal(true)}
-            className="bg-error hover:opacity-90 text-on-error font-label-md px-space-md py-2.5 rounded-xl transition-all shadow-sm shrink-0"
+            className="min-h-[44px] px-4 py-2 bg-[#B42318] text-white text-sm font-semibold rounded-lg hover:opacity-90 transition-opacity"
           >
-            Delete Account Permanently
+            Delete account
           </button>
         </div>
-      </div>
+      </section>
 
-      {/* Modal 1: Delete Single Report */}
-      {reportToDelete && (
-        <div className="fixed inset-0 bg-on-surface/40 backdrop-blur-sm z-50 flex items-center justify-center p-gutter">
-          <div className="bg-surface-container-lowest max-w-md w-full p-space-xl rounded-2xl shadow-xl flex flex-col gap-space-md border border-outline-variant/20 animate-fadeIn">
-            <div className="flex items-center gap-space-xs text-error font-medium text-label-sm">
-              <span className="material-symbols-outlined text-[18px]">warning</span>
-              <span>Delete Report</span>
-            </div>
-            <h3 className="font-headline-lg text-on-surface">Delete this report?</h3>
-            <p className="text-body-md text-on-surface-variant">
-              Are you sure you want to permanently delete{' '}
-              <strong>"{reportToDelete.title || 'this report'}"</strong>? It cannot be recovered once removed.
-            </p>
-            <div className="flex gap-space-sm mt-2">
-              <button
-                disabled={isDeleting}
-                onClick={() => setReportToDelete(null)}
-                className="flex-1 bg-surface-container-high hover:bg-surface-container text-on-surface py-3 rounded-xl font-medium text-label-md transition-colors"
-              >
-                Keep Report
-              </button>
-              <button
-                disabled={isDeleting}
-                onClick={handleDeleteSingle}
-                className="flex-1 bg-error hover:opacity-90 text-on-error py-3 rounded-xl font-medium text-label-md transition-colors flex items-center justify-center"
-              >
-                {isDeleting ? 'Deleting...' : 'Delete Permanently'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Modal 2: Delete All Reports */}
+      {/* Modal: Delete All Reports */}
       {showDeleteAllModal && (
-        <div className="fixed inset-0 bg-on-surface/40 backdrop-blur-sm z-50 flex items-center justify-center p-gutter">
-          <div className="bg-surface-container-lowest max-w-md w-full p-space-xl rounded-2xl shadow-xl flex flex-col gap-space-md border border-outline-variant/20 animate-fadeIn">
-            <div className="flex items-center gap-space-xs text-error font-medium text-label-sm">
-              <span className="material-symbols-outlined text-[18px]">warning</span>
-              <span>Delete All Reports</span>
-            </div>
-            <h3 className="font-headline-lg text-on-surface">Delete all reports?</h3>
-            <p className="text-body-md text-on-surface-variant">
-              This will permanently erase all {reports.length} reports in your account. Your account itself will remain active.
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
+          <div className="bg-white max-w-[440px] w-full p-6 rounded-xl border border-[#E5E5E1] shadow-xl flex flex-col gap-4">
+            <h2 className="text-xl font-bold text-[#1A1A1A]">Delete all reports?</h2>
+            <p className="text-sm text-[#5F5F5A]">
+              This will permanently delete all {reports.length} report{reports.length === 1 ? '' : 's'} in your account. This action cannot be undone.
             </p>
-            <div className="flex gap-space-sm mt-2">
+            <div className="flex justify-end gap-3 mt-2">
               <button
                 disabled={isDeleting}
                 onClick={() => setShowDeleteAllModal(false)}
-                className="flex-1 bg-surface-container-high hover:bg-surface-container text-on-surface py-3 rounded-xl font-medium text-label-md transition-colors"
+                className="min-h-[44px] px-4 py-2 border border-[#E5E5E1] rounded-lg text-sm font-semibold text-[#1A1A1A] hover:bg-[#F6F6F4]"
               >
                 Cancel
               </button>
               <button
                 disabled={isDeleting}
                 onClick={handleDeleteAll}
-                className="flex-1 bg-error hover:opacity-90 text-on-error py-3 rounded-xl font-medium text-label-md transition-colors flex items-center justify-center"
+                className="min-h-[44px] px-4 py-2 bg-[#B42318] text-white rounded-lg text-sm font-semibold hover:opacity-90"
               >
-                {isDeleting ? 'Deleting...' : 'Delete All'}
+                {isDeleting ? 'Deleting…' : 'Delete all reports'}
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Modal 3: Delete Whole Account */}
+      {/* Modal: Delete Account */}
       {showDeleteAccountModal && (
-        <div className="fixed inset-0 bg-on-surface/40 backdrop-blur-sm z-50 flex items-center justify-center p-gutter">
-          <div className="bg-surface-container-lowest max-w-md w-full p-space-xl rounded-2xl shadow-xl flex flex-col gap-space-md border border-error/30 animate-fadeIn">
-            <div className="flex items-center gap-space-xs text-error font-medium text-label-sm">
-              <span className="material-symbols-outlined text-[18px]">delete_forever</span>
-              <span>Delete Account & Everything</span>
-            </div>
-            <h3 className="font-headline-lg text-on-surface">Delete your account permanently?</h3>
-            <p className="text-body-md text-on-surface-variant leading-relaxed">
-              This will immediately and permanently delete your user record, your email address, password hash, and all {reports.length} reports. There is no backup or recovery possible.
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
+          <div className="bg-white max-w-[440px] w-full p-6 rounded-xl border border-[#E5E5E1] shadow-xl flex flex-col gap-4">
+            <h2 className="text-xl font-bold text-[#1A1A1A]">Delete your account?</h2>
+            <p className="text-sm text-[#5F5F5A]">
+              This will permanently delete your account, your email, and all {reports.length} reports. There is no backup and this cannot be undone.
             </p>
-            <div className="flex gap-space-sm mt-2">
+            <div className="flex justify-end gap-3 mt-2">
               <button
                 disabled={isDeleting}
                 onClick={() => setShowDeleteAccountModal(false)}
-                className="flex-1 bg-surface-container-high hover:bg-surface-container text-on-surface py-3 rounded-xl font-medium text-label-md transition-colors"
+                className="min-h-[44px] px-4 py-2 border border-[#E5E5E1] rounded-lg text-sm font-semibold text-[#1A1A1A] hover:bg-[#F6F6F4]"
               >
-                Keep Account
+                Cancel
               </button>
               <button
                 disabled={isDeleting}
                 onClick={handleDeleteAccount}
-                className="flex-1 bg-error hover:opacity-90 text-on-error py-3 rounded-xl font-medium text-label-md transition-colors flex items-center justify-center"
+                className="min-h-[44px] px-4 py-2 bg-[#B42318] text-white rounded-lg text-sm font-semibold hover:opacity-90"
               >
-                {isDeleting ? 'Deleting...' : 'Delete Account Now'}
+                {isDeleting ? 'Deleting…' : 'Delete account permanently'}
               </button>
             </div>
           </div>
@@ -301,4 +160,3 @@ export const SettingsPage: React.FC = () => {
     </div>
   );
 };
-

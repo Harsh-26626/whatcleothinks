@@ -86,19 +86,19 @@ const mockReports: Report[] = [
   { ...SAMPLE_REPORT },
   {
     id: "9c1234a5-6789-4bc2-8def-112233445566",
-    title: "Chai, Code & Endless Banter",
+    title: "Aarav and Meera",
     chatType: "friends",
     persona: "cleo",
     status: "done",
     stage: "done",
     errorCode: null,
-    createdAt: "2026-10-25T14:20:00Z",
-    completedAt: "2026-10-25T14:21:05Z",
+    createdAt: "2024-12-25T14:20:00Z",
+    completedAt: "2024-12-25T14:21:05Z",
     participants: [
-      { name: "Aarav", isMe: false },
-      { name: "Harsh", isMe: true }
+      { name: "Meera", isMe: false },
+      { name: "Aarav", isMe: true }
     ],
-    dateRange: { start: "2023-01-10", end: "2023-10-15" },
+    dateRange: { start: "2024-07-13", end: "2024-12-25" },
     stats: SAMPLE_REPORT.stats,
     monthly: SAMPLE_REPORT.monthly,
     narrative: SAMPLE_REPORT.narrative,
@@ -181,9 +181,9 @@ export const api = {
       // Simulate preview
       await new Promise((r) => setTimeout(r, 600));
       return {
-        participants: ['Vanshika', 'Harsh'],
+        participants: ['Meera', 'Aarav'],
         messageCount: 3518,
-        dateRange: { start: '2023-05-01', end: '2023-12-31' },
+        dateRange: { start: '2024-07-13', end: '2024-12-25' },
         isGroup: false,
       };
     }
@@ -216,8 +216,8 @@ export const api = {
         status: 'queued',
         stage: 'queued',
         participants: [
-          { name: 'Vanshika', isMe: params.myName === 'Vanshika' },
-          { name: 'Harsh', isMe: params.myName === 'Harsh' },
+          { name: 'Meera', isMe: params.myName === 'Meera' },
+          { name: 'Aarav', isMe: params.myName === 'Aarav' },
         ],
         createdAt: new Date().toISOString(),
       };

@@ -2,26 +2,26 @@ import { Report } from '../types';
 
 export const SAMPLE_REPORT: Report = {
   id: "8f9b42e6-7b89-4d62-9e23-3e74b5c719a0",
-  title: "The Safe Distance",
+  title: "Aarav and Meera",
   chatType: "romance",
   persona: "cleo",
   status: "done",
   stage: "done",
   errorCode: null,
-  createdAt: "2026-10-31T10:00:00Z",
-  completedAt: "2026-10-31T10:01:14Z",
+  createdAt: "2024-12-26T10:00:00Z",
+  completedAt: "2024-12-26T10:01:14Z",
   participants: [
-    { name: "Vanshika", isMe: false },
-    { name: "Harsh", isMe: true }
+    { name: "Meera", isMe: false },
+    { name: "Aarav", isMe: true }
   ],
-  dateRange: { start: "2023-05-01", end: "2023-12-31" },
+  dateRange: { start: "2024-07-13", end: "2024-12-25" },
   stats: {
     totalMessages: 3518,
-    bySender: { Vanshika: 1953, Harsh: 1565 },
-    shareOfVoice: { Vanshika: 56, Harsh: 44 },
-    initiationPct: { Vanshika: 49, Harsh: 51 },
-    replyMedianMinutes: { Vanshika: 4.2, Harsh: 6.8 },
-    recordDay: { date: "2023-12-25", count: 406 },
+    bySender: { Meera: 1953, Aarav: 1565 },
+    shareOfVoice: { Meera: 56, Aarav: 44 },
+    initiationPct: { Meera: 49, Aarav: 51 },
+    replyMedianMinutes: { Meera: 4.2, Aarav: 6.8 },
+    recordDay: { date: "2024-12-25", count: 406 },
     longestStreakDays: 11,
     longestSilenceDays: 8,
     hourly: [
@@ -29,194 +29,172 @@ export const SAMPLE_REPORT: Report = {
     ],
     lateNightPct: 26,
     daily: {
-      "2023-05-01": 24,
-      "2023-05-02": 31,
-      "2023-05-15": 88,
-      "2023-06-10": 45,
-      "2023-07-04": 112,
-      "2023-08-12": 95,
-      "2023-09-18": 60,
-      "2023-10-24": 140,
-      "2023-11-14": 180,
-      "2023-12-25": 406,
-      "2023-12-31": 210
+      "2024-07-13": 24,
+      "2024-07-14": 42,
+      "2024-07-20": 31,
+      "2024-08-05": 88,
+      "2024-08-18": 95,
+      "2024-09-10": 45,
+      "2024-09-18": 60,
+      "2024-10-12": 112,
+      "2024-10-24": 140,
+      "2024-11-14": 180,
+      "2024-12-10": 130,
+      "2024-12-25": 406
     },
     topWords: {
-      Vanshika: ["theek", "class", "exam", "college", "ghar"],
-      Harsh: ["waiting", "reach", "class", "kal", "batao"]
+      Meera: ["theek", "class", "exam", "college", "ghar"],
+      Aarav: ["waiting", "reach", "class", "kal", "batao"]
     },
     topEmojis: {
-      Vanshika: ["😭", "😂", "✨"],
-      Harsh: ["😭", "🤣", "🫡"]
+      Meera: ["😭", "😂", "✨"],
+      Aarav: ["😭", "🤣", "🫡"]
     }
   },
   monthly: [
     {
-      month: "2023-05",
-      messages: 284,
-      bySender: { Vanshika: 150, Harsh: 134 },
-      initiationPct: { Vanshika: 48, Harsh: 52 },
-      replyMedianMinutes: { Vanshika: 5.4, Harsh: 6.1 },
-      avgMessageLength: 28.2,
-      lateNightPct: 18,
-      closeness: 65,
-      mood: "Cautious curiosity and quick college updates"
-    },
-    {
-      month: "2023-06",
+      month: "2024-07",
       messages: 340,
-      bySender: { Vanshika: 185, Harsh: 155 },
-      initiationPct: { Vanshika: 50, Harsh: 50 },
-      replyMedianMinutes: { Vanshika: 4.8, Harsh: 5.2 },
+      bySender: { Meera: 185, Aarav: 155 },
+      initiationPct: { Meera: 50, Aarav: 50 },
+      replyMedianMinutes: { Meera: 4.8, Aarav: 5.2 },
       avgMessageLength: 30.1,
       lateNightPct: 22,
       closeness: 72,
-      mood: "Playful banter settling into everyday comfort"
+      mood: "Quick updates and settling into daily contact"
     },
     {
-      month: "2023-07",
+      month: "2024-08",
       messages: 612,
-      bySender: { Vanshika: 330, Harsh: 282 },
-      initiationPct: { Vanshika: 45, Harsh: 55 },
-      replyMedianMinutes: { Vanshika: 3.1, Harsh: 5.0 },
+      bySender: { Meera: 330, Aarav: 282 },
+      initiationPct: { Meera: 45, Aarav: 55 },
+      replyMedianMinutes: { Meera: 3.1, Aarav: 5.0 },
       avgMessageLength: 31.4,
       lateNightPct: 38,
       closeness: 86,
-      mood: "Warm, playful, talking every day late into the night"
+      mood: "Talking every day late into the night"
     },
     {
-      month: "2023-08",
-      messages: 490,
-      bySender: { Vanshika: 270, Harsh: 220 },
-      initiationPct: { Vanshika: 52, Harsh: 48 },
-      replyMedianMinutes: { Vanshika: 3.8, Harsh: 4.9 },
-      avgMessageLength: 29.5,
-      lateNightPct: 30,
-      closeness: 80,
-      mood: "Steady support during mid-semester exams"
-    },
-    {
-      month: "2023-09",
+      month: "2024-09",
       messages: 310,
-      bySender: { Vanshika: 180, Harsh: 130 },
-      initiationPct: { Vanshika: 44, Harsh: 56 },
-      replyMedianMinutes: { Vanshika: 6.5, Harsh: 8.1 },
+      bySender: { Meera: 180, Aarav: 130 },
+      initiationPct: { Meera: 44, Aarav: 56 },
+      replyMedianMinutes: { Meera: 6.5, Aarav: 8.1 },
       avgMessageLength: 24.0,
       lateNightPct: 15,
       closeness: 58,
-      mood: "Slight distance as schedules got crowded"
+      mood: "A quiet dip as exam schedules got busy"
     },
     {
-      month: "2023-10",
+      month: "2024-10",
       messages: 412,
-      bySender: { Vanshika: 232, Harsh: 180 },
-      initiationPct: { Vanshika: 51, Harsh: 49 },
-      replyMedianMinutes: { Vanshika: 4.0, Harsh: 6.2 },
+      bySender: { Meera: 232, Aarav: 180 },
+      initiationPct: { Meera: 51, Aarav: 49 },
+      replyMedianMinutes: { Meera: 4.0, Aarav: 6.2 },
       avgMessageLength: 32.8,
       lateNightPct: 25,
       closeness: 75,
-      mood: "Rekindled rhythm around festive plans"
+      mood: "Back to regular evening check-ins"
     },
     {
-      month: "2023-11",
+      month: "2024-11",
       messages: 480,
-      bySender: { Vanshika: 276, Harsh: 204 },
-      initiationPct: { Vanshika: 49, Harsh: 51 },
-      replyMedianMinutes: { Vanshika: 3.9, Harsh: 5.5 },
+      bySender: { Meera: 276, Aarav: 204 },
+      initiationPct: { Meera: 49, Aarav: 51 },
+      replyMedianMinutes: { Meera: 3.9, Aarav: 5.5 },
       avgMessageLength: 33.1,
       lateNightPct: 28,
       closeness: 82,
-      mood: "Comfortable vulnerability and shared routines"
+      mood: "Shared daily routines and quick replies"
     },
     {
-      month: "2023-12",
+      month: "2024-12",
       messages: 590,
-      bySender: { Vanshika: 330, Harsh: 260 },
-      initiationPct: { Vanshika: 53, Harsh: 47 },
-      replyMedianMinutes: { Vanshika: 3.2, Harsh: 4.5 },
+      bySender: { Meera: 330, Aarav: 260 },
+      initiationPct: { Meera: 53, Aarav: 47 },
+      replyMedianMinutes: { Meera: 3.2, Aarav: 4.5 },
       avgMessageLength: 35.0,
       lateNightPct: 35,
       closeness: 91,
-      mood: "High momentum with a record holiday marathon"
+      mood: "High message volume and a record holiday exchange"
     }
   ],
   narrative: {
     intro: [
-      "There is a steady, gentle rhythm to how you two speak. Over eight months and more than 3,500 messages, neither of you became the sole keeper of the conversation.",
-      "You both kept showing up with almost equal weight: Vanshika brought 56% of the messages and you initiated 51% of the conversations. That balance made this feel like a safe harbour rather than a game of chase."
+      "Across six months and 3,500 messages, the two of you kept an even balance. Neither person carried the conversation alone.",
+      "Meera sent 56% of the messages, and you started 51% of the conversations. That equal split makes the chat feel steady rather than one-sided."
     ],
     sections: [
       {
-        heading: "How it found its footing",
+        heading: "Finding a rhythm",
         paragraphs: [
-          "May began with short, practical check-ins between lectures. The replies were prompt but guarded, like two people testing the echo in a new room.",
-          "By July, the guard came down. The texts stretched well past midnight, and the questions turned from logistical coordination into unhurried curiosity about each other's days."
+          "July began with short updates between classes. Replies were fast, but mainly focused on college logistics.",
+          "By August, conversations moved into late evenings. You started asking about each other's day, and replies stretched past midnight."
         ],
         quotes: [
-          { id: 102, sender: "Vanshika", text: "Eng ki class me mil lenge", ts: "2023-05-15T09:12:00" },
-          { id: 488, sender: "Harsh", text: "Tu soyi nahi abhi tak? 2 baj rahe", ts: "2023-07-04T02:04:00" }
+          { id: 102, sender: "Meera", text: "Class ke baad canteen me milte hain", ts: "2024-07-14T09:12:00" },
+          { id: 488, sender: "Aarav", text: "Tu soyi nahi abhi tak? 2 baj rahe", ts: "2024-08-18T02:04:00" }
         ]
       },
       {
-        heading: "The silent dip in September",
+        heading: "The quiet dip in September",
         paragraphs: [
-          "September was the only chapter where the thread thinned out noticeably. Message volume dropped by almost half, and reply times on both sides stretched to over eight minutes.",
-          "It didn't look like anger or conflict; it looked like exhaustion. The messages became shorter updates about exams and home, keeping the link alive even when neither of you had the energy to hold court."
+          "September was the slowest month. Message count dropped by half, and replies took twice as long.",
+          "The tone did not look strained—just busy. Messages turned into short practical notes about assignments and travel."
         ],
         quotes: [
-          { id: 1420, sender: "Vanshika", text: "Aaj bilkul energy nahi bachi", ts: "2023-09-18T18:40:00" }
+          { id: 1420, sender: "Meera", text: "Aaj bilkul time nahi mila padhai se", ts: "2024-09-18T18:40:00" }
         ]
       },
       {
-        heading: "Finding the rhythm again",
+        heading: "Picking back up in November",
         paragraphs: [
-          "When winter came around, warmth returned quickly. By November you were back to swapping daily mini-monologues and sharing whatever funny detail happened on your walk back from campus.",
-          "What stands out here is that nobody had to force a dramatic reconciliation. You simply picked back up where life had paused you."
+          "Once exams passed, the pace returned quickly. You were back to checking in during the day and trading commentary about campus.",
+          "The conversation did not need a formal restart. Both of you simply picked up where things left off."
         ],
         quotes: [
-          { id: 2105, sender: "Harsh", text: "Kal canteen me wait kar raha hu, jaldi aana", ts: "2023-11-14T11:20:00" }
+          { id: 2105, sender: "Aarav", text: "Kal canteen me wait kar raha hu, jaldi aana", ts: "2024-11-14T11:20:00" }
         ]
       },
       {
-        heading: "The holiday marathon",
+        heading: "The holiday peak",
         paragraphs: [
-          "December 25th was your single highest message count of the entire year: 406 messages in one day. You bounced jokes and commentary across the evening without pausing.",
-          "Even when the conversation peaked, the speed remained natural. Neither of you was holding back."
+          "December 25 was your busiest day of the year, with 406 messages sent.",
+          "You traded quick replies throughout the evening without long pauses."
         ],
         quotes: [
-          { id: 3120, sender: "Vanshika", text: "Aadha din toh humara sirf memes discuss karne me nikal gaya 😭", ts: "2023-12-25T21:15:00" }
+          { id: 3120, sender: "Meera", text: "Poora din sirf memes discuss karne me nikal gaya 😭", ts: "2024-12-25T21:15:00" }
         ]
       },
       {
-        heading: "Cleo's reflection for you",
+        heading: "Cleo's read for you",
         paragraphs: [
-          "You don't need to overthink the quiet stretches. Your dynamic has already proved that a slow week doesn't mean the bond is brittle.",
-          "If there is one thing to keep in mind, it is to keep saying the spontaneous things out loud. That easy playfulness is what keeps this space alive."
+          "Quiet stretches in September did not hurt the relationship. You both return to the conversation naturally when schedules clear up.",
+          "Keep speaking up when you have something on your mind. That straightforward habit is what keeps this chat easy."
         ],
         quotes: []
       }
     ],
     turningPoints: [
       {
-        month: "2023-07",
-        title: "The Late Night Shift",
-        note: "Closeness climbed to 86 as late-night exchanges nearly doubled."
+        month: "2024-08",
+        title: "Late night shift",
+        note: "Closeness rose to 86 as late-night chats doubled."
       },
       {
-        month: "2023-09",
-        title: "The Academic Pause",
-        note: "A low-volume month where message speed slowed down before rebounding."
+        month: "2024-09",
+        title: "Exam pause",
+        note: "Messages slowed down during midterms before rebounding."
       },
       {
-        month: "2023-12",
-        title: "The 406-Message Record",
-        note: "Christmas day created the record spike of the entire year."
+        month: "2024-12",
+        title: "406-message record",
+        note: "Christmas day set the peak message count for the entire period."
       }
     ],
     closing: [
-      "Hold on to the ease you have built here. It is rare to find conversations where silence does not feel like distance."
+      "The steady give-and-take you have built here works well. Keep it simple and keep talking."
     ],
     safetyNote: null
   }
 };
-

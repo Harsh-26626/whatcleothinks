@@ -6,6 +6,7 @@ import { ApiRequestError } from '../lib/api';
 export const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -27,10 +28,10 @@ export const LoginPage: React.FC = () => {
         if (err.code === 'invalid_credentials') {
           setErrorMsg('Invalid email or password.');
         } else {
-          setErrorMsg(err.message || 'Could not log in. Please check your credentials.');
+          setErrorMsg(err.message || 'Could not log in.');
         }
       } else {
-        setErrorMsg('Network or server error. Please try again in a moment.');
+        setErrorMsg('Network error. Please try again.');
       }
     } finally {
       setIsSubmitting(false);
@@ -38,80 +39,77 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 flex items-center justify-center px-gutter py-space-xl">
-      <div className="w-full max-w-md bg-surface-container-lowest p-space-xl rounded-2xl shadow-xl border border-outline-variant/20 flex flex-col gap-space-md">
-        <div className="text-center">
-          <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center font-serif font-bold text-xl mx-auto mb-3">
-            C
+    <div className="w-full max-w-[400px] mx-auto py-16 md:py-24">
+      <h1 className="text-[30px] font-bold text-[#1A1A1A]">Log in</h1>
+      <p className="text-base text-[#5F5F5A] mt-2">
+        An account keeps your reports visible only to you.
+      </p>
+
+      {errorMsg && (
+        <div className="mt-4 p-3 bg-white border border-[#B42318] text-[#B42318] text-sm rounded-lg">
+          {errorMsg}
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5 mt-6">
+        <div>
+          <label className="block text-sm font-semibold text-[#1A1A1A] mb-1.5" htmlFor="email">
+            Email
+          </label>
+          <input
+            id="email"
+            type="email"
+            required
+            autoFocus
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
+            className="w-full min-h-[44px] px-3.5 py-2.5 text-base text-[#1A1A1A] border border-[#E5E5E1] rounded-lg bg-white focus-visible:ring-2 focus-visible:ring-[#1A1A1A] focus-visible:ring-offset-2"
+          />
+        </div>
+
+        <div>
+          <div className="flex items-center justify-between mb-1.5">
+            <label className="block text-sm font-semibold text-[#1A1A1A]" htmlFor="password">
+              Password
+            </label>
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="text-xs text-[#5F5F5A] hover:text-[#1A1A1A]"
+            >
+              {showPassword ? 'Hide' : 'Show'}
+            </button>
           </div>
-          <h1 className="font-headline-lg text-on-surface">Welcome back</h1>
-          <p className="text-body-sm text-on-surface-variant mt-1">
-            Sign in so only you can see your reports.
+          <input
+            id="password"
+            type={showPassword ? 'text' : 'password'}
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Your password"
+            className="w-full min-h-[44px] px-3.5 py-2.5 text-base text-[#1A1A1A] border border-[#E5E5E1] rounded-lg bg-white focus-visible:ring-2 focus-visible:ring-[#1A1A1A] focus-visible:ring-offset-2"
+          />
+          <p className="text-xs text-[#5F5F5A] mt-1.5">
+            Your password is stored hashed, never as plain text.
           </p>
         </div>
 
-        {errorMsg && (
-          <div className="bg-error-container/60 border border-error/30 text-on-error-container p-3 rounded-lg text-body-sm flex items-start gap-2">
-            <span className="material-symbols-outlined text-[18px] text-error shrink-0 mt-0.5">error</span>
-            <span>{errorMsg}</span>
-          </div>
-        )}
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full min-h-[44px] bg-[#F2B01E] text-[#1A1A1A] font-semibold text-base rounded-lg hover:opacity-90 transition-opacity duration-150 flex items-center justify-center mt-2 disabled:opacity-50"
+        >
+          {isSubmitting ? 'Logging in…' : 'Log in'}
+        </button>
+      </form>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-space-md mt-2">
-          <div>
-            <label className="block text-label-md text-on-surface mb-1">Email address</label>
-            <input
-              type="email"
-              required
-              autoFocus
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              className="w-full px-space-md py-3 rounded-xl border border-outline-variant/40 bg-surface focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary text-body-md text-on-surface transition-all"
-            />
-          </div>
-
-          <div>
-            <label className="block text-label-md text-on-surface mb-1">Password</label>
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              className="w-full px-space-md py-3 rounded-xl border border-outline-variant/40 bg-surface focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary text-body-md text-on-surface transition-all"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full bg-primary hover:bg-primary-container text-on-primary font-label-md py-3.5 rounded-xl shadow-md transition-all duration-200 mt-2 flex items-center justify-center gap-2 disabled:opacity-60"
-          >
-            {isSubmitting ? (
-              <span className="flex items-center gap-2">
-                <span className="w-4 h-4 border-2 border-on-primary border-t-transparent rounded-full animate-spin"></span>
-                Signing in...
-              </span>
-            ) : (
-              <span>Sign in</span>
-            )}
-          </button>
-        </form>
-
-        <div className="text-center pt-2 border-t border-surface-container-high text-body-sm text-on-surface-variant">
-          Don't have an account yet?{' '}
-          <Link to="/signup" className="text-primary font-medium hover:underline">
-            Sign up
-          </Link>
-        </div>
-
-        <div className="flex items-center justify-center gap-1.5 text-label-sm text-on-surface-variant/80">
-          <span className="material-symbols-outlined text-[14px] text-primary">lock</span>
-          <span>We store only your email and hashed password</span>
-        </div>
+      <div className="mt-6 text-sm text-[#5F5F5A]">
+        Need an account?{' '}
+        <Link to="/signup" className="text-[#1A1A1A] underline underline-offset-4 font-medium">
+          Create one
+        </Link>
       </div>
     </div>
   );
 };
-

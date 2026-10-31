@@ -16,7 +16,12 @@
 - DONE B5 @ T+62: Settings page with report deletion, delete-all, and permanent account removal modal. Loading skeletons, comprehensive error boundaries, and API error code mapping.
 - DONE B6 @ T+70: Production build verified clean (`tsc -b && vite build` in 2.4s). Contrast and touch targets verified for mobile (360px+), zero chat logging verified, `frontend/README.md` created. End-to-end integration verified with live backend and PostgreSQL.
 
-### Handoff Notes for Agent B (Frontend)
+### UI Redesign Audit (Replacing Generic / AI Look)
+1. Palette & Typography: Removed cream/terracotta/dusty-rose colors, serif headings, and blur gradients; migrated to clean white (#FFFFFF), subtle surface (#F6F6F4), border (#E5E5E1), dark text (#1A1A1A), and marigold accent (#F2B01E) using Google Fonts Figtree.
+2. Structure & Hierarchy: Eliminated nested rounded cards, pill badge overload, traffic-light fake windows, and decorative entrance animations in favor of clean 1px borders, generous whitespace, and sharp 8px/12px radii.
+3. Brand & Consistency: Extracted single brand constant `BRAND_NAME` in `src/brand.ts`; eliminated "whatcleothinks" everywhere; standardized fictional sample data strictly on "Aarav and Meera" and "chat_export.txt".
+4. Copy & Banned Words: Stripped out all banned terms ("sanctuary", "haven", "between the lines", "unhurried", etc.); locked privacy statements to the five exact verbatim statements with no overclaiming.
+5. Reading Experience: Rebuilt Report page for maximum legibility with sticky in-page nav (Overview · Over time · Cleo's read), WhatsApp-style quote bubbles with date headers and "You" labels, clear stat tiles, and un-gimmicky charts.
 - The backend API is fully functional on `http://localhost:8000` (or `PORT=8000`).
 - Database is live and synced on Render PostgreSQL.
 - When `ANTHROPIC_API_KEY` is set in `.env`, the real Claude pipeline executes; if omitted, the backend generates an authentic data-grounded report using the parsed stats and real quotes from the chat.
