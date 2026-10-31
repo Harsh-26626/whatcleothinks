@@ -13,26 +13,55 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const menuRef = useRef<HTMLDivElement>(null);
-  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const mobileMenuBtnRef = useRef<HTMLButtonElement>(null);
+  const mobileDrawerRef = useRef<HTMLDivElement>(null);
 
-  // Close menus on route change
+  // Close menus when route changes
   useEffect(() => {
     setAccountMenuOpen(false);
     setMobileMenuOpen(false);
   }, [location.pathname]);
 
-  // Click outside listener
+  // Click outside listener: only close when clicking outside both the trigger AND the drawer
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+    function handleClickOutside(event: MouseEvent | TouchEvent) {
+      const target = event.target as Node;
+
+      // Close desktop account menu if clicking outside
+      if (menuRef.current && !menuRef.current.contains(target)) {
         setAccountMenuOpen(false);
       }
-      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
+
+      // Close mobile drawer if clicking outside BOTH the toggle button and the drawer itself
+      if (
+        mobileMenuOpen &&
+        mobileMenuBtnRef.current &&
+        !mobileMenuBtnRef.current.contains(target) &&
+        mobileDrawerRef.current &&
+        !mobileDrawerRef.current.contains(target)
+      ) {
         setMobileMenuOpen(false);
       }
     }
+
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [mobileMenuOpen]);
+
+  // Close on Escape key
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        setAccountMenuOpen(false);
+        setMobileMenuOpen(false);
+      }
+    }
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   return (
@@ -89,6 +118,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
                 {/* Account dropdown */}
                 <div className="relative" ref={menuRef}>
                   <button
+                    type="button"
                     onClick={() => setAccountMenuOpen((prev) => !prev)}
                     className="min-h-[44px] px-3.5 py-1.5 text-sm text-[#1C1A33] border border-[#E7E5F0] rounded-xl hover:bg-[#F1EDFF] transition-colors duration-150 flex items-center gap-2 font-medium"
                     aria-expanded={accountMenuOpen}
@@ -111,6 +141,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
                         Settings
                       </Link>
                       <button
+                        type="button"
                         onClick={() => {
                           setAccountMenuOpen(false);
                           logout();
@@ -148,8 +179,8 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
             )}
           </nav>
 
-          {/* Mobile Navigation Trigger (sm/mobile) */}
-          <div className="flex md:hidden items-center gap-2" ref={mobileMenuRef}>
+          {/* Mobile Navigation Trigger Header */}
+          <div className="flex md:hidden items-center gap-2">
             {user ? (
               <Link
                 to="/new"
@@ -166,8 +197,10 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
               </Link>
             )}
 
-            {/* Hamburger / Menu button */}
+            {/* Hamburger / Menu toggle button */}
             <button
+              ref={mobileMenuBtnRef}
+              type="button"
               onClick={() => setMobileMenuOpen((prev) => !prev)}
               aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={mobileMenuOpen}
@@ -188,48 +221,68 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
         {/* Mobile Dropdown Menu Drawer */}
         {mobileMenuOpen && (
-          <div className="md:hidden absolute top-[72px] left-0 right-0 bg-white border-b border-[#E7E5F0] shadow-xl z-50 px-4 py-5 flex flex-col gap-3 animate-in fade-in slide-in-from-top-2 duration-150">
+          <div
+            ref={mobileDrawerRef}
+            className="md:hidden absolute top-[72px] left-0 right-0 bg-white border-b border-[#E7E5F0] shadow-2xl z-50 px-4 py-5 flex flex-col gap-2.5 animate-in fade-in slide-in-from-top-2 duration-150"
+          >
             {user ? (
               <>
-                <div className="p-3 bg-[#F1EDFF] rounded-[16px] mb-1">
+                <div className="p-3.5 bg-[#F1EDFF] rounded-[16px] mb-1">
                   <span className="block text-xs font-medium text-[#5A5873]">Signed in as</span>
                   <span className="block text-sm font-bold text-[#1C1A33] truncate mt-0.5">{user.email}</span>
                 </div>
 
-                <Link
+                <NavLink
                   to="/dashboard"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="min-h-[48px] px-4 rounded-xl flex items-center text-base font-semibold text-[#1C1A33] hover:bg-[#F1EDFF] transition-colors"
+                  className={({ isActive }) =>
+                    `min-h-[48px] px-4 rounded-xl flex items-center justify-between text-base font-semibold transition-colors ${
+                      isActive ? 'bg-[#F1EDFF] text-[#1C1A33]' : 'text-[#1C1A33] hover:bg-[#F1EDFF]'
+                    }`
+                  }
                 >
-                  Reports
-                </Link>
+                  <span>Reports</span>
+                  <span className="text-xs text-[#5A5873]">→</span>
+                </NavLink>
 
-                <Link
+                <NavLink
                   to="/new"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="min-h-[48px] px-4 rounded-xl flex items-center text-base font-semibold text-[#1C1A33] hover:bg-[#F1EDFF] transition-colors"
+                  className={({ isActive }) =>
+                    `min-h-[48px] px-4 rounded-xl flex items-center justify-between text-base font-semibold transition-colors ${
+                      isActive ? 'bg-[#F1EDFF] text-[#1C1A33]' : 'text-[#1C1A33] hover:bg-[#F1EDFF]'
+                    }`
+                  }
                 >
-                  New report
-                </Link>
+                  <span>New report</span>
+                  <span className="text-xs text-[#5A5873]">→</span>
+                </NavLink>
 
-                <Link
+                <NavLink
                   to="/privacy"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="min-h-[48px] px-4 rounded-xl flex items-center text-base font-semibold text-[#1C1A33] hover:bg-[#F1EDFF] transition-colors"
+                  className={({ isActive }) =>
+                    `min-h-[48px] px-4 rounded-xl flex items-center justify-between text-base font-semibold transition-colors ${
+                      isActive ? 'bg-[#F1EDFF] text-[#1C1A33]' : 'text-[#1C1A33] hover:bg-[#F1EDFF]'
+                    }`
+                  }
                 >
-                  Privacy
-                </Link>
+                  <span>Privacy</span>
+                  <span className="text-xs text-[#5A5873]">→</span>
+                </NavLink>
 
-                <Link
+                <NavLink
                   to="/settings"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="min-h-[48px] px-4 rounded-xl flex items-center text-base font-semibold text-[#1C1A33] hover:bg-[#F1EDFF] transition-colors"
+                  className={({ isActive }) =>
+                    `min-h-[48px] px-4 rounded-xl flex items-center justify-between text-base font-semibold transition-colors ${
+                      isActive ? 'bg-[#F1EDFF] text-[#1C1A33]' : 'text-[#1C1A33] hover:bg-[#F1EDFF]'
+                    }`
+                  }
                 >
-                  Settings
-                </Link>
+                  <span>Settings</span>
+                  <span className="text-xs text-[#5A5873]">→</span>
+                </NavLink>
 
                 <div className="pt-2 border-t border-[#E7E5F0]">
                   <button
+                    type="button"
                     onClick={() => {
                       setMobileMenuOpen(false);
                       logout();
@@ -243,26 +296,33 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
               </>
             ) : (
               <>
-                <Link
+                <NavLink
                   to="/login"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="min-h-[48px] px-4 rounded-xl flex items-center text-base font-semibold text-[#1C1A33] hover:bg-[#F1EDFF] transition-colors"
+                  className={({ isActive }) =>
+                    `min-h-[48px] px-4 rounded-xl flex items-center justify-between text-base font-semibold transition-colors ${
+                      isActive ? 'bg-[#F1EDFF] text-[#1C1A33]' : 'text-[#1C1A33] hover:bg-[#F1EDFF]'
+                    }`
+                  }
                 >
-                  Log in
-                </Link>
+                  <span>Log in</span>
+                  <span className="text-xs text-[#5A5873]">→</span>
+                </NavLink>
 
-                <Link
+                <NavLink
                   to="/privacy"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="min-h-[48px] px-4 rounded-xl flex items-center text-base font-semibold text-[#1C1A33] hover:bg-[#F1EDFF] transition-colors"
+                  className={({ isActive }) =>
+                    `min-h-[48px] px-4 rounded-xl flex items-center justify-between text-base font-semibold transition-colors ${
+                      isActive ? 'bg-[#F1EDFF] text-[#1C1A33]' : 'text-[#1C1A33] hover:bg-[#F1EDFF]'
+                    }`
+                  }
                 >
-                  Privacy
-                </Link>
+                  <span>Privacy</span>
+                  <span className="text-xs text-[#5A5873]">→</span>
+                </NavLink>
 
                 <div className="pt-2">
                   <Link
                     to="/signup"
-                    onClick={() => setMobileMenuOpen(false)}
                     className="w-full min-h-[48px] px-6 bg-[#CF3A26] hover:bg-[#B32F1D] text-white font-semibold text-base rounded-full inline-flex items-center justify-center transition-colors shadow-sm"
                   >
                     Sign up
