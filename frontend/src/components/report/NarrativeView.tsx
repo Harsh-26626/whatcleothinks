@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Narrative, Participant } from '../../types';
 import { ChatBubble } from './ChatBubble';
+import { CleoAvatar } from '../CleoAvatar';
 
 interface NarrativeViewProps {
   narrative: Narrative;
@@ -25,46 +26,62 @@ export const NarrativeView: React.FC<NarrativeViewProps> = ({
   };
 
   return (
-    <section id="cleos-read" className="w-full max-w-[680px] flex flex-col gap-8 scroll-mt-20">
-      {/* Section Title and "Take a break" Link */}
-      <div className="flex items-center justify-between border-b border-[#E5E5E1] pb-4">
-        <h2 className="text-[28px] font-bold text-[#1A1A1A]">Cleo's read</h2>
+    <section id="cleos-read" className="w-full max-w-[680px] mx-auto flex flex-col gap-8 scroll-mt-24">
+      {/* Top Bar: Cleo Avatar (48) + "Cleo's read" + "Take a break" */}
+      <div className="flex items-center justify-between pb-6 border-b border-[#E7E5F0]">
+        <div className="flex items-center gap-3.5">
+          <CleoAvatar size={48} />
+          <h2 className="font-heading font-bold text-[28px] sm:text-[32px] text-[#1C1A33]">
+            Cleo's read
+          </h2>
+        </div>
         {!isPaused && (
           <button
             onClick={() => setIsPaused(true)}
-            className="text-sm text-[#5F5F5A] hover:text-[#1A1A1A] underline underline-offset-4"
+            className="text-sm font-semibold text-[#5A5873] hover:text-[#CF3A26] underline underline-offset-4 transition-colors duration-150"
           >
             Take a break
           </button>
         )}
       </div>
 
-      {/* Paused State */}
+      {/* Paused State: Soft Peach Card (#FFE5D6, 28px radius) */}
       {isPaused ? (
-        <div className="p-6 bg-[#F6F6F4] border border-[#E5E5E1] rounded-xl flex flex-col items-start gap-4">
-          <p className="text-base text-[#1A1A1A]">
-            Reading paused. Taking in old conversations can bring up a lot. Take all the time you need.
+        <div className="bg-[#FFE5D6] rounded-[28px] p-8 sm:p-10 flex flex-col items-start gap-5 shadow-sm">
+          <CleoAvatar size={48} />
+          <h3 className="font-heading font-bold text-2xl text-[#1C1A33]">
+            Reading paused
+          </h3>
+          <p className="text-[18px] leading-[1.7] text-[#1C1A33] font-medium">
+            Taking in old conversations can bring up a lot. Take all the time you need.
           </p>
           <button
             onClick={() => setIsPaused(false)}
-            className="min-h-[44px] px-5 py-2.5 bg-[#F2B01E] text-[#1A1A1A] font-semibold text-base rounded-lg hover:opacity-90"
+            className="mt-2 min-h-[48px] px-7 py-2.5 bg-white border-[1.5px] border-[#1C1A33] text-[#1C1A33] font-semibold text-base rounded-full hover:bg-[#F1EDFF] transition-colors duration-150"
           >
             Continue reading
           </button>
         </div>
       ) : (
         <div className="flex flex-col gap-8">
-          {/* Safety Note if present */}
+          {/* Safety Note if present: Peach bubble callout (#FFE5D6) with Cleo avatar (32) */}
           {narrative.safetyNote && (
-            <div className="p-4 bg-white border border-[#E5E5E1] rounded-lg text-base text-[#1A1A1A] leading-[1.7]">
-              <strong className="block font-semibold mb-1">A note from Cleo:</strong>
-              {narrative.safetyNote}
+            <div className="bg-[#FFE5D6] rounded-[20px] p-6 flex items-start gap-4">
+              <div className="shrink-0 mt-0.5">
+                <CleoAvatar size={32} />
+              </div>
+              <div className="text-[17px] leading-[1.6] text-[#1C1A33]">
+                <strong className="font-heading font-bold block mb-1 text-[#1C1A33]">
+                  A note from Cleo:
+                </strong>
+                {narrative.safetyNote}
+              </div>
             </div>
           )}
 
-          {/* Intro Paragraphs */}
+          {/* Intro Paragraphs: 18px / 1.7 in Figtree */}
           {narrative.intro && narrative.intro.length > 0 && (
-            <div className="flex flex-col gap-4 text-lg leading-[1.7] text-[#1A1A1A]">
+            <div className="flex flex-col gap-5 text-[18px] leading-[1.7] text-[#1C1A33]">
               {narrative.intro.map((para, i) => (
                 <p key={i}>{para}</p>
               ))}
@@ -73,20 +90,22 @@ export const NarrativeView: React.FC<NarrativeViewProps> = ({
 
           {/* Sections with Headings & WhatsApp-style quote exchanges */}
           {narrative.sections.map((section, idx) => (
-            <div key={idx} className="flex flex-col gap-4 pt-6 border-t border-[#E5E5E1]">
-              <h3 className="text-[22px] font-bold text-[#1A1A1A]">{section.heading}</h3>
+            <div key={idx} className="flex flex-col gap-4 pt-8 border-t border-[#E7E5F0]">
+              <h3 className="font-heading font-bold text-[24px] sm:text-[28px] text-[#1C1A33]">
+                {section.heading}
+              </h3>
 
-              <div className="flex flex-col gap-4 text-lg leading-[1.7] text-[#1A1A1A]">
+              <div className="flex flex-col gap-5 text-[18px] leading-[1.7] text-[#1C1A33]">
                 {section.paragraphs.map((p, pIdx) => (
                   <p key={pIdx}>{p}</p>
                 ))}
               </div>
 
-              {/* Grouped Quote Exchange with Date Header */}
+              {/* Grouped Quote Exchange inside a Chat-Exchange Panel: Lilac tint (#F1EDFF), 28px radius */}
               {section.quotes && section.quotes.length > 0 && (
-                <div className="my-4 p-4 bg-white border border-[#E5E5E1] rounded-xl flex flex-col gap-2">
-                  {/* Date shown above the exchange */}
-                  <div className="text-xs font-semibold text-[#5F5F5A] border-b border-[#E5E5E1] pb-2 mb-1">
+                <div className="my-6 p-6 sm:p-8 bg-[#F1EDFF] rounded-[28px] flex flex-col gap-3">
+                  {/* White date pill at the top of the exchange */}
+                  <div className="bg-white px-3.5 py-1 rounded-full text-xs font-semibold text-[#5A5873] border border-[#E7E5F0] self-center mb-3 shadow-xs">
                     {formatDateHeader(section.quotes[0].ts)}
                   </div>
                   {section.quotes.map((quote) => {
@@ -100,7 +119,7 @@ export const NarrativeView: React.FC<NarrativeViewProps> = ({
 
           {/* Closing Reflection */}
           {narrative.closing && narrative.closing.length > 0 && (
-            <div className="pt-6 border-t border-[#E5E5E1] flex flex-col gap-4 text-lg leading-[1.7] text-[#1A1A1A]">
+            <div className="pt-8 border-t border-[#E7E5F0] flex flex-col gap-5 text-[18px] leading-[1.7] text-[#1C1A33]">
               {narrative.closing.map((para, i) => (
                 <p key={i}>{para}</p>
               ))}

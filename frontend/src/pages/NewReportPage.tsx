@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api, ApiRequestError } from '../lib/api';
 import { ChatType, UploadPreview } from '../types';
+import { CleoAvatar } from '../components/CleoAvatar';
 
 export const NewReportPage: React.FC = () => {
   const [currentStep, setCurrentStep] = useState<number>(1);
@@ -88,23 +89,23 @@ export const NewReportPage: React.FC = () => {
   };
 
   return (
-    <div className="w-full max-w-[680px] mx-auto py-12 md:py-16">
-      {/* Thin Progress Bar */}
+    <div className="w-full max-w-[720px] mx-auto px-4 sm:px-6 py-10 md:py-14">
+      {/* Thin Progress Bar: Coral line on Lilac background */}
       <div className="mb-8">
-        <div className="flex items-center justify-between text-xs text-[#5F5F5A] mb-2 font-medium">
+        <div className="flex items-center justify-between text-sm font-semibold text-[#5A5873] mb-2">
           <span>Step {currentStep} of 4</span>
           <span>{Math.round((currentStep / 4) * 100)}%</span>
         </div>
-        <div className="w-full bg-[#E5E5E1] h-1.5 rounded-full overflow-hidden">
+        <div className="w-full bg-[#E9E3FF] h-2 rounded-full overflow-hidden">
           <div
-            className="bg-[#1A1A1A] h-full transition-all duration-150"
+            className="bg-[#CF3A26] h-full transition-all duration-300 rounded-full"
             style={{ width: `${(currentStep / 4) * 100}%` }}
           />
         </div>
       </div>
 
       {errorMsg && (
-        <div className="mb-6 p-4 border border-[#B42318] text-[#B42318] text-sm rounded-lg">
+        <div className="mb-8 p-4 bg-[#FFE0E8] border border-[#CF3A26]/30 text-[#CF3A26] text-sm rounded-[16px] font-medium">
           {errorMsg}
         </div>
       )}
@@ -112,29 +113,32 @@ export const NewReportPage: React.FC = () => {
       {/* STEP 1: What kind of chat is it? */}
       {currentStep === 1 && (
         <div>
-          <h1 className="text-[28px] md:text-[32px] font-bold text-[#1A1A1A] mb-2">
+          <h1 className="font-heading font-bold text-[32px] sm:text-[40px] text-[#1C1A33] tracking-tight mb-2 leading-tight">
             What kind of chat is it?
           </h1>
-          <p className="text-base text-[#5F5F5A] mb-8">
+          <p className="text-base text-[#5A5873] mb-8">
             This guides the context and tone of the report.
           </p>
 
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4">
             {[
               {
                 type: 'romance' as ChatType,
                 title: 'Romance',
                 desc: 'Messages between partners, dating, or a relationship.',
+                bgClass: 'bg-[#FFE0E8]',
               },
               {
                 type: 'friends' as ChatType,
                 title: 'Friends',
                 desc: 'Conversations with a close friend or long-time pal.',
+                bgClass: 'bg-[#DCEBFF]',
               },
               {
                 type: 'group' as ChatType,
                 title: 'Student group',
                 desc: 'Study groups, college projects, and team threads.',
+                bgClass: 'bg-[#FFF3C9]',
               },
             ].map((option) => {
               const isSelected = chatType === option.type;
@@ -142,18 +146,18 @@ export const NewReportPage: React.FC = () => {
                 <div
                   key={option.type}
                   onClick={() => setChatType(option.type)}
-                  className={`p-4 rounded-xl cursor-pointer transition-colors duration-150 flex items-start justify-between border ${
-                    isSelected
-                      ? 'border-2 border-[#1A1A1A] bg-[#F6F6F4]'
-                      : 'border-[#E5E5E1] bg-white hover:bg-[#F6F6F4]'
+                  className={`p-6 rounded-[20px] cursor-pointer transition-all duration-150 flex items-center justify-between ${option.bgClass} ${
+                    isSelected ? 'ring-3 ring-[#1C1A33] shadow-sm' : 'hover:opacity-95'
                   }`}
                 >
-                  <div>
-                    <div className="text-base font-semibold text-[#1A1A1A]">{option.title}</div>
-                    <div className="text-sm text-[#5F5F5A] mt-0.5">{option.desc}</div>
+                  <div className="pr-4">
+                    <div className="font-heading font-bold text-xl text-[#1C1A33]">{option.title}</div>
+                    <div className="text-sm text-[#1C1A33]/80 mt-1 leading-normal">{option.desc}</div>
                   </div>
                   {isSelected && (
-                    <span className="text-[#1F7A4D] font-bold text-lg leading-none ml-4">✓</span>
+                    <div className="w-8 h-8 rounded-full bg-[#CF3A26] text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-sm">
+                      ✓
+                    </div>
                   )}
                 </div>
               );
@@ -163,9 +167,9 @@ export const NewReportPage: React.FC = () => {
           <div className="flex justify-end mt-10">
             <button
               onClick={() => setCurrentStep(2)}
-              className="min-h-[44px] px-6 py-2.5 bg-[#F2B01E] text-[#1A1A1A] font-semibold text-base rounded-lg hover:opacity-90 transition-opacity duration-150"
+              className="min-h-[48px] px-8 py-3 bg-[#CF3A26] hover:bg-[#B32F1D] text-white font-semibold text-base rounded-full transition-colors duration-150 shadow-sm"
             >
-              Continue
+              Next
             </button>
           </div>
         </div>
@@ -174,31 +178,31 @@ export const NewReportPage: React.FC = () => {
       {/* STEP 2: Export your chat */}
       {currentStep === 2 && (
         <div>
-          <h1 className="text-[28px] md:text-[32px] font-bold text-[#1A1A1A] mb-2">
+          <h1 className="font-heading font-bold text-[32px] sm:text-[40px] text-[#1C1A33] tracking-tight mb-2 leading-tight">
             Export your chat
           </h1>
-          <p className="text-base text-[#5F5F5A] mb-6">
+          <p className="text-base text-[#5A5873] mb-6">
             Follow these steps inside WhatsApp. It takes about ten seconds.
           </p>
 
-          {/* Android / iPhone Tabs */}
-          <div className="flex gap-2 border-b border-[#E5E5E1] mb-6">
+          {/* Platform Selector: Android / iPhone pill tabs */}
+          <div className="flex gap-3 mb-8">
             <button
               onClick={() => setGuidePlatform('android')}
-              className={`pb-2.5 px-3 text-sm font-semibold transition-colors duration-150 border-b-2 -mb-[1px] ${
+              className={`min-h-[44px] px-6 py-2 rounded-full text-sm font-semibold transition-all duration-150 ${
                 guidePlatform === 'android'
-                  ? 'border-[#1A1A1A] text-[#1A1A1A]'
-                  : 'border-transparent text-[#5F5F5A] hover:text-[#1A1A1A]'
+                  ? 'bg-[#1C1A33] text-white shadow-sm'
+                  : 'bg-white border-[1.5px] border-[#E7E5F0] text-[#5A5873] hover:text-[#1C1A33]'
               }`}
             >
               Android
             </button>
             <button
               onClick={() => setGuidePlatform('iphone')}
-              className={`pb-2.5 px-3 text-sm font-semibold transition-colors duration-150 border-b-2 -mb-[1px] ${
+              className={`min-h-[44px] px-6 py-2 rounded-full text-sm font-semibold transition-all duration-150 ${
                 guidePlatform === 'iphone'
-                  ? 'border-[#1A1A1A] text-[#1A1A1A]'
-                  : 'border-transparent text-[#5F5F5A] hover:text-[#1A1A1A]'
+                  ? 'bg-[#1C1A33] text-white shadow-sm'
+                  : 'bg-white border-[1.5px] border-[#E7E5F0] text-[#5A5873] hover:text-[#1C1A33]'
               }`}
             >
               iPhone
@@ -206,43 +210,81 @@ export const NewReportPage: React.FC = () => {
           </div>
 
           {guidePlatform === 'android' ? (
-            <ol className="list-decimal pl-5 space-y-3 text-base text-[#1A1A1A]">
-              <li>Open the chat in WhatsApp.</li>
-              <li>Tap the three dots (⋮) in the top-right corner.</li>
-              <li>Select <strong>More</strong>, then tap <strong>Export chat</strong>.</li>
-              <li>
-                <strong className="bg-[#F2B01E]/30 px-1.5 py-0.5 rounded">
-                  Choose Without Media
-                </strong>.
-              </li>
-              <li>Save or share the exported <code>.txt</code> or <code>.zip</code> file to your computer or phone.</li>
-            </ol>
+            <div className="bg-white border border-[#E7E5F0] rounded-[24px] p-6 sm:p-8">
+              <ol className="space-y-4 text-base text-[#1C1A33]">
+                <li className="flex items-start gap-3">
+                  <span className="font-heading font-bold text-lg text-[#CF3A26]">1.</span>
+                  <span>Open the conversation in WhatsApp.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="font-heading font-bold text-lg text-[#CF3A26]">2.</span>
+                  <span>Tap the three dots (⋮) in the top-right corner.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="font-heading font-bold text-lg text-[#CF3A26]">3.</span>
+                  <span>Select <strong>More</strong>, then tap <strong>Export chat</strong>.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="font-heading font-bold text-lg text-[#CF3A26]">4.</span>
+                  <div>
+                    Choose{' '}
+                    <span className="inline-block bg-[#FFF3C9] text-[#1C1A33] px-2.5 py-0.5 rounded-lg font-bold border border-[#F2B01E]/40">
+                      Without Media
+                    </span>
+                    .
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="font-heading font-bold text-lg text-[#CF3A26]">5.</span>
+                  <span>Save or share the exported <code>.txt</code> or <code>.zip</code> file to your device.</span>
+                </li>
+              </ol>
+            </div>
           ) : (
-            <ol className="list-decimal pl-5 space-y-3 text-base text-[#1A1A1A]">
-              <li>Open the chat in WhatsApp.</li>
-              <li>Tap the contact or group name at the top.</li>
-              <li>Scroll down and tap <strong>Export Chat</strong>.</li>
-              <li>
-                <strong className="bg-[#F2B01E]/30 px-1.5 py-0.5 rounded">
-                  Choose Without Media
-                </strong>.
-              </li>
-              <li>Save to Files or share the file to your device.</li>
-            </ol>
+            <div className="bg-white border border-[#E7E5F0] rounded-[24px] p-6 sm:p-8">
+              <ol className="space-y-4 text-base text-[#1C1A33]">
+                <li className="flex items-start gap-3">
+                  <span className="font-heading font-bold text-lg text-[#CF3A26]">1.</span>
+                  <span>Open the conversation in WhatsApp.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="font-heading font-bold text-lg text-[#CF3A26]">2.</span>
+                  <span>Tap the contact or group name at the top.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="font-heading font-bold text-lg text-[#CF3A26]">3.</span>
+                  <span>Scroll down and tap <strong>Export Chat</strong>.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="font-heading font-bold text-lg text-[#CF3A26]">4.</span>
+                  <div>
+                    Choose{' '}
+                    <span className="inline-block bg-[#FFF3C9] text-[#1C1A33] px-2.5 py-0.5 rounded-lg font-bold border border-[#F2B01E]/40">
+                      Without Media
+                    </span>
+                    .
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="font-heading font-bold text-lg text-[#CF3A26]">5.</span>
+                  <span>Save to Files or share the file to your device.</span>
+                </li>
+              </ol>
+            </div>
           )}
 
-          <div className="flex items-center justify-between mt-10 pt-6 border-t border-[#E5E5E1]">
+          <div className="flex items-center justify-between mt-10 pt-6 border-t border-[#E7E5F0]">
             <button
               onClick={() => setCurrentStep(1)}
-              className="min-h-[44px] px-4 py-2 border border-[#E5E5E1] rounded-lg text-sm font-semibold text-[#1A1A1A] hover:bg-[#F6F6F4]"
+              className="min-h-[48px] px-6 py-2.5 bg-white border-[1.5px] border-[#1C1A33] rounded-full text-sm font-semibold text-[#1C1A33] hover:bg-[#F1EDFF] transition-colors duration-150"
             >
               Back
             </button>
             <button
               onClick={() => setCurrentStep(3)}
-              className="min-h-[44px] px-6 py-2.5 bg-[#F2B01E] text-[#1A1A1A] font-semibold text-base rounded-lg hover:opacity-90 transition-opacity duration-150"
+              className="min-h-[48px] px-8 py-3 bg-[#CF3A26] hover:bg-[#B32F1D] text-white font-semibold text-base rounded-full transition-colors duration-150 shadow-sm"
             >
-              Continue
+              Next
             </button>
           </div>
         </div>
@@ -251,22 +293,22 @@ export const NewReportPage: React.FC = () => {
       {/* STEP 3: Upload */}
       {currentStep === 3 && (
         <div>
-          <h1 className="text-[28px] md:text-[32px] font-bold text-[#1A1A1A] mb-2">
+          <h1 className="font-heading font-bold text-[32px] sm:text-[40px] text-[#1C1A33] tracking-tight mb-2 leading-tight">
             Upload your chat
           </h1>
-          <p className="text-base text-[#5F5F5A] mb-6">
+          <p className="text-base text-[#5A5873] mb-6">
             We read the file to create your report, then delete it.
           </p>
 
-          {/* Dashed Drop Zone */}
+          {/* 2px Dashed Drop Zone on Lilac (#E9E3FF), 20px radius */}
           <div
             onDragOver={(e) => e.preventDefault()}
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
-            className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors duration-150 ${
+            className={`border-2 border-dashed rounded-[20px] p-8 sm:p-12 text-center cursor-pointer transition-all duration-150 ${
               file
-                ? 'border-[#1A1A1A] bg-[#F6F6F4]'
-                : 'border-[#E5E5E1] hover:border-[#1A1A1A] bg-white'
+                ? 'border-[#1C1A33] bg-[#E9E3FF]'
+                : 'border-[#CF3A26]/50 bg-[#E9E3FF] hover:border-[#CF3A26]'
             }`}
           >
             <input
@@ -280,41 +322,47 @@ export const NewReportPage: React.FC = () => {
             />
 
             {isPreviewing ? (
-              <p className="text-base text-[#1A1A1A] font-medium">Checking file…</p>
+              <p className="text-base text-[#1C1A33] font-semibold animate-pulse">Checking file…</p>
             ) : file ? (
               <div>
-                <p className="text-base font-semibold text-[#1A1A1A]">{file.name}</p>
-                <p className="text-xs text-[#5F5F5A] mt-1">
+                <p className="font-heading font-bold text-xl text-[#1C1A33]">{file.name}</p>
+                <p className="text-xs text-[#5A5873] mt-1 font-medium">
                   {(file.size / 1024).toFixed(1)} KB · Click to change file
                 </p>
               </div>
             ) : (
               <div>
-                <p className="text-base font-semibold text-[#1A1A1A]">
+                <p className="font-heading font-bold text-xl text-[#1C1A33]">
                   Choose a .txt or .zip file
                 </p>
-                <p className="text-sm text-[#5F5F5A] mt-1">
+                <p className="text-sm text-[#5A5873] mt-1 font-medium">
                   Drag and drop here, or click to browse
                 </p>
               </div>
             )}
           </div>
 
+          {/* Short note on privacy below drop zone */}
+          <div className="mt-4 p-3.5 bg-[#FFF3C9] rounded-[16px] text-xs sm:text-sm font-semibold text-[#1C1A33] flex items-center justify-center gap-2">
+            <span>🔒</span>
+            <span>Your file is deleted immediately after processing.</span>
+          </div>
+
           {/* After Upload: Which one is you? and Consent */}
           {previewData && (
-            <div className="mt-8 pt-6 border-t border-[#E5E5E1] flex flex-col gap-6">
+            <div className="mt-8 pt-6 border-t border-[#E7E5F0] flex flex-col gap-6">
               <div>
-                <label className="block text-base font-semibold text-[#1A1A1A] mb-3">
+                <label className="block font-heading font-bold text-lg text-[#1C1A33] mb-3">
                   Which one is you?
                 </label>
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2.5">
                   {previewData.participants.map((name) => (
                     <label
                       key={name}
-                      className={`flex items-center justify-between p-3 border rounded-lg cursor-pointer ${
+                      className={`flex items-center justify-between p-4 rounded-xl cursor-pointer transition-colors duration-150 ${
                         myName === name
-                          ? 'border-[#1A1A1A] bg-[#F6F6F4]'
-                          : 'border-[#E5E5E1] bg-white hover:bg-[#F6F6F4]'
+                          ? 'border-[2px] border-[#1C1A33] bg-[#DCEBFF]'
+                          : 'border border-[#E7E5F0] bg-white hover:bg-[#F1EDFF]'
                       }`}
                     >
                       <div className="flex items-center gap-3">
@@ -323,46 +371,46 @@ export const NewReportPage: React.FC = () => {
                           name="myName"
                           checked={myName === name}
                           onChange={() => setMyName(name)}
-                          className="w-4 h-4 text-[#1A1A1A] accent-[#1A1A1A]"
+                          className="w-4 h-4 text-[#1C1A33] accent-[#1C1A33]"
                         />
-                        <span className="text-base text-[#1A1A1A]">{name}</span>
+                        <span className="text-base font-semibold text-[#1C1A33]">{name}</span>
                       </div>
-                      {myName === name && <span className="text-[#1F7A4D] font-bold">✓</span>}
+                      {myName === name && <span className="text-[#1F7A4D] font-bold text-lg">✓</span>}
                     </label>
                   ))}
                 </div>
               </div>
 
               {/* Consent checkbox */}
-              <div className="pt-2">
+              <div className="p-4 bg-[#FFE5D6] rounded-[16px]">
                 <label className="flex items-start gap-3 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={consent}
                     onChange={(e) => setConsent(e.target.checked)}
-                    className="mt-1 w-4 h-4 rounded text-[#1A1A1A] accent-[#1A1A1A]"
+                    className="mt-0.5 w-4 h-4 rounded text-[#1C1A33] accent-[#1C1A33]"
                   />
-                  <span className="text-sm text-[#1A1A1A] leading-normal">
-                    I'm okay with this chat being analysed to create my report.
+                  <span className="text-sm font-medium text-[#1C1A33] leading-normal">
+                    I agree to have this chat analysed to create my report.
                   </span>
                 </label>
               </div>
             </div>
           )}
 
-          <div className="flex items-center justify-between mt-10 pt-6 border-t border-[#E5E5E1]">
+          <div className="flex items-center justify-between mt-10 pt-6 border-t border-[#E7E5F0]">
             <button
               onClick={() => setCurrentStep(2)}
-              className="min-h-[44px] px-4 py-2 border border-[#E5E5E1] rounded-lg text-sm font-semibold text-[#1A1A1A] hover:bg-[#F6F6F4]"
+              className="min-h-[48px] px-6 py-2.5 bg-white border-[1.5px] border-[#1C1A33] rounded-full text-sm font-semibold text-[#1C1A33] hover:bg-[#F1EDFF] transition-colors duration-150"
             >
               Back
             </button>
             <button
               disabled={!file || !previewData || !myName || !consent}
               onClick={() => setCurrentStep(4)}
-              className="min-h-[44px] px-6 py-2.5 bg-[#F2B01E] text-[#1A1A1A] font-semibold text-base rounded-lg hover:opacity-90 transition-opacity duration-150 disabled:opacity-40"
+              className="min-h-[48px] px-8 py-3 bg-[#CF3A26] hover:bg-[#B32F1D] text-white font-semibold text-base rounded-full transition-colors duration-150 shadow-sm disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              Continue
+              Next
             </button>
           </div>
         </div>
@@ -371,69 +419,76 @@ export const NewReportPage: React.FC = () => {
       {/* STEP 4: Choose who reads it */}
       {currentStep === 4 && (
         <div>
-          <h1 className="text-[28px] md:text-[32px] font-bold text-[#1A1A1A] mb-2">
-            Choose who reads it
+          <h1 className="font-heading font-bold text-[32px] sm:text-[40px] text-[#1C1A33] tracking-tight mb-2 leading-tight">
+            Who should read it?
           </h1>
-          <p className="text-base text-[#5F5F5A] mb-8">
+          <p className="text-base text-[#5A5873] mb-8">
             Pick an AI reader for your report.
           </p>
 
-          <div className="flex flex-col gap-3">
-            {/* Cleo (selected) */}
+          <div className="flex flex-col gap-4">
+            {/* Cleo (selected, lilac background #E9E3FF) */}
             <div
               onClick={() => setSelectedPersona('cleo')}
-              className="p-4 rounded-xl border-2 border-[#1A1A1A] bg-[#F6F6F4] flex items-start justify-between cursor-pointer"
+              className="p-6 rounded-[20px] bg-[#E9E3FF] border-[3px] border-[#1C1A33] flex items-center justify-between cursor-pointer shadow-sm"
             >
-              <div>
-                <div className="text-base font-semibold text-[#1A1A1A]">Cleo</div>
-                <div className="text-sm text-[#5F5F5A] mt-0.5">
-                  Honest, friendly, and kind. Looks at communication patterns and turning points.
+              <div className="flex items-center gap-4">
+                <CleoAvatar size={48} />
+                <div>
+                  <div className="font-heading font-bold text-xl text-[#1C1A33]">
+                    Cleo <span className="text-xs font-semibold px-2 py-0.5 bg-[#CF3A26] text-white rounded-full ml-1">recommended</span>
+                  </div>
+                  <div className="text-sm text-[#5A5873] mt-0.5">
+                    Honest, friendly, and kind. Looks at communication patterns and turning points.
+                  </div>
                 </div>
               </div>
-              <span className="text-[#1F7A4D] font-bold text-lg leading-none ml-4">✓</span>
+              <div className="w-8 h-8 rounded-full bg-[#CF3A26] text-white flex items-center justify-center font-bold text-sm shrink-0">
+                ✓
+              </div>
             </div>
 
-            {/* Coming soon 1 */}
-            <div className="p-4 rounded-xl border border-[#E5E5E1] bg-white opacity-50 flex items-start justify-between cursor-not-allowed">
+            {/* Coming soon 1: Dev */}
+            <div className="p-6 rounded-[20px] bg-[#F6F6F4] border border-[#E7E5F0] opacity-60 flex items-center justify-between cursor-not-allowed">
               <div>
-                <div className="text-base font-semibold text-[#1A1A1A]">Dev</div>
-                <div className="text-sm text-[#5F5F5A] mt-0.5">
+                <div className="font-heading font-bold text-xl text-[#1C1A33]">Dev</div>
+                <div className="text-sm text-[#5A5873] mt-0.5">
                   Analytical reader focused on response statistics.
                 </div>
               </div>
-              <span className="text-xs text-[#5F5F5A] border border-[#E5E5E1] px-2 py-0.5 rounded">
+              <span className="text-xs font-semibold text-[#5A5873] bg-[#E7E5F0] px-3 py-1 rounded-full">
                 Coming soon
               </span>
             </div>
 
-            {/* Coming soon 2 */}
-            <div className="p-4 rounded-xl border border-[#E5E5E1] bg-white opacity-50 flex items-start justify-between cursor-not-allowed">
+            {/* Coming soon 2: Tara */}
+            <div className="p-6 rounded-[20px] bg-[#F6F6F4] border border-[#E7E5F0] opacity-60 flex items-center justify-between cursor-not-allowed">
               <div>
-                <div className="text-base font-semibold text-[#1A1A1A]">Tara</div>
-                <div className="text-sm text-[#5F5F5A] mt-0.5">
+                <div className="font-heading font-bold text-xl text-[#1C1A33]">Tara</div>
+                <div className="text-sm text-[#5A5873] mt-0.5">
                   Playful read focused on humor and inside jokes.
                 </div>
               </div>
-              <span className="text-xs text-[#5F5F5A] border border-[#E5E5E1] px-2 py-0.5 rounded">
+              <span className="text-xs font-semibold text-[#5A5873] bg-[#E7E5F0] px-3 py-1 rounded-full">
                 Coming soon
               </span>
             </div>
           </div>
 
-          <div className="flex items-center justify-between mt-10 pt-6 border-t border-[#E5E5E1]">
+          <div className="flex items-center justify-between mt-10 pt-6 border-t border-[#E7E5F0]">
             <button
               onClick={() => setCurrentStep(3)}
               disabled={isSubmitting}
-              className="min-h-[44px] px-4 py-2 border border-[#E5E5E1] rounded-lg text-sm font-semibold text-[#1A1A1A] hover:bg-[#F6F6F4]"
+              className="min-h-[48px] px-6 py-2.5 bg-white border-[1.5px] border-[#1C1A33] rounded-full text-sm font-semibold text-[#1C1A33] hover:bg-[#F1EDFF] transition-colors duration-150"
             >
               Back
             </button>
             <button
               onClick={handleSubmit}
               disabled={isSubmitting}
-              className="min-h-[44px] px-6 py-2.5 bg-[#F2B01E] text-[#1A1A1A] font-semibold text-base rounded-lg hover:opacity-90 transition-opacity duration-150 disabled:opacity-50"
+              className="min-h-[48px] px-8 py-3 bg-[#CF3A26] hover:bg-[#B32F1D] text-white font-semibold text-base rounded-full transition-colors duration-150 shadow-sm disabled:opacity-50"
             >
-              {isSubmitting ? 'Starting…' : 'Create report'}
+              {isSubmitting ? 'Starting…' : 'Create my report'}
             </button>
           </div>
         </div>

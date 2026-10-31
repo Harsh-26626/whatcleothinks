@@ -100,8 +100,8 @@ describe('End-to-End API Integration', () => {
       .attach('file', samplePath);
 
     expect(res.status).toBe(200);
-    expect(res.body.participants).toContain('Harsh');
-    expect(res.body.participants).toContain('Vanshika');
+    expect(res.body.participants).toContain('sam');
+    expect(res.body.participants).toContain('natasha');
     expect(res.body.messageCount).toBe(64);
     expect(res.body.isGroup).toBe(false);
   });
@@ -114,7 +114,7 @@ describe('End-to-End API Integration', () => {
       .post('/api/reports')
       .set('Authorization', `Bearer ${authToken}`)
       .field('chatType', 'romance')
-      .field('myName', 'Harsh')
+      .field('myName', 'sam')
       .field('consent', 'false')
       .attach('file', samplePath);
 
@@ -127,7 +127,7 @@ describe('End-to-End API Integration', () => {
       .set('Authorization', `Bearer ${authToken}`)
       .field('chatType', 'romance')
       .field('persona', 'cleo')
-      .field('myName', 'Harsh')
+      .field('myName', 'sam')
       .field('consent', 'true')
       .attach('file', samplePath);
 

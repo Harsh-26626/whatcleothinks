@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { Participant, ReportStats, DateRange } from '../../types';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 
 interface StatsDashboardProps {
   stats: ReportStats;
@@ -46,144 +47,245 @@ export const StatsDashboard: React.FC<StatsDashboardProps> = ({
     return Math.max(1, ...heatmapDays.map((d) => d.count));
   }, [heatmapDays]);
 
+  // 5-step blue scale: #EEF1FF, #C9D3FF, #94A8FF, #5F7BEA, #3B5BDB
   const getHeatmapColor = (count: number) => {
-    if (count === 0) return '#F6F6F4';
+    if (count === 0) return '#FFFFFF';
     const ratio = count / maxDayCount;
-    if (ratio < 0.25) return '#FDE68A'; // light yellow/marigold
-    if (ratio < 0.5) return '#FBBF24';
-    if (ratio < 0.75) return '#F2B01E'; // primary marigold
-    return '#D97706';
+    if (ratio < 0.2) return '#EEF1FF';
+    if (ratio < 0.4) return '#C9D3FF';
+    if (ratio < 0.6) return '#94A8FF';
+    if (ratio < 0.8) return '#5F7BEA';
+    return '#3B5BDB';
   };
 
   const maxHour = Math.max(1, ...(stats.hourly || []));
 
+  // Donut data for share of messages
+  const donutData = useMemo(() => {
+    const list = Object.entries(stats.shareOfVoice || {}).map(([name, pct]) => {
+      const isMe = name === myName;
+      return {
+        name,
+        value: pct,
+        color: isMe ? '#3B5BDB' : '#F28C28',
+      };
+    });
+    if (list.length === 0) {
+      return [
+        { name: myName, value: 50, color: '#3B5BDB' },
+        { name: otherName, value: 50, color: '#F28C28' },
+      ];
+    }
+    return list;
+  }, [stats.shareOfVoice, myName, otherName]);
+
   return (
-    <section id="overview" className="flex flex-col gap-10 scroll-mt-20">
-      {/* 1. Plain Stat Tiles Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-        {/* Total Messages */}
-        <div className="p-4 bg-white border border-[#E5E5E1] rounded-lg">
-          <div className="text-[28px] font-bold text-[#1A1A1A]">
+    <section id="overview" className="flex flex-col gap-10 scroll-mt-24">
+      {/* 1. Plain Stat Tiles Grid: 2-col (mobile) / 4-col (desktop) rotating tints */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Tile 1: Total Messages (Peach #FFE5D6) */}
+        <div className="p-6 bg-[#FFE5D6] rounded-[20px] flex flex-col justify-between">
+          <div className="font-heading font-bold text-[32px] sm:text-[40px] text-[#1C1A33] leading-tight">
             {stats.totalMessages.toLocaleString()}
           </div>
-          <div className="text-sm text-[#5F5F5A] mt-1">Total messages</div>
+          <div className="text-sm font-semibold text-[#5A5873] mt-2">
+            Total messages
+          </div>
         </div>
 
-        {/* Share of Messages */}
-        <div className="p-4 bg-white border border-[#E5E5E1] rounded-lg">
-          <div className="text-[28px] font-bold text-[#1A1A1A]">
-            {stats.shareOfVoice[myName] ?? 50}% <span className="text-base font-normal text-[#5F5F5A]">/ {stats.shareOfVoice[otherName] ?? 50}%</span>
+        {/* Tile 2: Share of Messages (Sky #DCEBFF) */}
+        <div className="p-6 bg-[#DCEBFF] rounded-[20px] flex flex-col justify-between">
+          <div className="font-heading font-bold text-[32px] sm:text-[40px] text-[#1C1A33] leading-tight">
+            {stats.shareOfVoice[myName] ?? 50}%{' '}
+            <span className="text-xl sm:text-2xl font-normal text-[#5A5873]">
+              / {stats.shareOfVoice[otherName] ?? 50}%
+            </span>
           </div>
-          <div className="text-sm text-[#5F5F5A] mt-1">
+          <div className="text-sm font-semibold text-[#5A5873] mt-2">
             Share of messages ({myName} / {otherName})
           </div>
         </div>
 
-        {/* Who Starts Conversations */}
-        <div className="p-4 bg-white border border-[#E5E5E1] rounded-lg">
-          <div className="text-[28px] font-bold text-[#1A1A1A]">
-            {stats.initiationPct[myName] ?? 50}% <span className="text-base font-normal text-[#5F5F5A]">/ {stats.initiationPct[otherName] ?? 50}%</span>
+        {/* Tile 3: Who Starts Conversations (Lilac #E9E3FF) */}
+        <div className="p-6 bg-[#E9E3FF] rounded-[20px] flex flex-col justify-between">
+          <div className="font-heading font-bold text-[32px] sm:text-[40px] text-[#1C1A33] leading-tight">
+            {stats.initiationPct[myName] ?? 50}%{' '}
+            <span className="text-xl sm:text-2xl font-normal text-[#5A5873]">
+              / {stats.initiationPct[otherName] ?? 50}%
+            </span>
           </div>
-          <div className="text-sm text-[#5F5F5A] mt-1">
+          <div className="text-sm font-semibold text-[#5A5873] mt-2">
             Conversation starts ({myName} / {otherName})
           </div>
         </div>
 
-        {/* Median Reply Time */}
-        <div className="p-4 bg-white border border-[#E5E5E1] rounded-lg">
-          <div className="text-[28px] font-bold text-[#1A1A1A]">
-            {stats.replyMedianMinutes[myName] ?? 4}m <span className="text-base font-normal text-[#5F5F5A]">/ {stats.replyMedianMinutes[otherName] ?? 6}m</span>
+        {/* Tile 4: Median Reply Time (Butter #FFF3C9) */}
+        <div className="p-6 bg-[#FFF3C9] rounded-[20px] flex flex-col justify-between">
+          <div className="font-heading font-bold text-[32px] sm:text-[40px] text-[#1C1A33] leading-tight">
+            {stats.replyMedianMinutes[myName] ?? 4}m{' '}
+            <span className="text-xl sm:text-2xl font-normal text-[#5A5873]">
+              / {stats.replyMedianMinutes[otherName] ?? 6}m
+            </span>
           </div>
-          <div className="text-sm text-[#5F5F5A] mt-1">
+          <div className="text-sm font-semibold text-[#5A5873] mt-2">
             Median reply time ({myName} / {otherName})
           </div>
         </div>
 
-        {/* Longest Streak */}
-        <div className="p-4 bg-white border border-[#E5E5E1] rounded-lg">
-          <div className="text-[28px] font-bold text-[#1A1A1A]">
-            {stats.longestStreakDays} <span className="text-base font-normal text-[#5F5F5A]">days</span>
+        {/* Tile 5: Longest Streak (Blush #FFE0E8) */}
+        <div className="p-6 bg-[#FFE0E8] rounded-[20px] flex flex-col justify-between">
+          <div className="font-heading font-bold text-[32px] sm:text-[40px] text-[#1C1A33] leading-tight">
+            {stats.longestStreakDays}{' '}
+            <span className="text-xl sm:text-2xl font-normal text-[#5A5873]">days</span>
           </div>
-          <div className="text-sm text-[#5F5F5A] mt-1">Longest streak</div>
+          <div className="text-sm font-semibold text-[#5A5873] mt-2">
+            Longest streak
+          </div>
         </div>
 
-        {/* Longest Silence */}
-        <div className="p-4 bg-white border border-[#E5E5E1] rounded-lg">
-          <div className="text-[28px] font-bold text-[#1A1A1A]">
-            {stats.longestSilenceDays} <span className="text-base font-normal text-[#5F5F5A]">days</span>
+        {/* Tile 6: Longest Silence (Peach #FFE5D6) */}
+        <div className="p-6 bg-[#FFE5D6] rounded-[20px] flex flex-col justify-between">
+          <div className="font-heading font-bold text-[32px] sm:text-[40px] text-[#1C1A33] leading-tight">
+            {stats.longestSilenceDays}{' '}
+            <span className="text-xl sm:text-2xl font-normal text-[#5A5873]">days</span>
           </div>
-          <div className="text-sm text-[#5F5F5A] mt-1">Longest silence</div>
+          <div className="text-sm font-semibold text-[#5A5873] mt-2">
+            Longest silence
+          </div>
         </div>
 
-        {/* Busiest Day */}
-        <div className="p-4 bg-white border border-[#E5E5E1] rounded-lg col-span-2 sm:col-span-1">
-          <div className="text-[28px] font-bold text-[#1A1A1A]">
-            {stats.recordDay?.count ?? 0} <span className="text-base font-normal text-[#5F5F5A]">msgs</span>
+        {/* Tile 7: Busiest Day (Sky #DCEBFF) */}
+        <div className="p-6 bg-[#DCEBFF] rounded-[20px] flex flex-col justify-between">
+          <div className="font-heading font-bold text-[32px] sm:text-[40px] text-[#1C1A33] leading-tight">
+            {stats.recordDay?.count ?? 0}{' '}
+            <span className="text-xl sm:text-2xl font-normal text-[#5A5873]">msgs</span>
           </div>
-          <div className="text-sm text-[#5F5F5A] mt-1">
+          <div className="text-sm font-semibold text-[#5A5873] mt-2">
             Busiest day ({stats.recordDay?.date ?? ''})
           </div>
         </div>
 
-        {/* Late Night Messages */}
-        <div className="p-4 bg-white border border-[#E5E5E1] rounded-lg col-span-2 sm:col-span-1">
-          <div className="text-[28px] font-bold text-[#1A1A1A]">
+        {/* Tile 8: Messages 10pm-4am (Lilac #E9E3FF) */}
+        <div className="p-6 bg-[#E9E3FF] rounded-[20px] flex flex-col justify-between">
+          <div className="font-heading font-bold text-[32px] sm:text-[40px] text-[#1C1A33] leading-tight">
             {stats.lateNightPct}%
           </div>
-          <div className="text-sm text-[#5F5F5A] mt-1">Messages sent 10pm to 4am</div>
+          <div className="text-sm font-semibold text-[#5A5873] mt-2">
+            Messages 10pm to 4am
+          </div>
         </div>
       </div>
 
-      {/* 2. Calendar Heatmap Chart */}
-      <div className="p-6 bg-white border border-[#E5E5E1] rounded-xl flex flex-col gap-4">
-        <div>
-          <h3 className="text-[22px] font-semibold text-[#1A1A1A]">Daily activity</h3>
-          <p className="text-base text-[#5F5F5A] mt-0.5">
-            Every day of the conversation, shaded from zero to peak messages.
-          </p>
-        </div>
+      {/* 2. Middle Row: Share of Messages Donut & Calendar Heatmap */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Share of Messages Donut (Recharts) */}
+        <div className="p-6 sm:p-8 bg-white border border-[#E7E5F0] rounded-[28px] flex flex-col justify-between">
+          <div>
+            <h3 className="font-heading font-bold text-[22px] text-[#1C1A33]">
+              Share of messages
+            </h3>
+            <p className="text-sm text-[#5A5873] mt-1">
+              Who sent what percentage of the total conversation.
+            </p>
+          </div>
 
-        {/* Grid Container */}
-        <div className="w-full overflow-x-auto pb-2">
-          <div className="inline-grid grid-rows-7 grid-flow-col gap-1 min-w-[500px]">
-            {heatmapDays.map((day, idx) => (
-              <div
-                key={idx}
-                title={`${day.date}: ${day.count} messages`}
-                className="w-3 h-3 rounded-[2px]"
-                style={{ backgroundColor: getHeatmapColor(day.count) }}
-              />
-            ))}
+          <div className="w-full h-48 my-2">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={donutData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={50}
+                  outerRadius={75}
+                  paddingAngle={3}
+                  dataKey="value"
+                >
+                  {donutData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} stroke="#FFFFFF" strokeWidth={2} />
+                  ))}
+                </Pie>
+                <Tooltip
+                  formatter={(val: number) => [`${val}%`, 'Share']}
+                  contentStyle={{
+                    backgroundColor: '#FFFFFF',
+                    borderRadius: '12px',
+                    border: '1px solid #E7E5F0',
+                    fontSize: '13px',
+                    fontWeight: 600,
+                  }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Legend */}
+          <div className="flex items-center justify-center gap-6 pt-2 border-t border-[#E7E5F0] text-sm font-semibold">
+            <div className="flex items-center gap-2">
+              <span className="w-3 h-3 rounded-full bg-[#3B5BDB]" />
+              <span className="text-[#1C1A33]">{myName} ({stats.shareOfVoice[myName] ?? 50}%)</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-3 h-3 rounded-full bg-[#F28C28]" />
+              <span className="text-[#1C1A33]">{otherName} ({stats.shareOfVoice[otherName] ?? 50}%)</span>
+            </div>
           </div>
         </div>
 
-        {/* Legend */}
-        <div className="flex items-center justify-between text-xs text-[#5F5F5A] pt-2 border-t border-[#E5E5E1]">
-          <span>{dateRange?.start || 'Start'}</span>
-          <div className="flex items-center gap-1.5">
-            <span>Fewer</span>
-            <span className="w-2.5 h-2.5 rounded-[2px] bg-[#F6F6F4] border border-[#E5E5E1]" />
-            <span className="w-2.5 h-2.5 rounded-[2px] bg-[#FDE68A]" />
-            <span className="w-2.5 h-2.5 rounded-[2px] bg-[#FBBF24]" />
-            <span className="w-2.5 h-2.5 rounded-[2px] bg-[#F2B01E]" />
-            <span className="w-2.5 h-2.5 rounded-[2px] bg-[#D97706]" />
-            <span>More messages</span>
+        {/* Calendar Heatmap (2 cols on large screen) */}
+        <div className="lg:col-span-2 p-6 sm:p-8 bg-white border border-[#E7E5F0] rounded-[28px] flex flex-col justify-between">
+          <div>
+            <h3 className="font-heading font-bold text-[22px] text-[#1C1A33]">Daily activity</h3>
+            <p className="text-sm text-[#5A5873] mt-1">
+              Every day of the conversation, shaded from zero to peak messages.
+            </p>
           </div>
-          <span>{dateRange?.end || 'End'}</span>
+
+          {/* Grid Container */}
+          <div className="w-full overflow-x-auto py-6">
+            <div className="inline-grid grid-rows-7 grid-flow-col gap-1.5 min-w-[500px]">
+              {heatmapDays.map((day, idx) => (
+                <div
+                  key={idx}
+                  title={`${day.date}: ${day.count} messages`}
+                  className="w-3.5 h-3.5 rounded-[3px] border border-[#E7E5F0]/50 transition-colors"
+                  style={{ backgroundColor: getHeatmapColor(day.count) }}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* 5-step Blue Legend */}
+          <div className="flex items-center justify-between text-xs font-semibold text-[#5A5873] pt-4 border-t border-[#E7E5F0]">
+            <span>{dateRange?.start || 'Start'}</span>
+            <div className="flex items-center gap-1.5">
+              <span>Fewer</span>
+              <span className="w-3 h-3 rounded-[2px] bg-white border border-[#E7E5F0]" title="0 messages" />
+              <span className="w-3 h-3 rounded-[2px] bg-[#EEF1FF]" title="Low" />
+              <span className="w-3 h-3 rounded-[2px] bg-[#C9D3FF]" title="Medium-Low" />
+              <span className="w-3 h-3 rounded-[2px] bg-[#94A8FF]" title="Medium" />
+              <span className="w-3 h-3 rounded-[2px] bg-[#5F7BEA]" title="Medium-High" />
+              <span className="w-3 h-3 rounded-[2px] bg-[#3B5BDB]" title="Peak" />
+              <span>More messages</span>
+            </div>
+            <span>{dateRange?.end || 'End'}</span>
+          </div>
         </div>
       </div>
 
-      {/* 3. Hourly Chart with Late-Night Shading */}
-      <div className="p-6 bg-white border border-[#E5E5E1] rounded-xl flex flex-col gap-4">
+      {/* 3. Hourly Chart with Late-Night Shading (28px white panel) */}
+      <div className="p-6 sm:p-8 bg-white border border-[#E7E5F0] rounded-[28px] flex flex-col gap-5">
         <div>
-          <h3 className="text-[22px] font-semibold text-[#1A1A1A]">Messages by hour of the day</h3>
-          <p className="text-base text-[#5F5F5A] mt-0.5">
-            Hourly volume across 24 hours. Late-night hours (10pm to 4am) are shaded.
+          <h3 className="font-heading font-bold text-[22px] text-[#1C1A33]">
+            Messages by hour of the day
+          </h3>
+          <p className="text-sm text-[#5A5873] mt-1">
+            Hourly volume across 24 hours. Late-night hours (10pm to 4am) are highlighted.
           </p>
         </div>
 
         {/* Bar chart container */}
-        <div className="h-40 flex items-end justify-between gap-1 pt-6 pb-2 border-b border-[#E5E5E1]">
+        <div className="h-44 flex items-end justify-between gap-1.5 pt-6 pb-2 border-b border-[#E7E5F0]">
           {(stats.hourly || Array(24).fill(0)).map((count, hour) => {
             const heightPct = Math.max(6, (count / maxHour) * 100);
             const isLateNight = hour >= 22 || hour <= 4;
@@ -191,10 +293,10 @@ export const StatsDashboard: React.FC<StatsDashboardProps> = ({
             return (
               <div key={hour} className="flex-1 flex flex-col items-center justify-end h-full group relative">
                 <div
-                  className="w-full rounded-t"
+                  className="w-full rounded-t-md transition-all duration-150 hover:opacity-85"
                   style={{
                     height: `${heightPct}%`,
-                    backgroundColor: isLateNight ? '#2F5BEA' : '#E5E5E1',
+                    backgroundColor: isLateNight ? '#CF3A26' : '#CFC3FF',
                   }}
                   title={`${hour}:00 — ${count} messages`}
                 />
@@ -204,87 +306,115 @@ export const StatsDashboard: React.FC<StatsDashboardProps> = ({
         </div>
 
         {/* Hour Axis & Legend */}
-        <div className="flex items-center justify-between text-xs text-[#5F5F5A]">
+        <div className="flex items-center justify-between text-xs font-semibold text-[#5A5873]">
           <span>12am</span>
+          <span>3am</span>
           <span>6am</span>
+          <span>9am</span>
           <span>12pm</span>
+          <span>3pm</span>
           <span>6pm</span>
+          <span>9pm</span>
           <span>11pm</span>
         </div>
 
-        <div className="flex items-center gap-4 text-xs text-[#5F5F5A] pt-2">
-          <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-[2px] bg-[#2F5BEA]" />
-            <span>10pm to 4am (late night)</span>
+        <div className="flex items-center gap-6 text-xs font-semibold text-[#5A5873] pt-2">
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-3 rounded-[3px] bg-[#CF3A26]" />
+            <span className="text-[#1C1A33]">10pm to 4am (late night)</span>
           </div>
-          <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-[2px] bg-[#E5E5E1]" />
-            <span>Daytime & evening</span>
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-3 rounded-[3px] bg-[#CFC3FF]" />
+            <span className="text-[#1C1A33]">Daytime & evening</span>
           </div>
         </div>
       </div>
 
-      {/* 4. Top Words and Emojis (Simple Lists Per Person) */}
+      {/* 4. Top Words and Emojis: Simple side-by-side lists per person */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Person 1 */}
-        <div className="p-6 bg-white border border-[#E5E5E1] rounded-xl flex flex-col gap-4">
-          <div className="flex items-center justify-between border-b border-[#E5E5E1] pb-3">
-            <h4 className="text-base font-bold text-[#1A1A1A]">
-              {otherName} {otherParticipant?.isMe && '(You)'}
-            </h4>
-            <span className="text-xs text-[#5F5F5A]">Top vocabulary</span>
+        {/* Person 1 (Them) */}
+        <div className="p-6 sm:p-8 bg-white border border-[#E7E5F0] rounded-[28px] flex flex-col gap-6">
+          <div className="flex items-center justify-between border-b border-[#E7E5F0] pb-4">
+            <div className="flex items-center gap-2.5">
+              <span className="w-3.5 h-3.5 rounded-full bg-[#F28C28]" />
+              <h4 className="font-heading font-bold text-xl text-[#1C1A33]">
+                {otherName}
+              </h4>
+            </div>
+            <span className="text-xs font-semibold text-[#5A5873] uppercase tracking-wider">
+              Top vocabulary
+            </span>
           </div>
 
           <div>
-            <div className="text-xs font-semibold text-[#5F5F5A] uppercase tracking-wider mb-2">
+            <div className="text-xs font-bold text-[#5A5873] uppercase tracking-wider mb-3">
               Most used words
             </div>
-            <ul className="list-disc pl-5 space-y-1 text-sm text-[#1A1A1A]">
+            <div className="flex flex-wrap gap-2">
               {(stats.topWords[otherName] || []).map((word, i) => (
-                <li key={i}>{word}</li>
+                <span
+                  key={i}
+                  className="px-3 py-1 bg-[#F1EDFF] text-[#1C1A33] rounded-full text-sm font-semibold"
+                >
+                  {word}
+                </span>
               ))}
-            </ul>
+            </div>
           </div>
 
-          <div className="pt-2 border-t border-[#E5E5E1]">
-            <div className="text-xs font-semibold text-[#5F5F5A] uppercase tracking-wider mb-2">
+          <div className="pt-2 border-t border-[#E7E5F0]">
+            <div className="text-xs font-bold text-[#5A5873] uppercase tracking-wider mb-3">
               Most used emojis
             </div>
-            <div className="flex items-center gap-3 text-2xl">
+            <div className="flex items-center gap-3 text-3xl">
               {(stats.topEmojis[otherName] || []).map((emoji, i) => (
-                <span key={i} title={emoji}>{emoji}</span>
+                <span key={i} title={emoji} className="hover:scale-110 transition-transform">
+                  {emoji}
+                </span>
               ))}
             </div>
           </div>
         </div>
 
         {/* Person 2 (You) */}
-        <div className="p-6 bg-white border border-[#E5E5E1] rounded-xl flex flex-col gap-4">
-          <div className="flex items-center justify-between border-b border-[#E5E5E1] pb-3">
-            <h4 className="text-base font-bold text-[#1A1A1A]">
-              {myName} {myParticipant?.isMe && '(You)'}
-            </h4>
-            <span className="text-xs text-[#5F5F5A]">Top vocabulary</span>
+        <div className="p-6 sm:p-8 bg-white border border-[#E7E5F0] rounded-[28px] flex flex-col gap-6">
+          <div className="flex items-center justify-between border-b border-[#E7E5F0] pb-4">
+            <div className="flex items-center gap-2.5">
+              <span className="w-3.5 h-3.5 rounded-full bg-[#3B5BDB]" />
+              <h4 className="font-heading font-bold text-xl text-[#1C1A33]">
+                {myName} (You)
+              </h4>
+            </div>
+            <span className="text-xs font-semibold text-[#5A5873] uppercase tracking-wider">
+              Top vocabulary
+            </span>
           </div>
 
           <div>
-            <div className="text-xs font-semibold text-[#5F5F5A] uppercase tracking-wider mb-2">
+            <div className="text-xs font-bold text-[#5A5873] uppercase tracking-wider mb-3">
               Most used words
             </div>
-            <ul className="list-disc pl-5 space-y-1 text-sm text-[#1A1A1A]">
+            <div className="flex flex-wrap gap-2">
               {(stats.topWords[myName] || []).map((word, i) => (
-                <li key={i}>{word}</li>
+                <span
+                  key={i}
+                  className="px-3 py-1 bg-[#DCEBFF] text-[#1C1A33] rounded-full text-sm font-semibold"
+                >
+                  {word}
+                </span>
               ))}
-            </ul>
+            </div>
           </div>
 
-          <div className="pt-2 border-t border-[#E5E5E1]">
-            <div className="text-xs font-semibold text-[#5F5F5A] uppercase tracking-wider mb-2">
+          <div className="pt-2 border-t border-[#E7E5F0]">
+            <div className="text-xs font-bold text-[#5A5873] uppercase tracking-wider mb-3">
               Most used emojis
             </div>
-            <div className="flex items-center gap-3 text-2xl">
+            <div className="flex items-center gap-3 text-3xl">
               {(stats.topEmojis[myName] || []).map((emoji, i) => (
-                <span key={i} title={emoji}>{emoji}</span>
+                <span key={i} title={emoji} className="hover:scale-110 transition-transform">
+                  {emoji}
+                </span>
               ))}
             </div>
           </div>

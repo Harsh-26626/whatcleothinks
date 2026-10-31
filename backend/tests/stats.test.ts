@@ -54,27 +54,27 @@ describe('Stats and Monthly Computation', () => {
 
   it('filters Hinglish and English stopwords in top words', () => {
     const messages: Message[] = [
-      { id: 0, ts: new Date('2023-05-01T10:00:00Z'), sender: 'Vanshika', text: 'hai yeh kya baat hui college chalenge' },
-      { id: 1, ts: new Date('2023-05-01T10:02:00Z'), sender: 'Vanshika', text: 'college assignment submission today' },
-      { id: 2, ts: new Date('2023-05-01T10:05:00Z'), sender: 'Vanshika', text: 'college canteen best hai' },
+      { id: 0, ts: new Date('2023-05-01T10:00:00Z'), sender: 'natasha', text: 'hai yeh kya baat hui college chalenge' },
+      { id: 1, ts: new Date('2023-05-01T10:02:00Z'), sender: 'natasha', text: 'college assignment submission today' },
+      { id: 2, ts: new Date('2023-05-01T10:05:00Z'), sender: 'natasha', text: 'college canteen best hai' },
     ];
 
-    const stats = computeStats(messages, ['Vanshika']);
+    const stats = computeStats(messages, ['natasha']);
     // 'college' should be top word, stopwords like 'hai', 'yeh', 'kya' stripped
-    expect(stats.topWords['Vanshika']).toContain('college');
-    expect(stats.topWords['Vanshika']).not.toContain('hai');
-    expect(stats.topWords['Vanshika']).not.toContain('yeh');
+    expect(stats.topWords['natasha']).toContain('college');
+    expect(stats.topWords['natasha']).not.toContain('hai');
+    expect(stats.topWords['natasha']).not.toContain('yeh');
   });
 
   it('extracts top emojis using emoji-regex', () => {
     const messages: Message[] = [
-      { id: 0, ts: new Date('2023-05-01T10:00:00Z'), sender: 'Vanshika', text: 'so funny 😭 😭 😂' },
-      { id: 1, ts: new Date('2023-05-01T10:02:00Z'), sender: 'Vanshika', text: 'crying 😭' },
+      { id: 0, ts: new Date('2023-05-01T10:00:00Z'), sender: 'natasha', text: 'so funny 😭 😭 😂' },
+      { id: 1, ts: new Date('2023-05-01T10:02:00Z'), sender: 'natasha', text: 'crying 😭' },
     ];
 
-    const stats = computeStats(messages, ['Vanshika']);
-    expect(stats.topEmojis['Vanshika'][0]).toBe('😭');
-    expect(stats.topEmojis['Vanshika']).toContain('😂');
+    const stats = computeStats(messages, ['natasha']);
+    expect(stats.topEmojis['natasha'][0]).toBe('😭');
+    expect(stats.topEmojis['natasha']).toContain('😂');
   });
 
   it('computes monthly aggregations', () => {

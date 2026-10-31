@@ -3,16 +3,18 @@
 @tailwind utilities;
 
 :root {
-  --color-bg: #FFFFFF;
-  --color-surface: #F6F6F4;
-  --color-border: #E5E5E1;
-  --color-text: #1A1A1A;
-  --color-muted: #5F5F5A;
-  --color-accent: #F2B01E;
-  --color-you: #2F5BEA;
-  --color-them: #F2B01E;
-  --color-danger: #B42318;
-  --color-success: #1F7A4D;
+  --color-page: #FFFFFF;
+  --color-ink: #1C1A33;
+  --color-muted: #5A5873;
+  --color-line: #E7E5F0;
+  --color-coral: #CF3A26;
+  --color-butter: #FFF3C9;
+  --color-sky: #DCEBFF;
+  --color-lilac: #E9E3FF;
+  --color-peach: #FFE5D6;
+  --color-blush: #FFE0E8;
+  --color-you: #3B5BDB;
+  --color-them: #F28C28;
 }
 
 @layer base {
@@ -20,15 +22,55 @@
     margin: 0;
     padding: 0;
     background-color: #FFFFFF;
-    color: #1A1A1A;
+    color: #1C1A33;
     font-family: 'Figtree', 'Noto Sans Devanagari', system-ui, sans-serif;
-    line-height: 1.5;
+    line-height: 1.6;
   }
 
-  /* Default visible focus ring on interactive elements */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Bricolage Grotesque', 'Noto Sans Devanagari', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #1C1A33;
+  }
+
+  /* 3px solid #1C1A33 focus ring with 2px offset */
   a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #1A1A1A;
+    box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 5px #1C1A33;
+  }
+}
+
+/* Chat bubble shape utilities */
+.bubble-in {
+  border-radius: 20px 20px 20px 6px;
+}
+
+.bubble-out {
+  border-radius: 20px 20px 6px 20px;
+}
+
+/* Three typing dots animation */
+@keyframes typingBounce {
+  0%, 80%, 100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  40% {
+    transform: translateY(-6px);
+    opacity: 1;
+  }
+}
+
+.typing-dot {
+  animation: typingBounce 1.4s infinite ease-in-out both;
+}
+.typing-dot:nth-child(1) { animation-delay: -0.32s; }
+.typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .typing-dot {
+    animation: none !important;
   }
 }
 
@@ -37,13 +79,20 @@
   header, footer, nav, .no-print, button {
     display: none !important;
   }
-  
+
   body {
     background: #FFFFFF !important;
-    color: #000000 !important;
+    color: #1C1A33 !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
   }
-  
+
   main {
     padding-top: 0 !important;
+  }
+
+  .chart-panel, .exchange-block {
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 }

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { api, ApiRequestError } from '../lib/api';
 import { Report } from '../types';
+import { CleoAvatar } from '../components/CleoAvatar';
 
 export const ProcessingPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -79,128 +80,102 @@ export const ProcessingPage: React.FC = () => {
   const step3State: 'done' | 'current' | 'waiting' =
     stage === 'done' ? 'done' : stage === 'writing_report' ? 'current' : 'waiting';
 
+  const renderStatusIcon = (status: 'done' | 'current' | 'waiting') => {
+    if (status === 'done') {
+      return (
+        <div className="w-6 h-6 rounded-full bg-[#1F7A4D] text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-sm">
+          ✓
+        </div>
+      );
+    }
+    if (status === 'current') {
+      return (
+        <div className="w-6 h-6 rounded-full bg-[#FFE0E8] flex items-center justify-center shrink-0">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#CF3A26] animate-pulse"></span>
+        </div>
+      );
+    }
+    return (
+      <div className="w-6 h-6 rounded-full bg-[#E7E5F0] flex items-center justify-center shrink-0">
+        <span className="w-2 h-2 rounded-full bg-[#8A889D]"></span>
+      </div>
+    );
+  };
+
   return (
-    <div className="w-full max-w-[540px] mx-auto py-16 md:py-24">
+    <div className="w-full flex-1 flex items-center justify-center px-4 py-12 md:py-20">
       {errorMsg ? (
-        <div className="flex flex-col items-start gap-4">
-          <h1 className="text-[28px] font-bold text-[#1A1A1A]">Report could not be finished</h1>
-          <p className="text-base text-[#5F5F5A]">
-            {errorMsg}
+        /* Failure State: Peach Callout (#FFE5D6) with Cleo Avatar (32) */
+        <div className="bg-[#FFE5D6] max-w-[560px] w-full p-8 sm:p-10 rounded-[28px] border border-[#CF3A26]/20 flex flex-col items-start gap-5 shadow-sm">
+          <div className="flex items-center gap-3">
+            <CleoAvatar size={32} />
+            <h2 className="font-heading font-bold text-2xl text-[#1C1A33]">
+              Something went wrong
+            </h2>
+          </div>
+          <p className="text-base text-[#1C1A33] leading-normal font-medium">
+            Something went wrong while reading this chat. Your chat file was still deleted.
           </p>
-          <p className="text-sm text-[#1A1A1A] font-medium p-3 bg-[#F6F6F4] rounded-lg border border-[#E5E5E1] w-full">
-            Your chat file was still deleted.
-          </p>
-          <div className="flex gap-4 mt-4">
+          <div className="flex flex-wrap gap-4 mt-2">
             <Link
               to="/new"
-              className="min-h-[44px] px-5 py-2.5 bg-[#F2B01E] text-[#1A1A1A] font-semibold text-base rounded-lg hover:opacity-90 inline-flex items-center"
+              className="min-h-[48px] px-7 py-3 bg-[#CF3A26] hover:bg-[#B32F1D] text-white font-semibold text-base rounded-full transition-colors duration-150 inline-flex items-center shadow-sm"
             >
               Try another chat
             </Link>
             <Link
               to="/dashboard"
-              className="min-h-[44px] px-5 py-2.5 border border-[#E5E5E1] text-[#1A1A1A] font-semibold text-base rounded-lg hover:bg-[#F6F6F4] inline-flex items-center"
+              className="min-h-[48px] px-6 py-2.5 bg-white border-[1.5px] border-[#1C1A33] text-[#1C1A33] font-semibold text-base rounded-full hover:bg-[#F1EDFF] transition-colors duration-150 inline-flex items-center"
             >
-              Reports list
+              Go to reports
             </Link>
           </div>
         </div>
       ) : (
-        <div className="flex flex-col gap-6">
-          <div>
-            <h1 className="text-[28px] font-bold text-[#1A1A1A]">Creating your report</h1>
-            <p className="text-base text-[#5F5F5A] mt-2">
-              This usually takes under a minute.
-            </p>
+        /* Processing Center on Lilac Panel (28px radius, max-width 560px) */
+        <div className="bg-[#E9E3FF] max-w-[560px] w-full p-8 sm:p-12 rounded-[28px] flex flex-col items-center text-center shadow-sm">
+          {/* Cleo Avatar 96 with 3 typing dots underneath */}
+          <div className="flex flex-col items-center">
+            <CleoAvatar size={96} />
+            <div className="flex items-center gap-2 mt-4" aria-label="Processing animation">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#1C1A33] typing-dot"></span>
+              <span className="w-2.5 h-2.5 rounded-full bg-[#1C1A33] typing-dot"></span>
+              <span className="w-2.5 h-2.5 rounded-full bg-[#1C1A33] typing-dot"></span>
+            </div>
           </div>
 
-          {/* Plain Checklist */}
-          <div className="flex flex-col gap-4 py-4 border-y border-[#E5E5E1]">
-            {/* Step 1 */}
-            <div className="flex items-center gap-3">
-              <span className="w-5 text-center text-sm font-bold">
-                {step1State === 'done' ? (
-                  <span className="text-[#1F7A4D]">✓</span>
-                ) : step1State === 'current' ? (
-                  <span className="inline-block w-2.5 h-2.5 rounded-full bg-[#1A1A1A]" />
-                ) : (
-                  <span className="inline-block w-2.5 h-2.5 rounded-full border border-[#E5E5E1]" />
-                )}
-              </span>
-              <span
-                className={`text-base ${
-                  step1State === 'current'
-                    ? 'font-semibold text-[#1A1A1A]'
-                    : step1State === 'done'
-                    ? 'text-[#5F5F5A]'
-                    : 'text-[#8E8E87]'
-                }`}
-              >
+          <h1 className="font-heading font-bold text-[28px] sm:text-[34px] text-[#1C1A33] tracking-tight mt-6 mb-2">
+            Cleo is reading your chat
+          </h1>
+          <p className="text-base text-[#5A5873] max-w-[400px] mb-8">
+            This usually takes 20 to 40 seconds.
+          </p>
+
+          {/* Plain Checklist on White Panel */}
+          <div className="w-full bg-white rounded-[20px] p-5 sm:p-6 border border-[#E7E5F0] flex flex-col gap-4 text-left">
+            <div className="flex items-center gap-3.5">
+              {renderStatusIcon(step1State)}
+              <span className={`text-base font-semibold ${step1State === 'waiting' ? 'text-[#5A5873]' : 'text-[#1C1A33]'}`}>
                 Reading your chat
               </span>
             </div>
-
-            {/* Step 2 */}
-            <div className="flex items-center gap-3">
-              <span className="w-5 text-center text-sm font-bold">
-                {step2State === 'done' ? (
-                  <span className="text-[#1F7A4D]">✓</span>
-                ) : step2State === 'current' ? (
-                  <span className="inline-block w-2.5 h-2.5 rounded-full bg-[#1A1A1A]" />
-                ) : (
-                  <span className="inline-block w-2.5 h-2.5 rounded-full border border-[#E5E5E1]" />
-                )}
-              </span>
-              <span
-                className={`text-base ${
-                  step2State === 'current'
-                    ? 'font-semibold text-[#1A1A1A]'
-                    : step2State === 'done'
-                    ? 'text-[#5F5F5A]'
-                    : 'text-[#8E8E87]'
-                }`}
-              >
+            <div className="flex items-center gap-3.5">
+              {renderStatusIcon(step2State)}
+              <span className={`text-base font-semibold ${step2State === 'waiting' ? 'text-[#5A5873]' : 'text-[#1C1A33]'}`}>
                 Working out the month-by-month changes
               </span>
             </div>
-
-            {/* Step 3 */}
-            <div className="flex items-center gap-3">
-              <span className="w-5 text-center text-sm font-bold">
-                {step3State === 'done' ? (
-                  <span className="text-[#1F7A4D]">✓</span>
-                ) : step3State === 'current' ? (
-                  <span className="inline-block w-2.5 h-2.5 rounded-full bg-[#1A1A1A]" />
-                ) : (
-                  <span className="inline-block w-2.5 h-2.5 rounded-full border border-[#E5E5E1]" />
-                )}
-              </span>
-              <span
-                className={`text-base ${
-                  step3State === 'current'
-                    ? 'font-semibold text-[#1A1A1A]'
-                    : step3State === 'done'
-                    ? 'text-[#5F5F5A]'
-                    : 'text-[#8E8E87]'
-                }`}
-              >
+            <div className="flex items-center gap-3.5">
+              {renderStatusIcon(step3State)}
+              <span className={`text-base font-semibold ${step3State === 'waiting' ? 'text-[#5A5873]' : 'text-[#1C1A33]'}`}>
                 Writing your report
               </span>
             </div>
           </div>
 
           {/* Reassurance text */}
-          <p className="text-sm text-[#5F5F5A] leading-normal">
+          <div className="mt-8 text-sm text-[#5A5873] leading-normal max-w-[440px]">
             Your chat file is deleted when this finishes. You can close this tab; the report will be in your reports list.
-          </p>
-
-          <div>
-            <Link
-              to="/dashboard"
-              className="text-sm text-[#1A1A1A] underline underline-offset-4 hover:text-[#5F5F5A]"
-            >
-              Go to reports list
-            </Link>
           </div>
         </div>
       )}

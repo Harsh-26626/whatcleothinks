@@ -38,7 +38,7 @@ describe('Hardening and Security Verification', () => {
       .post('/api/reports')
       .set('Authorization', `Bearer ${tokenA}`)
       .field('chatType', 'romance')
-      .field('myName', 'Harsh')
+      .field('myName', 'sam')
       .field('consent', 'true')
       .attach('file', samplePath);
 

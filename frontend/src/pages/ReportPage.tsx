@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { api, ApiRequestError } from '../lib/api';
-import { Report } from '../types';
+import { Report, ChatType } from '../types';
 import { StatsDashboard } from '../components/report/StatsDashboard';
 import { MonthlyEvolution } from '../components/report/MonthlyEvolution';
 import { NarrativeView } from '../components/report/NarrativeView';
@@ -14,7 +14,7 @@ export const ReportPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const [activeSection, setActiveSection] = useState<'overview' | 'over-time' | 'cleos-read'>('overview');
+  const [activeTab, setActiveTab] = useState<'stats' | 'monthly' | 'narrative'>('stats');
   const [menuOpen, setMenuOpen] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -74,24 +74,48 @@ export const ReportPage: React.FC = () => {
     window.print();
   };
 
+  const getChatTypeChip = (type?: ChatType) => {
+    switch (type) {
+      case 'romance':
+        return (
+          <span className="inline-flex items-center px-3.5 py-1 rounded-full text-xs font-semibold bg-[#FFE0E8] text-[#1C1A33]">
+            Romance
+          </span>
+        );
+      case 'group':
+        return (
+          <span className="inline-flex items-center px-3.5 py-1 rounded-full text-xs font-semibold bg-[#FFF3C9] text-[#1C1A33]">
+            Student group
+          </span>
+        );
+      case 'friends':
+      default:
+        return (
+          <span className="inline-flex items-center px-3.5 py-1 rounded-full text-xs font-semibold bg-[#DCEBFF] text-[#1C1A33]">
+            Friends
+          </span>
+        );
+    }
+  };
+
   if (loading) {
     return (
-      <div className="w-full py-12 flex flex-col gap-6">
-        <div className="h-10 bg-[#F6F6F4] rounded w-1/2"></div>
-        <div className="h-6 bg-[#F6F6F4] rounded w-1/4"></div>
-        <div className="h-64 bg-[#F6F6F4] rounded mt-4"></div>
+      <div className="w-full max-w-[1100px] mx-auto px-4 sm:px-6 py-12 flex flex-col gap-6 animate-pulse">
+        <div className="h-12 bg-[#E9E3FF] rounded-[20px] w-2/3"></div>
+        <div className="h-6 bg-[#F1EDFF] rounded-lg w-1/3"></div>
+        <div className="h-64 bg-[#F6F6F4] rounded-[28px] mt-4"></div>
       </div>
     );
   }
 
   if (errorMsg || !report) {
     return (
-      <div className="w-full max-w-[500px] mx-auto py-20 text-center flex flex-col items-center gap-4">
-        <h1 className="text-2xl font-bold text-[#1A1A1A]">Unable to load report</h1>
-        <p className="text-base text-[#5F5F5A]">{errorMsg}</p>
+      <div className="w-full max-w-[500px] mx-auto py-20 px-4 text-center flex flex-col items-center gap-4">
+        <h1 className="font-heading font-bold text-2xl text-[#1C1A33]">Unable to load report</h1>
+        <p className="text-base text-[#5A5873]">{errorMsg}</p>
         <Link
           to="/dashboard"
-          className="min-h-[44px] px-5 py-2.5 bg-[#F2B01E] text-[#1A1A1A] font-semibold text-base rounded-lg inline-flex items-center"
+          className="min-h-[48px] px-7 py-3 bg-[#CF3A26] text-white font-semibold text-base rounded-full inline-flex items-center hover:bg-[#B32F1D] transition-colors"
         >
           Return to reports
         </Link>
@@ -107,136 +131,149 @@ export const ReportPage: React.FC = () => {
     : '13 Jul 2024 to 25 Dec 2024';
 
   return (
-    <div className="w-full py-8 md:py-12 flex flex-col gap-8">
-      {/* Header */}
-      <header className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-[#E5E5E1]">
-        <div>
-          <h1 className="text-[30px] md:text-[36px] font-bold text-[#1A1A1A]">
-            {report.title || participantsText}
-          </h1>
-          <p className="text-base text-[#5F5F5A] mt-1">
-            {participantsText} · {dateRangeText}
-          </p>
-        </div>
+    <div className="w-full flex flex-col">
+      {/* Header: Sits on a soft lilac band (#E9E3FF, full width) */}
+      <header className="w-full bg-[#E9E3FF] border-b border-[#E7E5F0] py-8 sm:py-12">
+        <div className="max-w-[1100px] mx-auto px-4 sm:px-6 flex flex-col sm:flex-row sm:items-end justify-between gap-6">
+          <div>
+            <div className="flex flex-wrap items-center gap-3 mb-2">
+              <h1 className="font-heading font-bold text-[32px] sm:text-[42px] text-[#1C1A33] tracking-tight leading-tight">
+                {report.title || participantsText}
+              </h1>
+              {getChatTypeChip(report.chatType)}
+            </div>
+            <p className="text-base text-[#5A5873] font-medium">
+              {participantsText} · {dateRangeText}
+            </p>
+          </div>
 
-        {/* Actions: Print and ... menu */}
-        <div className="flex items-center gap-3 no-print">
-          <button
-            onClick={handlePrint}
-            className="min-h-[44px] px-4 py-2 border border-[#E5E5E1] rounded-lg text-sm font-semibold text-[#1A1A1A] hover:bg-[#F6F6F4] transition-colors"
-          >
-            Print
-          </button>
-
-          {/* ... menu */}
-          <div className="relative" ref={menuRef}>
+          {/* Actions: Print and ... menu */}
+          <div className="flex items-center gap-3 no-print shrink-0">
             <button
-              onClick={() => setMenuOpen((prev) => !prev)}
-              aria-label="More options"
-              className="min-h-[44px] min-w-[44px] px-3 py-2 border border-[#E5E5E1] rounded-lg text-base font-bold text-[#1A1A1A] hover:bg-[#F6F6F4] transition-colors flex items-center justify-center"
+              onClick={handlePrint}
+              className="min-h-[44px] px-5 py-2 bg-white border-[1.5px] border-[#1C1A33] rounded-full text-sm font-semibold text-[#1C1A33] hover:bg-[#F1EDFF] transition-colors"
             >
-              ···
+              Print
             </button>
 
-            {menuOpen && (
-              <div className="absolute right-0 mt-1 w-44 bg-white border border-[#E5E5E1] rounded-lg shadow-lg py-1 z-50">
-                <button
-                  onClick={() => {
-                    setMenuOpen(false);
-                    setShowDeleteModal(true);
-                  }}
-                  className="w-full text-left px-4 py-2 text-sm text-[#B42318] hover:bg-[#F6F6F4]"
-                >
-                  Delete report
-                </button>
-              </div>
-            )}
+            {/* ... menu */}
+            <div className="relative" ref={menuRef}>
+              <button
+                onClick={() => setMenuOpen((prev) => !prev)}
+                aria-label="More options"
+                className="min-h-[44px] min-w-[44px] px-3 py-2 bg-white border-[1.5px] border-[#1C1A33] rounded-full text-base font-bold text-[#1C1A33] hover:bg-[#F1EDFF] transition-colors flex items-center justify-center"
+              >
+                ···
+              </button>
+
+              {menuOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white border border-[#E7E5F0] rounded-xl shadow-[0_8px_24px_rgba(28,26,51,0.08)] py-1.5 z-50">
+                  <button
+                    onClick={() => {
+                      setMenuOpen(false);
+                      setShowDeleteModal(true);
+                    }}
+                    className="w-full text-left px-4 py-2.5 text-sm font-semibold text-[#B42318] hover:bg-[#FFE0E8] transition-colors"
+                  >
+                    Delete report
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </header>
 
-      {/* Simple Sticky In-Page Nav */}
-      <nav className="sticky top-16 bg-white z-30 py-3 border-b border-[#E5E5E1] flex items-center gap-6 text-base font-medium no-print">
-        <a
-          href="#overview"
-          onClick={() => setActiveSection('overview')}
-          className={`pb-1 transition-colors ${
-            activeSection === 'overview'
-              ? 'text-[#1A1A1A] font-semibold border-b-2 border-[#1A1A1A]'
-              : 'text-[#5F5F5A] hover:text-[#1A1A1A]'
-          }`}
-        >
-          Overview
-        </a>
-        <a
-          href="#over-time"
-          onClick={() => setActiveSection('over-time')}
-          className={`pb-1 transition-colors ${
-            activeSection === 'over-time'
-              ? 'text-[#1A1A1A] font-semibold border-b-2 border-[#1A1A1A]'
-              : 'text-[#5F5F5A] hover:text-[#1A1A1A]'
-          }`}
-        >
-          Over time
-        </a>
-        <a
-          href="#cleos-read"
-          onClick={() => setActiveSection('cleos-read')}
-          className={`pb-1 transition-colors ${
-            activeSection === 'cleos-read'
-              ? 'text-[#1A1A1A] font-semibold border-b-2 border-[#1A1A1A]'
-              : 'text-[#5F5F5A] hover:text-[#1A1A1A]'
-          }`}
-        >
-          Cleo's read
-        </a>
+      {/* Sticky Tab Nav: Sits below the header on white, sticky */}
+      <nav className="sticky top-[72px] bg-white z-30 border-b border-[#E7E5F0] no-print">
+        <div className="max-w-[1100px] mx-auto px-4 sm:px-6 flex items-center gap-8">
+          <button
+            onClick={() => setActiveTab('stats')}
+            className={`py-3.5 text-base font-semibold transition-all relative ${
+              activeTab === 'stats'
+                ? 'text-[#1C1A33] border-b-[3px] border-[#CF3A26]'
+                : 'text-[#5A5873] hover:text-[#1C1A33] border-b-[3px] border-transparent'
+            }`}
+          >
+            Stats
+          </button>
+          <button
+            onClick={() => setActiveTab('monthly')}
+            className={`py-3.5 text-base font-semibold transition-all relative ${
+              activeTab === 'monthly'
+                ? 'text-[#1C1A33] border-b-[3px] border-[#CF3A26]'
+                : 'text-[#5A5873] hover:text-[#1C1A33] border-b-[3px] border-transparent'
+            }`}
+          >
+            Month by month
+          </button>
+          <button
+            onClick={() => setActiveTab('narrative')}
+            className={`py-3.5 text-base font-semibold transition-all relative ${
+              activeTab === 'narrative'
+                ? 'text-[#1C1A33] border-b-[3px] border-[#CF3A26]'
+                : 'text-[#5A5873] hover:text-[#1C1A33] border-b-[3px] border-transparent'
+            }`}
+          >
+            Cleo's read
+          </button>
+        </div>
       </nav>
 
-      {/* 1. Overview */}
-      {report.stats && (
-        <StatsDashboard
-          stats={report.stats}
-          participants={report.participants || []}
-          dateRange={report.dateRange}
-        />
-      )}
+      {/* Main Content Sections: In screen mode, show active tab. In print mode, show all 3. */}
+      <main className="max-w-[1100px] mx-auto px-4 sm:px-6 py-10 sm:py-14 w-full flex flex-col gap-12">
+        {/* Tab 1: Stats */}
+        {report.stats && (
+          <div className={activeTab === 'stats' ? 'block' : 'hidden print:block'}>
+            <StatsDashboard
+              stats={report.stats}
+              participants={report.participants || []}
+              dateRange={report.dateRange}
+            />
+          </div>
+        )}
 
-      {/* 2. Over Time */}
-      {report.monthly && report.monthly.length > 0 && (
-        <MonthlyEvolution
-          monthly={report.monthly}
-          turningPoints={report.narrative?.turningPoints || []}
-        />
-      )}
+        {/* Tab 2: Month by month */}
+        {report.monthly && report.monthly.length > 0 && (
+          <div className={activeTab === 'monthly' ? 'block' : 'hidden print:block'}>
+            <MonthlyEvolution
+              monthly={report.monthly}
+              turningPoints={report.narrative?.turningPoints || []}
+            />
+          </div>
+        )}
 
-      {/* 3. Cleo's Read */}
-      {report.narrative && (
-        <NarrativeView
-          narrative={report.narrative}
-          participants={report.participants || []}
-        />
-      )}
+        {/* Tab 3: Cleo's read */}
+        {report.narrative && (
+          <div className={activeTab === 'narrative' ? 'block' : 'hidden print:block'}>
+            <NarrativeView
+              narrative={report.narrative}
+              participants={report.participants || []}
+            />
+          </div>
+        )}
+      </main>
 
-      {/* Delete Confirmation Modal */}
+      {/* Delete Confirmation Modal (28px radius, max-width 480px, centered) */}
       {showDeleteModal && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-          <div className="bg-white max-w-[440px] w-full p-6 rounded-xl border border-[#E5E5E1] shadow-xl flex flex-col gap-4">
-            <h2 className="text-xl font-bold text-[#1A1A1A]">Delete this report?</h2>
-            <p className="text-sm text-[#5F5F5A]">
-              This report will be permanently removed from your account. Your original chat file was already deleted after the report was created.
+        <div className="fixed inset-0 bg-[#1C1A33]/40 z-50 flex items-center justify-center p-4">
+          <div className="bg-white max-w-[480px] w-full p-8 rounded-[28px] border border-[#E7E5F0] shadow-2xl flex flex-col gap-4">
+            <h2 className="font-heading font-bold text-2xl text-[#1C1A33]">Delete this report?</h2>
+            <p className="text-base text-[#5A5873] leading-normal">
+              This report will be permanently removed from your account. Your original chat file was already deleted right after the report was created.
             </p>
-            <div className="flex justify-end gap-3 mt-2">
+            <div className="flex justify-end gap-3 mt-4">
               <button
                 disabled={isDeleting}
                 onClick={() => setShowDeleteModal(false)}
-                className="min-h-[44px] px-4 py-2 border border-[#E5E5E1] rounded-lg text-sm font-semibold text-[#1A1A1A] hover:bg-[#F6F6F4]"
+                className="min-h-[48px] px-5 py-2.5 border-[1.5px] border-[#1C1A33] rounded-xl text-sm font-semibold text-[#1C1A33] hover:bg-[#F1EDFF] transition-colors"
               >
                 Cancel
               </button>
               <button
                 disabled={isDeleting}
                 onClick={handleDelete}
-                className="min-h-[44px] px-4 py-2 bg-[#B42318] text-white rounded-lg text-sm font-semibold hover:opacity-90"
+                className="min-h-[48px] px-6 py-2.5 bg-[#B42318] text-white rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity"
               >
                 {isDeleting ? 'Deleting…' : 'Delete permanently'}
               </button>
