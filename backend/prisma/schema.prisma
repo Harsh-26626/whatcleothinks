@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ChatType {
+  romance
+  friends
+  group
+}
+
+enum ReportStatus {
+  queued
+  processing
+  done
+  failed
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  reports      Report[]
+}
+
+model Report {
+  id           String       @id @default(uuid())
+  userId       String
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title        String?
+  chatType     ChatType
+  persona      String       @default("cleo")
+  status       ReportStatus @default(queued)
+  stage        String       @default("queued")
+  errorCode    String?
+  participants Json?
+  dateRange    Json?
+  stats        Json?
+  monthly      Json?
+  narrative    Json?
+  createdAt    DateTime     @default(now())
+  completedAt  DateTime?
+
+  @@index([userId, createdAt(sort: Desc)])
+}
