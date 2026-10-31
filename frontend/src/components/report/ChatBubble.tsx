@@ -48,3 +48,4 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({ quote, isMe }) => {
     </div>
   );
 };
+

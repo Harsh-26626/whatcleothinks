@@ -213,3 +213,4 @@ export const MonthlyEvolution: React.FC<MonthlyEvolutionProps> = ({
     </section>
   );
 };
+

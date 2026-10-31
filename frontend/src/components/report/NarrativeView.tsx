@@ -123,3 +123,4 @@ export const NarrativeView: React.FC<NarrativeViewProps> = ({
     </section>
   );
 };
+
