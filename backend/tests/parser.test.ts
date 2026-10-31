@@ -120,3 +120,4 @@ describe('WhatsApp Chat Parser', () => {
     expect(() => parseChat(shortChat)).toThrow('too_short');
   });
 });
+

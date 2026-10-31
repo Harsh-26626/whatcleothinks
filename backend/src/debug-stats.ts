@@ -39,3 +39,4 @@ main().catch((err) => {
   console.error('[Debug Error]', err?.message || 'Failed to compute stats');
   process.exit(1);
 });
+

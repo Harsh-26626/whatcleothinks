@@ -17,3 +17,4 @@ startServer().catch((err) => {
   console.error('[Fatal Startup Error]', err?.message || 'Failed to start server');
   process.exit(1);
 });
+

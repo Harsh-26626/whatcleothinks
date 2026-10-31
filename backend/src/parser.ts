@@ -262,3 +262,4 @@ export function parseChat(rawContent: string): ParseResult {
     isGroup,
   };
 }
+

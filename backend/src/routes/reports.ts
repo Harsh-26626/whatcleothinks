@@ -236,3 +236,4 @@ reportsRouter.delete('/:id', requireAuth, async (req: AuthenticatedRequest, res:
     next(err);
   }
 });
+

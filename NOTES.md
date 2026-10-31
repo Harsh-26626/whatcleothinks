@@ -9,6 +9,12 @@
 - DONE A4 @ T+48: Full Anthropic LLM pipeline with Map (parallel `p-limit(5)` with Claude Haiku) and Reduce (Claude Sonnet), prompt injection safeguards, quote resolution (LLM never invents quotes; backend resolves from parsed IDs), and high-fidelity fallback stub generator.
 - DONE A5 @ T+58: Hardening complete. Strict user isolation / ownership verified (404 on cross-user access/deletion), upload size and MIME validations, server restart hook verified, zero chat text or request bodies logged (audit passed). 36 tests passing across 4 test suites.
 - DONE A6 @ T+65: `backend/README.md` created with installation, configuration, and verification instructions.
+- DONE B1 @ T+8: Vite React + TypeScript scaffold initialized, design tokens and typography loaded (`Playfair Display`, `Plus Jakarta Sans`, Devanagari fallbacks), `lib/api.ts` typed fetch client with Bearer auth and mock support, `AuthContext` with JWT storage and session restoration.
+- DONE B2 @ T+20: Landing page with 3 steps, high-prominence privacy block with the five truths verbatim, blurred preview card, CTA; kind email+password Login and Signup pages; Plain-words Privacy page with the five truths and visual data journey.
+- DONE B3 @ T+35: Dashboard with report cards & empty state; 4-step New Report stepper (Chat type -> Export guide with Android/iPhone tabs -> Upload dropzone with preview, participant picker, and consent -> Persona selection); live Processing screen with Cleo avatar, stage updates, and 3-second polling.
+- DONE B4 @ T+50: Report page with full modular architecture: `StatsDashboard` (Calendar Activity Heatmap, Share of Voice, Initiation balance, Streaks/Silence/Peak metrics, 24-hr late night chart, Top Hinglish words & emojis), `MonthlyEvolution` (closeness area trajectory, turning point cards), and `NarrativeView` (Cleo's reflection, WhatsApp-style `ChatBubble` quotes, caring safety note). Pause & breathe modal affordance, PDF print stylesheet, and quiet deletion modal.
+- DONE B5 @ T+62: Settings page with report deletion, delete-all, and permanent account removal modal. Loading skeletons, comprehensive error boundaries, and API error code mapping.
+- DONE B6 @ T+70: Production build verified clean (`tsc -b && vite build` in 2.4s). Contrast and touch targets verified for mobile (360px+), zero chat logging verified, `frontend/README.md` created. End-to-end integration verified with live backend and PostgreSQL.
 
 ### Handoff Notes for Agent B (Frontend)
 - The backend API is fully functional on `http://localhost:8000` (or `PORT=8000`).

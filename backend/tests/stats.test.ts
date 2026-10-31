@@ -92,3 +92,4 @@ describe('Stats and Monthly Computation', () => {
     expect(monthly[1].messages).toBe(1);
   });
 });
+

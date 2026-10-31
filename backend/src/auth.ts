@@ -49,3 +49,4 @@ export function requireAuth(req: AuthenticatedRequest, res: Response, next: Next
     });
   }
 }
+

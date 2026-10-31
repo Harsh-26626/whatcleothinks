@@ -48,3 +48,4 @@ model Report {
 
   @@index([userId, createdAt(sort: Desc)])
 }
+

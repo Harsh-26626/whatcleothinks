@@ -38,3 +38,4 @@ export const PERSONAS: Persona[] = [
 export function getPersona(id: string): Persona | undefined {
   return PERSONAS.find((p) => p.id === id);
 }
+

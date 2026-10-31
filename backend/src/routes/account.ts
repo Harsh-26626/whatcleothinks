@@ -16,3 +16,4 @@ accountRouter.delete('/', requireAuth, async (req: AuthenticatedRequest, res: Re
     next(err);
   }
 });
+

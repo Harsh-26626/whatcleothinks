@@ -157,3 +157,4 @@ authRouter.get('/me', requireAuth, async (req: AuthenticatedRequest, res: Respon
     next(err);
   }
 });
+

@@ -332,3 +332,4 @@ export function computeMonthlyStats(messages: Message[], participants: string[])
 
   return monthlyList;
 }
+
