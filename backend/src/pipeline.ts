@@ -48,6 +48,11 @@ function stripCodeFences(text: string): string {
   return cleaned.trim();
 }
 
+function extractResponseText(resp: Anthropic.Message): string {
+  const textBlock = resp.content.find((b) => b.type === 'text');
+  return textBlock && 'text' in textBlock ? textBlock.text : '';
+}
+
 export function sampleMonthTranscript(messages: Message[]): string {
   // If month transcript exceeds ~15,000 characters:
   // keep every message over 120 chars and sample the rest evenly until it fits.
@@ -103,8 +108,8 @@ export async function runPipeline(
   narrative: Narrative;
 }> {
   const apiKey = process.env.ANTHROPIC_API_KEY?.trim();
-  const modelMap = process.env.MODEL_MAP || 'claude-3-5-haiku-20241022';
-  const modelReport = process.env.MODEL_REPORT || 'claude-3-5-sonnet-20241022';
+  const modelMap = process.env.MODEL_MAP || 'claude-haiku-5-5';
+  const modelReport = process.env.MODEL_REPORT || 'claude-sonnet-5-5';
 
   // If no API key is provided, use the high-fidelity stub narrative
   if (!apiKey) {
@@ -178,15 +183,16 @@ Output JSON only in this format:
             messages: [{ role: 'user', content: prompt }],
           });
 
-          const content = resp.content[0]?.type === 'text' ? resp.content[0].text : '';
+          const content = extractResponseText(resp);
           const cleanedJson = stripCodeFences(content);
           const parsed = JSON.parse(cleanedJson);
           const validated = mapOutputSchema.parse(parsed);
           monthMapResults.set(mStats.month, validated);
           return;
-        } catch (_err) {
+        } catch (err: any) {
           retries--;
           if (retries < 0) {
+            console.error(`[LLM Map Error] Month ${mStats.month} failed (status: ${err?.status || 'unknown'}). Using fallback.`);
             // Fallback for this month if LLM fails
             const fallbackCloseness = Math.min(95, Math.max(30, Math.round((monthMsgs.length / 500) * 100)));
             monthMapResults.set(mStats.month, {
@@ -327,12 +333,13 @@ Output JSON only in this exact format:
         messages: [{ role: 'user', content: reducePrompt }],
       });
 
-      const content = resp.content[0]?.type === 'text' ? resp.content[0].text : '';
+      const content = extractResponseText(resp);
       const cleaned = stripCodeFences(content);
       const parsed = JSON.parse(cleaned);
       reduceResult = reduceOutputSchema.parse(parsed);
       break;
-    } catch (_err) {
+    } catch (err: any) {
+      console.error(`[LLM Reduce Error] Status ${err?.status || 'unknown'}: ${err?.message?.slice(0, 100) || 'error'}`);
       reduceRetries--;
     }
   }
