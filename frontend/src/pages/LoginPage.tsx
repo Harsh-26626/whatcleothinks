@@ -41,36 +41,46 @@ export const LoginPage: React.FC = () => {
 
   return (
     <div className="w-full flex-1 grid grid-cols-1 lg:grid-cols-12 min-h-[calc(100vh-72px)]">
-      {/* Left Column: Lilac Panel with Cleo Avatar (96) and Speech Bubbles */}
-      <div className="lg:col-span-5 bg-[#E9E3FF] p-8 sm:p-12 lg:p-16 flex flex-col items-center justify-center text-center lg:text-left lg:items-start gap-6">
+      {/* Mobile-only compact banner (visible on screens < lg) */}
+      <div className="lg:hidden bg-[#E9E3FF] p-5 sm:p-8 flex items-center gap-4 border-b border-[#E7E5F0]">
+        <div className="shrink-0">
+          <CleoAvatar size={48} />
+        </div>
+        <div className="bg-white border border-[#E7E5F0] bubble-in px-3.5 py-2 text-xs sm:text-sm font-semibold text-[#1C1A33] shadow-xs">
+          Log in to read your chat reports.
+        </div>
+      </div>
+
+      {/* Desktop Left Column: Lilac Panel with Cleo Avatar (96) and Speech Bubbles */}
+      <div className="hidden lg:flex lg:col-span-5 bg-[#E9E3FF] p-8 sm:p-12 lg:p-16 flex-col items-start justify-center gap-6">
         <CleoAvatar size={96} />
         <div className="flex flex-col gap-3 max-w-[360px]">
-          <div className="self-center lg:self-start bg-white border border-[#E7E5F0] bubble-in p-4 text-base font-semibold text-[#1C1A33] shadow-sm">
+          <div className="bg-white border border-[#E7E5F0] bubble-in p-4 text-base font-semibold text-[#1C1A33] shadow-sm">
             Hi, I'm Cleo.
           </div>
-          <div className="self-center lg:self-start bg-white border border-[#E7E5F0] bubble-in p-4 text-sm text-[#1C1A33] leading-relaxed shadow-sm">
+          <div className="bg-white border border-[#E7E5F0] bubble-in p-4 text-sm text-[#1C1A33] leading-relaxed shadow-sm">
             An account keeps your reports visible only to you.
           </div>
         </div>
       </div>
 
-      {/* Right Column: Centered Form */}
-      <div className="lg:col-span-7 bg-white p-8 sm:p-12 lg:p-16 flex items-center justify-center">
+      {/* Right Column: Centered Form (Mobile-first padding) */}
+      <div className="lg:col-span-7 bg-white p-5 sm:p-10 lg:p-16 flex items-center justify-center">
         <div className="w-full max-w-[400px]">
-          <h1 className="text-[32px] md:text-[36px] font-heading font-bold text-[#1C1A33]">
+          <h1 className="text-[28px] sm:text-[34px] md:text-[36px] font-heading font-bold text-[#1C1A33]">
             Welcome back
           </h1>
-          <p className="text-base text-[#5A5873] mt-2">
+          <p className="text-sm sm:text-base text-[#5A5873] mt-1.5 sm:mt-2">
             Log in to read your chat reports.
           </p>
 
           {errorMsg && (
-            <div className="mt-4 p-3.5 bg-[#FFE5D6] border border-[#CF3A26] text-[#B42318] text-sm font-medium rounded-xl">
+            <div className="mt-4 p-3.5 bg-[#FFE5D6] border border-[#CF3A26]/30 text-[#B42318] text-sm font-medium rounded-xl">
               {errorMsg}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-5 mt-6">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:gap-5 mt-6">
             <div>
               <label className="block text-sm font-semibold text-[#1C1A33] mb-1.5" htmlFor="login-email">
                 Email
@@ -95,7 +105,7 @@ export const LoginPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
-                  className="text-xs text-[#5A5873] hover:text-[#1C1A33] font-medium"
+                  className="text-xs text-[#5A5873] hover:text-[#1C1A33] font-medium p-1"
                 >
                   {showPassword ? 'Hide' : 'Show'}
                 </button>
@@ -106,29 +116,25 @@ export const LoginPage: React.FC = () => {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Your password"
                 className="w-full min-h-[48px] px-4 py-2.5 text-base text-[#1C1A33] border border-[#E7E5F0] rounded-xl bg-white focus-visible:ring-2 focus-visible:ring-[#1C1A33]"
               />
-              <p className="text-xs text-[#5A5873] mt-1.5">
-                Your password is stored hashed, never as plain text.
-              </p>
             </div>
 
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full min-h-[48px] bg-[#CF3A26] hover:bg-[#B32F1D] text-white font-semibold text-base rounded-full transition-colors duration-150 flex items-center justify-center mt-2 disabled:opacity-50"
+              className="mt-2 min-h-[48px] w-full px-6 py-3 bg-[#CF3A26] hover:bg-[#B32F1D] text-white font-semibold text-base rounded-full transition-colors duration-150 flex items-center justify-center disabled:opacity-50 shadow-sm"
             >
               {isSubmitting ? 'Logging in…' : 'Log in'}
             </button>
           </form>
 
-          <div className="mt-8 text-sm text-[#5A5873] text-center">
-            Need an account?{' '}
-            <Link to="/signup" className="text-[#1C1A33] underline underline-offset-4 hover:text-[#CF3A26] font-semibold">
-              Create one
+          <p className="text-sm text-[#5A5873] mt-6 text-center">
+            Do not have an account?{' '}
+            <Link to="/signup" className="text-[#1C1A33] font-semibold underline underline-offset-4 hover:text-[#CF3A26]">
+              Sign up
             </Link>
-          </div>
+          </p>
         </div>
       </div>
     </div>

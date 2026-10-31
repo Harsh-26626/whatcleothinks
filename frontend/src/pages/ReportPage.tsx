@@ -78,20 +78,20 @@ export const ReportPage: React.FC = () => {
     switch (type) {
       case 'romance':
         return (
-          <span className="inline-flex items-center px-3.5 py-1 rounded-full text-xs font-semibold bg-[#FFE0E8] text-[#1C1A33]">
+          <span className="inline-flex items-center px-2.5 sm:px-3 py-0.5 rounded-full text-[11px] sm:text-xs font-semibold bg-[#FFE0E8] text-[#1C1A33] shrink-0">
             Romance
           </span>
         );
       case 'group':
         return (
-          <span className="inline-flex items-center px-3.5 py-1 rounded-full text-xs font-semibold bg-[#FFF3C9] text-[#1C1A33]">
+          <span className="inline-flex items-center px-2.5 sm:px-3 py-0.5 rounded-full text-[11px] sm:text-xs font-semibold bg-[#FFF3C9] text-[#1C1A33] shrink-0">
             Student group
           </span>
         );
       case 'friends':
       default:
         return (
-          <span className="inline-flex items-center px-3.5 py-1 rounded-full text-xs font-semibold bg-[#DCEBFF] text-[#1C1A33]">
+          <span className="inline-flex items-center px-2.5 sm:px-3 py-0.5 rounded-full text-[11px] sm:text-xs font-semibold bg-[#DCEBFF] text-[#1C1A33] shrink-0">
             Friends
           </span>
         );
@@ -100,22 +100,22 @@ export const ReportPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="w-full max-w-[1100px] mx-auto px-4 sm:px-6 py-12 flex flex-col gap-6 animate-pulse">
-        <div className="h-12 bg-[#E9E3FF] rounded-[20px] w-2/3"></div>
-        <div className="h-6 bg-[#F1EDFF] rounded-lg w-1/3"></div>
-        <div className="h-64 bg-[#F6F6F4] rounded-[28px] mt-4"></div>
+      <div className="w-full max-w-[1100px] mx-auto px-4 sm:px-6 py-8 sm:py-12 flex flex-col gap-5 sm:gap-6 animate-pulse">
+        <div className="h-10 sm:h-12 bg-[#E9E3FF] rounded-[18px] sm:rounded-[20px] w-3/4 sm:w-2/3"></div>
+        <div className="h-5 sm:h-6 bg-[#F1EDFF] rounded-lg w-1/2 sm:w-1/3"></div>
+        <div className="h-56 sm:h-64 bg-[#F6F6F4] rounded-[22px] sm:rounded-[28px] mt-4"></div>
       </div>
     );
   }
 
   if (errorMsg || !report) {
     return (
-      <div className="w-full max-w-[500px] mx-auto py-20 px-4 text-center flex flex-col items-center gap-4">
-        <h1 className="font-heading font-bold text-2xl text-[#1C1A33]">Unable to load report</h1>
-        <p className="text-base text-[#5A5873]">{errorMsg}</p>
+      <div className="w-full max-w-[500px] mx-auto py-16 sm:py-20 px-4 text-center flex flex-col items-center gap-4">
+        <h1 className="font-heading font-bold text-xl sm:text-2xl text-[#1C1A33]">Unable to load report</h1>
+        <p className="text-sm sm:text-base text-[#5A5873]">{errorMsg}</p>
         <Link
           to="/dashboard"
-          className="min-h-[48px] px-7 py-3 bg-[#CF3A26] text-white font-semibold text-base rounded-full inline-flex items-center hover:bg-[#B32F1D] transition-colors"
+          className="w-full sm:w-auto min-h-[48px] px-7 py-3 bg-[#CF3A26] text-white font-semibold text-base rounded-full inline-flex items-center justify-center hover:bg-[#B32F1D] transition-colors"
         >
           Return to reports
         </Link>
@@ -131,27 +131,27 @@ export const ReportPage: React.FC = () => {
     : '13 Jul 2024 to 25 Dec 2024';
 
   return (
-    <div className="w-full flex flex-col">
+    <div className="w-full flex flex-col overflow-x-hidden">
       {/* Header: Sits on a soft lilac band (#E9E3FF, full width) */}
-      <header className="w-full bg-[#E9E3FF] border-b border-[#E7E5F0] py-8 sm:py-12">
-        <div className="max-w-[1100px] mx-auto px-4 sm:px-6 flex flex-col sm:flex-row sm:items-end justify-between gap-6">
+      <header className="w-full bg-[#E9E3FF] border-b border-[#E7E5F0] py-6 sm:py-10 md:py-12">
+        <div className="max-w-[1100px] mx-auto px-4 sm:px-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4 sm:gap-6">
           <div>
-            <div className="flex flex-wrap items-center gap-3 mb-2">
-              <h1 className="font-heading font-bold text-[32px] sm:text-[42px] text-[#1C1A33] tracking-tight leading-tight">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-1.5 sm:mb-2">
+              <h1 className="font-heading font-bold text-[24px] xs:text-[28px] sm:text-[36px] md:text-[42px] text-[#1C1A33] tracking-tight leading-tight">
                 {report.title || participantsText}
               </h1>
               {getChatTypeChip(report.chatType)}
             </div>
-            <p className="text-base text-[#5A5873] font-medium">
+            <p className="text-xs sm:text-sm md:text-base text-[#5A5873] font-medium">
               {participantsText} · {dateRangeText}
             </p>
           </div>
 
           {/* Actions: Print and ... menu */}
-          <div className="flex items-center gap-3 no-print shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3 no-print shrink-0 self-end sm:self-auto">
             <button
               onClick={handlePrint}
-              className="min-h-[44px] px-5 py-2 bg-white border-[1.5px] border-[#1C1A33] rounded-full text-sm font-semibold text-[#1C1A33] hover:bg-[#F1EDFF] transition-colors"
+              className="min-h-[40px] sm:min-h-[44px] px-4 sm:px-5 py-1.5 bg-white border-[1.5px] border-[#1C1A33] rounded-full text-xs sm:text-sm font-semibold text-[#1C1A33] hover:bg-[#F1EDFF] transition-colors"
             >
               Print
             </button>
@@ -161,7 +161,7 @@ export const ReportPage: React.FC = () => {
               <button
                 onClick={() => setMenuOpen((prev) => !prev)}
                 aria-label="More options"
-                className="min-h-[44px] min-w-[44px] px-3 py-2 bg-white border-[1.5px] border-[#1C1A33] rounded-full text-base font-bold text-[#1C1A33] hover:bg-[#F1EDFF] transition-colors flex items-center justify-center"
+                className="min-h-[40px] sm:min-h-[44px] min-w-[40px] sm:min-w-[44px] px-2.5 sm:px-3 py-1.5 bg-white border-[1.5px] border-[#1C1A33] rounded-full text-sm sm:text-base font-bold text-[#1C1A33] hover:bg-[#F1EDFF] transition-colors flex items-center justify-center"
               >
                 ···
               </button>
@@ -173,7 +173,7 @@ export const ReportPage: React.FC = () => {
                       setMenuOpen(false);
                       setShowDeleteModal(true);
                     }}
-                    className="w-full text-left px-4 py-2.5 text-sm font-semibold text-[#B42318] hover:bg-[#FFE0E8] transition-colors"
+                    className="w-full text-left px-4 py-2.5 text-xs sm:text-sm font-semibold text-[#B42318] hover:bg-[#FFE0E8] transition-colors"
                   >
                     Delete report
                   </button>
@@ -184,12 +184,12 @@ export const ReportPage: React.FC = () => {
         </div>
       </header>
 
-      {/* Sticky Tab Nav: Sits below the header on white, sticky */}
+      {/* Sticky Tab Nav: Full width & touch friendly on mobile */}
       <nav className="sticky top-[72px] bg-white z-30 border-b border-[#E7E5F0] no-print">
-        <div className="max-w-[1100px] mx-auto px-4 sm:px-6 flex items-center gap-8">
+        <div className="max-w-[1100px] mx-auto px-2 sm:px-6 flex items-center justify-between sm:justify-start sm:gap-8">
           <button
             onClick={() => setActiveTab('stats')}
-            className={`py-3.5 text-base font-semibold transition-all relative ${
+            className={`flex-1 sm:flex-none text-center py-3 sm:py-3.5 px-2 text-xs xs:text-sm sm:text-base font-semibold transition-all relative ${
               activeTab === 'stats'
                 ? 'text-[#1C1A33] border-b-[3px] border-[#CF3A26]'
                 : 'text-[#5A5873] hover:text-[#1C1A33] border-b-[3px] border-transparent'
@@ -199,7 +199,7 @@ export const ReportPage: React.FC = () => {
           </button>
           <button
             onClick={() => setActiveTab('monthly')}
-            className={`py-3.5 text-base font-semibold transition-all relative ${
+            className={`flex-1 sm:flex-none text-center py-3 sm:py-3.5 px-2 text-xs xs:text-sm sm:text-base font-semibold transition-all relative ${
               activeTab === 'monthly'
                 ? 'text-[#1C1A33] border-b-[3px] border-[#CF3A26]'
                 : 'text-[#5A5873] hover:text-[#1C1A33] border-b-[3px] border-transparent'
@@ -209,7 +209,7 @@ export const ReportPage: React.FC = () => {
           </button>
           <button
             onClick={() => setActiveTab('narrative')}
-            className={`py-3.5 text-base font-semibold transition-all relative ${
+            className={`flex-1 sm:flex-none text-center py-3 sm:py-3.5 px-2 text-xs xs:text-sm sm:text-base font-semibold transition-all relative ${
               activeTab === 'narrative'
                 ? 'text-[#1C1A33] border-b-[3px] border-[#CF3A26]'
                 : 'text-[#5A5873] hover:text-[#1C1A33] border-b-[3px] border-transparent'
@@ -221,7 +221,7 @@ export const ReportPage: React.FC = () => {
       </nav>
 
       {/* Main Content Sections: In screen mode, show active tab. In print mode, show all 3. */}
-      <main className="max-w-[1100px] mx-auto px-4 sm:px-6 py-10 sm:py-14 w-full flex flex-col gap-12">
+      <main className="max-w-[1100px] mx-auto px-4 sm:px-6 py-6 sm:py-10 md:py-14 w-full flex flex-col gap-8 sm:gap-12">
         {/* Tab 1: Stats */}
         {report.stats && (
           <div className={activeTab === 'stats' ? 'block' : 'hidden print:block'}>
@@ -254,26 +254,26 @@ export const ReportPage: React.FC = () => {
         )}
       </main>
 
-      {/* Delete Confirmation Modal (28px radius, max-width 480px, centered) */}
+      {/* Delete Confirmation Modal (Mobile-safe layout) */}
       {showDeleteModal && (
         <div className="fixed inset-0 bg-[#1C1A33]/40 z-50 flex items-center justify-center p-4">
-          <div className="bg-white max-w-[480px] w-full p-8 rounded-[28px] border border-[#E7E5F0] shadow-2xl flex flex-col gap-4">
-            <h2 className="font-heading font-bold text-2xl text-[#1C1A33]">Delete this report?</h2>
-            <p className="text-base text-[#5A5873] leading-normal">
+          <div className="bg-white max-w-[480px] w-full p-6 sm:p-8 rounded-[24px] sm:rounded-[28px] border border-[#E7E5F0] shadow-2xl flex flex-col gap-4">
+            <h2 className="font-heading font-bold text-xl sm:text-2xl text-[#1C1A33]">Delete this report?</h2>
+            <p className="text-sm sm:text-base text-[#5A5873] leading-normal">
               This report will be permanently removed from your account. Your original chat file was already deleted right after the report was created.
             </p>
-            <div className="flex justify-end gap-3 mt-4">
+            <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 mt-4">
               <button
                 disabled={isDeleting}
                 onClick={() => setShowDeleteModal(false)}
-                className="min-h-[48px] px-5 py-2.5 border-[1.5px] border-[#1C1A33] rounded-xl text-sm font-semibold text-[#1C1A33] hover:bg-[#F1EDFF] transition-colors"
+                className="w-full sm:w-auto min-h-[48px] px-5 py-2.5 border-[1.5px] border-[#1C1A33] rounded-full sm:rounded-xl text-sm font-semibold text-[#1C1A33] hover:bg-[#F1EDFF] transition-colors flex items-center justify-center"
               >
                 Cancel
               </button>
               <button
                 disabled={isDeleting}
                 onClick={handleDelete}
-                className="min-h-[48px] px-6 py-2.5 bg-[#B42318] text-white rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity"
+                className="w-full sm:w-auto min-h-[48px] px-6 py-2.5 bg-[#B42318] text-white rounded-full sm:rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity flex items-center justify-center"
               >
                 {isDeleting ? 'Deleting…' : 'Delete permanently'}
               </button>

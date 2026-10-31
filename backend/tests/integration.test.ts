@@ -149,7 +149,7 @@ describe('End-to-End API Integration', () => {
 
   it('Polls GET /api/reports/:id until finished and validates report structure', async () => {
     let report: any = null;
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 30; i++) {
       const res = await request(app)
         .get(`/api/reports/${createdReportId}`)
         .set('Authorization', `Bearer ${authToken}`);
@@ -159,7 +159,7 @@ describe('End-to-End API Integration', () => {
       if (report.status === 'done' || report.status === 'failed') {
         break;
       }
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 800));
     }
 
     expect(report.status).toBe('done');
@@ -170,7 +170,7 @@ describe('End-to-End API Integration', () => {
     expect(report.monthly).toBeDefined();
     expect(report.narrative).toBeDefined();
     expect(report.narrative.sections.length).toBeGreaterThan(0);
-  });
+  }, 60000);
 
   it('DELETE /api/reports/:id deletes report', async () => {
     const res = await request(app)

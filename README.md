@@ -58,7 +58,7 @@ Official Anthropic API pricing (checked October 2026): Claude 3.5 Haiku is $0.80
 | Medium (5,000 msgs, 8 mo) | 9 calls | ~31,200 | ~2,840 | $0.059 | ₹5.00 |
 | Large (40,000 msgs, 12 mo cap) | 13 calls | ~45,800 | ~3,660 | $0.076 | ₹6.50 |
 
-Estimates, not exact bills. Actual cost depends on chat length and language. (Exchange rate: ₹84.50 per USD, checked October 2026).
+Estimates, not exact bills. Actual cost depends on chat length and language. (Exchange rate: ₹94.91 per USD, checked October 2026).
 Frontend hosted on Vercel (free tier); backend web service and PostgreSQL database hosted on Render (free tier).
 
 ## Tech Stack

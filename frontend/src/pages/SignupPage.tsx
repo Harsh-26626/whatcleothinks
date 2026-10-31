@@ -17,25 +17,17 @@ export const SignupPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg(null);
-
-    if (password.length < 8) {
-      setErrorMsg('Password must be at least 8 characters.');
-      return;
-    }
-
     setIsSubmitting(true);
 
     try {
       await signup(email, password);
-      navigate('/new', { replace: true });
+      navigate('/dashboard', { replace: true });
     } catch (err: any) {
       if (err instanceof ApiRequestError) {
-        if (err.code === 'invalid_email') {
-          setErrorMsg('Please enter a valid email address.');
-        } else if (err.code === 'weak_password') {
-          setErrorMsg('Password must be at least 8 characters.');
-        } else if (err.code === 'email_taken') {
+        if (err.code === 'email_taken') {
           setErrorMsg('An account with this email already exists.');
+        } else if (err.code === 'weak_password') {
+          setErrorMsg('Password should be at least 8 characters long.');
         } else {
           setErrorMsg(err.message || 'Could not create account.');
         }
@@ -49,36 +41,46 @@ export const SignupPage: React.FC = () => {
 
   return (
     <div className="w-full flex-1 grid grid-cols-1 lg:grid-cols-12 min-h-[calc(100vh-72px)]">
-      {/* Left Column: Lilac Panel with Cleo Avatar (96) and Speech Bubbles */}
-      <div className="lg:col-span-5 bg-[#E9E3FF] p-8 sm:p-12 lg:p-16 flex flex-col items-center justify-center text-center lg:text-left lg:items-start gap-6">
+      {/* Mobile-only compact banner (visible on screens < lg) */}
+      <div className="lg:hidden bg-[#E9E3FF] p-5 sm:p-8 flex items-center gap-4 border-b border-[#E7E5F0]">
+        <div className="shrink-0">
+          <CleoAvatar size={48} />
+        </div>
+        <div className="bg-white border border-[#E7E5F0] bubble-in px-3.5 py-2 text-xs sm:text-sm font-semibold text-[#1C1A33] shadow-xs">
+          Sign up to get started with your first chat report.
+        </div>
+      </div>
+
+      {/* Desktop Left Column: Lilac Panel with Cleo Avatar (96) and Speech Bubbles */}
+      <div className="hidden lg:flex lg:col-span-5 bg-[#E9E3FF] p-8 sm:p-12 lg:p-16 flex-col items-start justify-center gap-6">
         <CleoAvatar size={96} />
         <div className="flex flex-col gap-3 max-w-[360px]">
-          <div className="self-center lg:self-start bg-white border border-[#E7E5F0] bubble-in p-4 text-base font-semibold text-[#1C1A33] shadow-sm">
+          <div className="bg-white border border-[#E7E5F0] bubble-in p-4 text-base font-semibold text-[#1C1A33] shadow-sm">
             Hi, I'm Cleo.
           </div>
-          <div className="self-center lg:self-start bg-white border border-[#E7E5F0] bubble-in p-4 text-sm text-[#1C1A33] leading-relaxed shadow-sm">
-            An account keeps your reports visible only to you.
+          <div className="bg-white border border-[#E7E5F0] bubble-in p-4 text-sm text-[#1C1A33] leading-relaxed shadow-sm">
+            Sign up to see what your chat looks like over time.
           </div>
         </div>
       </div>
 
-      {/* Right Column: Centered Form */}
-      <div className="lg:col-span-7 bg-white p-8 sm:p-12 lg:p-16 flex items-center justify-center">
+      {/* Right Column: Centered Form (Mobile-first padding) */}
+      <div className="lg:col-span-7 bg-white p-5 sm:p-10 lg:p-16 flex items-center justify-center">
         <div className="w-full max-w-[400px]">
-          <h1 className="text-[32px] md:text-[36px] font-heading font-bold text-[#1C1A33]">
-            Create your account
+          <h1 className="text-[28px] sm:text-[34px] md:text-[36px] font-heading font-bold text-[#1C1A33]">
+            Create an account
           </h1>
-          <p className="text-base text-[#5A5873] mt-2">
-            An account keeps your reports visible only to you.
+          <p className="text-sm sm:text-base text-[#5A5873] mt-1.5 sm:mt-2">
+            Your reports are saved to your account until you delete them.
           </p>
 
           {errorMsg && (
-            <div className="mt-4 p-3.5 bg-[#FFE5D6] border border-[#CF3A26] text-[#B42318] text-sm font-medium rounded-xl">
+            <div className="mt-4 p-3.5 bg-[#FFE5D6] border border-[#CF3A26]/30 text-[#B42318] text-sm font-medium rounded-xl">
               {errorMsg}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-5 mt-6">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:gap-5 mt-6">
             <div>
               <label className="block text-sm font-semibold text-[#1C1A33] mb-1.5" htmlFor="signup-email">
                 Email
@@ -103,7 +105,7 @@ export const SignupPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
-                  className="text-xs text-[#5A5873] hover:text-[#1C1A33] font-medium"
+                  className="text-xs text-[#5A5873] hover:text-[#1C1A33] font-medium p-1"
                 >
                   {showPassword ? 'Hide' : 'Show'}
                 </button>
@@ -118,26 +120,23 @@ export const SignupPage: React.FC = () => {
                 placeholder="At least 8 characters"
                 className="w-full min-h-[48px] px-4 py-2.5 text-base text-[#1C1A33] border border-[#E7E5F0] rounded-xl bg-white focus-visible:ring-2 focus-visible:ring-[#1C1A33]"
               />
-              <p className="text-xs text-[#5A5873] mt-1.5">
-                Your password is stored hashed, never as plain text.
-              </p>
             </div>
 
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full min-h-[48px] bg-[#CF3A26] hover:bg-[#B32F1D] text-white font-semibold text-base rounded-full transition-colors duration-150 flex items-center justify-center mt-2 disabled:opacity-50"
+              className="mt-2 min-h-[48px] w-full px-6 py-3 bg-[#CF3A26] hover:bg-[#B32F1D] text-white font-semibold text-base rounded-full transition-colors duration-150 flex items-center justify-center disabled:opacity-50 shadow-sm"
             >
-              {isSubmitting ? 'Creating account…' : 'Create account'}
+              {isSubmitting ? 'Creating account…' : 'Sign up'}
             </button>
           </form>
 
-          <div className="mt-8 text-sm text-[#5A5873] text-center">
+          <p className="text-sm text-[#5A5873] mt-6 text-center">
             Already have an account?{' '}
-            <Link to="/login" className="text-[#1C1A33] underline underline-offset-4 hover:text-[#CF3A26] font-semibold">
+            <Link to="/login" className="text-[#1C1A33] font-semibold underline underline-offset-4 hover:text-[#CF3A26]">
               Log in
             </Link>
-          </div>
+          </p>
         </div>
       </div>
     </div>

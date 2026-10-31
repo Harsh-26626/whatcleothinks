@@ -9,23 +9,24 @@ export const LandingPage: React.FC = () => {
   return (
     <div className="w-full flex flex-col">
       {/* 1. HERO BAND ON BUTTER #FFF3C9 */}
-      <section className="w-full bg-[#FFF3C9] py-16 md:py-24">
-        <div className="max-w-[1100px] mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+      <section className="w-full bg-[#FFF3C9] py-10 sm:py-16 md:py-24">
+        <div className="max-w-[1100px] mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
           {/* Left Column: Heading, Subtitle, CTAs */}
           <div className="lg:col-span-7 flex flex-col items-start">
-            <h1 className="text-[34px] sm:text-[42px] lg:text-[52px] font-heading font-bold leading-[1.15] text-[#1C1A33] tracking-tight">
+            <h1 className="text-[30px] xs:text-[34px] sm:text-[44px] lg:text-[52px] font-heading font-bold leading-[1.15] text-[#1C1A33] tracking-tight">
               See how your chat changed,{' '}
-              <span className="relative inline-block whitespace-nowrap">
+              <span className="relative inline-block">
                 month by month.
-                <Squiggle className="absolute -bottom-2.5 left-0 w-full" />
+                <Squiggle className="absolute -bottom-1.5 sm:-bottom-2.5 left-0 w-full" />
               </span>
             </h1>
 
-            <p className="text-lg md:text-xl text-[#5A5873] mt-6 leading-relaxed max-w-[540px]">
+            <p className="text-base sm:text-lg md:text-xl text-[#5A5873] mt-4 sm:mt-6 leading-relaxed max-w-[540px]">
               Upload a WhatsApp chat. Cleo reads it and tells you what she notices, honestly and kindly.
             </p>
 
-            <div className="flex flex-wrap items-center gap-4 mt-8">
+            {/* Mobile-optimized action buttons (full width on mobile, inline on desktop) */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 mt-6 sm:mt-8 w-full sm:w-auto">
               <Link
                 to={user ? "/new" : "/signup"}
                 className="min-h-[48px] px-8 py-3 bg-[#CF3A26] hover:bg-[#B32F1D] text-white font-semibold text-base rounded-full transition-colors duration-150 inline-flex items-center justify-center shadow-sm"
@@ -41,13 +42,13 @@ export const LandingPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Column: White Sample Panel (28px radius) */}
-          <div className="lg:col-span-5 w-full bg-white border border-[#E7E5F0] rounded-[28px] p-6 sm:p-7 flex flex-col gap-5">
+          {/* Right Column: White Sample Panel (28px radius on desktop, 20px on mobile) */}
+          <div className="lg:col-span-5 w-full bg-white border border-[#E7E5F0] rounded-[22px] sm:rounded-[28px] p-4 sm:p-7 flex flex-col gap-4 sm:gap-5 shadow-xs">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-[#5A5873]">
+              <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-[#5A5873]">
                 Sample report · Aarav & Meera
               </span>
-              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[#FFE0E8] text-[#1C1A33]">
+              <span className="text-[11px] sm:text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[#FFE0E8] text-[#1C1A33]">
                 Romance
               </span>
             </div>
@@ -112,20 +113,20 @@ export const LandingPage: React.FC = () => {
             </div>
 
             {/* Lilac Chat Panel (#F1EDFF) with Date Chip & 2 Bubbles */}
-            <div className="bg-[#F1EDFF] p-4 rounded-[20px] flex flex-col gap-2.5">
+            <div className="bg-[#F1EDFF] p-3.5 sm:p-4 rounded-[18px] sm:rounded-[20px] flex flex-col gap-2.5">
               <div className="self-center bg-white px-3 py-0.5 rounded-full text-[11px] font-semibold text-[#5A5873] border border-[#E7E5F0]">
                 18 Aug 2024
               </div>
 
               {/* Incoming from Aarav (left) */}
-              <div className="self-start max-w-[85%] bg-white border border-[#E7E5F0] bubble-in p-3 text-sm text-[#1C1A33]">
+              <div className="self-start max-w-[90%] sm:max-w-[85%] bg-white border border-[#E7E5F0] bubble-in p-3 text-xs sm:text-sm text-[#1C1A33]">
                 <span className="block text-[11px] font-bold text-[#F28C28] mb-0.5">Aarav</span>
                 Tu soyi nahi abhi tak? 2 baj rahe
                 <span className="block text-[10px] text-right text-[#5A5873] mt-1">02:04 AM</span>
               </div>
 
               {/* Outgoing from "You" (right) */}
-              <div className="self-end max-w-[85%] bg-[#D6E2FF] bubble-out p-3 text-sm text-[#1C1A33]">
+              <div className="self-end max-w-[90%] sm:max-w-[85%] bg-[#D6E2FF] bubble-out p-3 text-xs sm:text-sm text-[#1C1A33]">
                 <span className="block text-[11px] font-bold text-[#3B5BDB] mb-0.5">You</span>
                 Nahi, bas abhi sone ja rahi thi ✨
                 <span className="block text-[10px] text-right text-[#5A5873] mt-1">02:05 AM</span>
@@ -136,48 +137,48 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* 2. HOW IT WORKS BAND ON WHITE */}
-      <section className="w-full bg-white py-20 md:py-24">
+      <section className="w-full bg-white py-14 sm:py-20 md:py-24">
         <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
-          <h2 className="text-[28px] md:text-[36px] font-heading font-bold text-[#1C1A33] mb-12">
+          <h2 className="text-[26px] sm:text-[32px] md:text-[36px] font-heading font-bold text-[#1C1A33] mb-8 sm:mb-12">
             How it works
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10 lg:gap-12">
             {/* Step 1: Peach round bubble */}
             <div className="flex flex-col items-start">
-              <div className="w-14 h-14 rounded-full bg-[#FFE5D6] flex items-center justify-center font-heading font-bold text-2xl text-[#1C1A33] mb-4">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#FFE5D6] flex items-center justify-center font-heading font-bold text-xl sm:text-2xl text-[#1C1A33] mb-3 sm:mb-4 shrink-0">
                 1
               </div>
-              <h3 className="text-[22px] font-heading font-bold text-[#1C1A33] mb-2">
+              <h3 className="text-[20px] sm:text-[22px] font-heading font-bold text-[#1C1A33] mb-1.5 sm:mb-2">
                 Export your chat
               </h3>
-              <p className="text-base text-[#5A5873] leading-relaxed">
+              <p className="text-sm sm:text-base text-[#5A5873] leading-relaxed">
                 In WhatsApp, tap your chat options and select Export Chat without media. It produces a plain text file.
               </p>
             </div>
 
             {/* Step 2: Sky round bubble */}
             <div className="flex flex-col items-start">
-              <div className="w-14 h-14 rounded-full bg-[#DCEBFF] flex items-center justify-center font-heading font-bold text-2xl text-[#1C1A33] mb-4">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#DCEBFF] flex items-center justify-center font-heading font-bold text-xl sm:text-2xl text-[#1C1A33] mb-3 sm:mb-4 shrink-0">
                 2
               </div>
-              <h3 className="text-[22px] font-heading font-bold text-[#1C1A33] mb-2">
+              <h3 className="text-[20px] sm:text-[22px] font-heading font-bold text-[#1C1A33] mb-1.5 sm:mb-2">
                 Upload it and pick who you are
               </h3>
-              <p className="text-base text-[#5A5873] leading-relaxed">
+              <p className="text-sm sm:text-base text-[#5A5873] leading-relaxed">
                 Select your export file and choose your name so Cleo speaks directly to you.
               </p>
             </div>
 
             {/* Step 3: Lilac round bubble */}
             <div className="flex flex-col items-start">
-              <div className="w-14 h-14 rounded-full bg-[#E9E3FF] flex items-center justify-center font-heading font-bold text-2xl text-[#1C1A33] mb-4">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#E9E3FF] flex items-center justify-center font-heading font-bold text-xl sm:text-2xl text-[#1C1A33] mb-3 sm:mb-4 shrink-0">
                 3
               </div>
-              <h3 className="text-[22px] font-heading font-bold text-[#1C1A33] mb-2">
+              <h3 className="text-[20px] sm:text-[22px] font-heading font-bold text-[#1C1A33] mb-1.5 sm:mb-2">
                 Read your report
               </h3>
-              <p className="text-base text-[#5A5873] leading-relaxed">
+              <p className="text-sm sm:text-base text-[#5A5873] leading-relaxed">
                 Get your daily heatmap, reply times, month-by-month changes, and written observations with quotes.
               </p>
             </div>
@@ -186,23 +187,23 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* 3. WHAT'S IN YOUR REPORT BAND ON SKY #DCEBFF */}
-      <section className="w-full bg-[#DCEBFF] py-20 md:py-24">
+      <section className="w-full bg-[#DCEBFF] py-14 sm:py-20 md:py-24">
         <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
-          <h2 className="text-[28px] md:text-[36px] font-heading font-bold text-[#1C1A33] mb-12">
+          <h2 className="text-[26px] sm:text-[32px] md:text-[36px] font-heading font-bold text-[#1C1A33] mb-8 sm:mb-12">
             What is in your report
           </h2>
 
           {/* 2x3 Grid of Flat Tinted Tiles */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {/* Tile 1: White with Mini Heatmap */}
-            <div className="p-6 bg-white rounded-[20px] flex flex-col justify-between gap-4">
+            <div className="p-5 sm:p-6 bg-white rounded-[20px] flex flex-col justify-between gap-4">
               <div className="h-16 flex items-center">
                 {/* Mini Heatmap Visual */}
                 <div className="grid grid-rows-3 grid-flow-col gap-1">
                   {Array.from({ length: 27 }).map((_, i) => (
                     <div
                       key={i}
-                      className="w-3.5 h-3.5 rounded-[3px]"
+                      className="w-3 sm:w-3.5 h-3 sm:h-3.5 rounded-[3px]"
                       style={{
                         backgroundColor:
                           i % 5 === 0 ? '#3B5BDB' : i % 3 === 0 ? '#94A8FF' : i % 2 === 0 ? '#C9D3FF' : '#EEF1FF',
@@ -212,7 +213,7 @@ export const LandingPage: React.FC = () => {
                 </div>
               </div>
               <div>
-                <h3 className="text-[20px] font-heading font-bold text-[#1C1A33] mb-1">Daily heatmap</h3>
+                <h3 className="text-[19px] sm:text-[20px] font-heading font-bold text-[#1C1A33] mb-1">Daily heatmap</h3>
                 <p className="text-sm text-[#5A5873]">
                   See every busy week and quiet pause across the entire conversation.
                 </p>
@@ -220,7 +221,7 @@ export const LandingPage: React.FC = () => {
             </div>
 
             {/* Tile 2: Peach with Mini Donut */}
-            <div className="p-6 bg-[#FFE5D6] rounded-[20px] flex flex-col justify-between gap-4">
+            <div className="p-5 sm:p-6 bg-[#FFE5D6] rounded-[20px] flex flex-col justify-between gap-4">
               <div className="h-16 flex items-center">
                 {/* Mini Donut Visual */}
                 <div className="flex items-center gap-3">
@@ -243,7 +244,7 @@ export const LandingPage: React.FC = () => {
                 </div>
               </div>
               <div>
-                <h3 className="text-[20px] font-heading font-bold text-[#1C1A33] mb-1">Who starts & who replies faster</h3>
+                <h3 className="text-[19px] sm:text-[20px] font-heading font-bold text-[#1C1A33] mb-1">Who starts & who replies faster</h3>
                 <p className="text-sm text-[#5A5873]">
                   Simple metrics on conversation balance and median response speed.
                 </p>
@@ -251,12 +252,12 @@ export const LandingPage: React.FC = () => {
             </div>
 
             {/* Tile 3: Butter with Mini Hourly Bars */}
-            <div className="p-6 bg-[#FFF3C9] rounded-[20px] flex flex-col justify-between gap-4">
+            <div className="p-5 sm:p-6 bg-[#FFF3C9] rounded-[20px] flex flex-col justify-between gap-4">
               <div className="h-16 flex items-end gap-1.5 pb-1">
                 {[12, 18, 30, 24, 45, 60, 80, 75, 40, 20].map((h, i) => (
                   <div
                     key={i}
-                    className="w-3 rounded-t"
+                    className="w-2.5 sm:w-3 rounded-t"
                     style={{
                       height: `${(h / 80) * 44}px`,
                       backgroundColor: i >= 6 ? '#CF3A26' : '#CFC3FF',
@@ -265,7 +266,7 @@ export const LandingPage: React.FC = () => {
                 ))}
               </div>
               <div>
-                <h3 className="text-[20px] font-heading font-bold text-[#1C1A33] mb-1">Late-night patterns</h3>
+                <h3 className="text-[19px] sm:text-[20px] font-heading font-bold text-[#1C1A33] mb-1">Late-night patterns</h3>
                 <p className="text-sm text-[#5A5873]">
                   Message volume sent between 10pm and 4am highlighted in coral.
                 </p>
@@ -273,9 +274,9 @@ export const LandingPage: React.FC = () => {
             </div>
 
             {/* Tile 4: Lilac with Mini Closeness Line */}
-            <div className="p-6 bg-[#E9E3FF] rounded-[20px] flex flex-col justify-between gap-4">
+            <div className="p-5 sm:p-6 bg-[#E9E3FF] rounded-[20px] flex flex-col justify-between gap-4">
               <div className="h-16 flex items-center">
-                <svg viewBox="0 0 140 40" className="w-36 h-10 overflow-visible">
+                <svg viewBox="0 0 140 40" className="w-32 sm:w-36 h-10 overflow-visible">
                   <path
                     d="M 5,28 Q 35,5 70,22 T 135,8"
                     fill="none"
@@ -288,7 +289,7 @@ export const LandingPage: React.FC = () => {
                 </svg>
               </div>
               <div>
-                <h3 className="text-[20px] font-heading font-bold text-[#1C1A33] mb-1">Month-by-month closeness</h3>
+                <h3 className="text-[19px] sm:text-[20px] font-heading font-bold text-[#1C1A33] mb-1">Month-by-month closeness</h3>
                 <p className="text-sm text-[#5A5873]">
                   Watch the trajectory deepen or pause across months.
                 </p>
@@ -296,9 +297,9 @@ export const LandingPage: React.FC = () => {
             </div>
 
             {/* Tile 5: Blush with Turning Point Marker */}
-            <div className="p-6 bg-[#FFE0E8] rounded-[20px] flex flex-col justify-between gap-4">
+            <div className="p-5 sm:p-6 bg-[#FFE0E8] rounded-[20px] flex flex-col justify-between gap-4">
               <div className="h-16 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-[#CF3A26] text-white flex items-center justify-center font-bold text-sm">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#CF3A26] text-white flex items-center justify-center font-bold text-sm shrink-0">
                   #1
                 </div>
                 <div className="text-xs font-semibold text-[#1C1A33]">
@@ -306,7 +307,7 @@ export const LandingPage: React.FC = () => {
                 </div>
               </div>
               <div>
-                <h3 className="text-[20px] font-heading font-bold text-[#1C1A33] mb-1">Turning points</h3>
+                <h3 className="text-[19px] sm:text-[20px] font-heading font-bold text-[#1C1A33] mb-1">Turning points</h3>
                 <p className="text-sm text-[#5A5873]">
                   Spot the notable months where your conversation pace changed.
                 </p>
@@ -314,7 +315,7 @@ export const LandingPage: React.FC = () => {
             </div>
 
             {/* Tile 6: White with Mini Bubble Pair */}
-            <div className="p-6 bg-white rounded-[20px] flex flex-col justify-between gap-4">
+            <div className="p-5 sm:p-6 bg-white rounded-[20px] flex flex-col justify-between gap-4">
               <div className="h-16 flex flex-col justify-center gap-1.5">
                 <div className="self-start bg-[#F1EDFF] px-2.5 py-1 rounded-t-lg rounded-br-lg text-xs font-medium text-[#1C1A33]">
                   "Kal milte hain canteen me"
@@ -324,7 +325,7 @@ export const LandingPage: React.FC = () => {
                 </div>
               </div>
               <div>
-                <h3 className="text-[20px] font-heading font-bold text-[#1C1A33] mb-1">Cleo's written read with quotes</h3>
+                <h3 className="text-[19px] sm:text-[20px] font-heading font-bold text-[#1C1A33] mb-1">Cleo's written read with quotes</h3>
                 <p className="text-sm text-[#5A5873]">
                   An honest, friendly summary quoting exact messages from your chat.
                 </p>
@@ -335,23 +336,23 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* 4. YOUR PRIVACY BAND ON LILAC #E9E3FF */}
-      <section className="w-full bg-[#E9E3FF] py-20 md:py-24">
+      <section className="w-full bg-[#E9E3FF] py-14 sm:py-20 md:py-24">
         <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
-          <div className="max-w-[760px] mx-auto bg-white border border-[#E7E5F0] rounded-[28px] p-8 sm:p-12">
-            <h2 className="text-[28px] md:text-[34px] font-heading font-bold text-[#1C1A33] mb-6">
+          <div className="max-w-[760px] mx-auto bg-white border border-[#E7E5F0] rounded-[22px] sm:rounded-[28px] p-6 sm:p-12">
+            <h2 className="text-[24px] sm:text-[30px] md:text-[34px] font-heading font-bold text-[#1C1A33] mb-4 sm:mb-6">
               Your privacy
             </h2>
-            <ol className="list-decimal pl-5 space-y-4 text-base text-[#1C1A33] leading-relaxed">
+            <ol className="list-decimal pl-5 space-y-3 sm:space-y-4 text-sm sm:text-base text-[#1C1A33] leading-relaxed">
               <li>Your chat file is deleted right after your report is created.</li>
               <li>Your report is saved to your account until you delete it.</li>
               <li>Reports can include short quotes from your chat.</li>
               <li>You can delete any report, or your whole account, at any time.</li>
               <li>Nothing is shared with the people in the chat, and nothing is sold.</li>
             </ol>
-            <div className="mt-8 pt-6 border-t border-[#E7E5F0]">
+            <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-[#E7E5F0]">
               <Link
                 to="/privacy"
-                className="text-base text-[#1C1A33] underline underline-offset-4 hover:text-[#CF3A26] font-semibold transition-colors duration-150"
+                className="text-sm sm:text-base text-[#1C1A33] underline underline-offset-4 hover:text-[#CF3A26] font-semibold transition-colors duration-150"
               >
                 Read the full privacy page
               </Link>
@@ -361,19 +362,19 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* 5. FINAL CTA BAND ON CORAL #CF3A26 */}
-      <section className="w-full bg-[#CF3A26] text-white py-16 md:py-20">
-        <div className="max-w-[1100px] mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-8 text-center sm:text-left">
+      <section className="w-full bg-[#CF3A26] text-white py-12 sm:py-16 md:py-20">
+        <div className="max-w-[1100px] mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-6 sm:gap-8 text-center sm:text-left">
           <div>
-            <h2 className="text-[32px] md:text-[40px] font-heading font-bold text-white tracking-tight">
+            <h2 className="text-[28px] sm:text-[36px] md:text-[40px] font-heading font-bold text-white tracking-tight leading-tight">
               Ready to see your chat?
             </h2>
-            <p className="text-white/80 text-base md:text-lg mt-2">
+            <p className="text-white/85 text-sm sm:text-base md:text-lg mt-2 max-w-[500px]">
               Export your chat without media and upload it to start.
             </p>
           </div>
           <Link
             to={user ? "/new" : "/signup"}
-            className="min-h-[48px] px-8 py-3 bg-white text-[#1C1A33] hover:bg-[#FFF3C9] font-semibold text-base rounded-full transition-colors duration-150 inline-flex items-center justify-center shrink-0"
+            className="w-full sm:w-auto min-h-[48px] px-8 py-3 bg-white text-[#1C1A33] hover:bg-[#FFF3C9] font-semibold text-base rounded-full transition-colors duration-150 inline-flex items-center justify-center shrink-0 shadow-sm"
           >
             Upload a chat
           </Link>

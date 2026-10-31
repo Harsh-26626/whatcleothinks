@@ -106,7 +106,7 @@ describe('WhatsApp Chat Parser', () => {
   });
 
   it('7. Handles narrow no-break space U+202F and LTR marks', () => {
-    const sample = '12/03/24, 9:41\u202Fpm - \u200EVanshika: Hello with unicode space';
+    const sample = '12/03/24, 9:41\u202Fpm - \u200Enatasha: Hello with unicode space';
     const normalized = normalizeText(sample);
     expect(normalized).toBe('12/03/24, 9:41 pm - natasha: Hello with unicode space');
   });

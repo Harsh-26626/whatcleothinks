@@ -80,124 +80,136 @@ export const StatsDashboard: React.FC<StatsDashboardProps> = ({
   }, [stats.shareOfVoice, myName, otherName]);
 
   return (
-    <section id="overview" className="flex flex-col gap-10 scroll-mt-24">
+    <section id="overview" className="flex flex-col gap-6 sm:gap-10 scroll-mt-24">
       {/* 1. Plain Stat Tiles Grid: 2-col (mobile) / 4-col (desktop) rotating tints */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {/* Tile 1: Total Messages (Peach #FFE5D6) */}
-        <div className="p-6 bg-[#FFE5D6] rounded-[20px] flex flex-col justify-between">
-          <div className="font-heading font-bold text-[32px] sm:text-[40px] text-[#1C1A33] leading-tight">
+        <div className="p-4 sm:p-6 bg-[#FFE5D6] rounded-[18px] sm:rounded-[20px] flex flex-col justify-between">
+          <div className="font-heading font-bold text-[24px] xs:text-[28px] sm:text-[36px] md:text-[40px] text-[#1C1A33] leading-tight">
             {stats.totalMessages.toLocaleString()}
           </div>
-          <div className="text-sm font-semibold text-[#5A5873] mt-2">
+          <div className="text-xs sm:text-sm font-semibold text-[#5A5873] mt-2 leading-snug">
             Total messages
           </div>
         </div>
 
         {/* Tile 2: Share of Messages (Sky #DCEBFF) */}
-        <div className="p-6 bg-[#DCEBFF] rounded-[20px] flex flex-col justify-between">
-          <div className="font-heading font-bold text-[32px] sm:text-[40px] text-[#1C1A33] leading-tight">
-            {stats.shareOfVoice[myName] ?? 50}%{' '}
-            <span className="text-xl sm:text-2xl font-normal text-[#5A5873]">
+        <div className="p-4 sm:p-6 bg-[#DCEBFF] rounded-[18px] sm:rounded-[20px] flex flex-col justify-between">
+          <div className="flex items-baseline gap-1 font-heading font-bold text-[22px] xs:text-[26px] sm:text-[34px] md:text-[40px] text-[#1C1A33] leading-tight flex-wrap">
+            <span>{stats.shareOfVoice[myName] ?? 50}%</span>
+            <span className="text-sm sm:text-xl font-normal text-[#5A5873]">
               / {stats.shareOfVoice[otherName] ?? 50}%
             </span>
           </div>
-          <div className="text-sm font-semibold text-[#5A5873] mt-2">
-            Share of messages ({myName} / {otherName})
+          <div className="text-xs sm:text-sm font-semibold text-[#5A5873] mt-2 leading-snug">
+            Share of messages
+            <span className="block text-[11px] font-normal text-[#5A5873]/80">
+              {myName} / {otherName}
+            </span>
           </div>
         </div>
 
         {/* Tile 3: Who Starts Conversations (Lilac #E9E3FF) */}
-        <div className="p-6 bg-[#E9E3FF] rounded-[20px] flex flex-col justify-between">
-          <div className="font-heading font-bold text-[32px] sm:text-[40px] text-[#1C1A33] leading-tight">
-            {stats.initiationPct[myName] ?? 50}%{' '}
-            <span className="text-xl sm:text-2xl font-normal text-[#5A5873]">
+        <div className="p-4 sm:p-6 bg-[#E9E3FF] rounded-[18px] sm:rounded-[20px] flex flex-col justify-between">
+          <div className="flex items-baseline gap-1 font-heading font-bold text-[22px] xs:text-[26px] sm:text-[34px] md:text-[40px] text-[#1C1A33] leading-tight flex-wrap">
+            <span>{stats.initiationPct[myName] ?? 50}%</span>
+            <span className="text-sm sm:text-xl font-normal text-[#5A5873]">
               / {stats.initiationPct[otherName] ?? 50}%
             </span>
           </div>
-          <div className="text-sm font-semibold text-[#5A5873] mt-2">
-            Conversation starts ({myName} / {otherName})
+          <div className="text-xs sm:text-sm font-semibold text-[#5A5873] mt-2 leading-snug">
+            Conversation starts
+            <span className="block text-[11px] font-normal text-[#5A5873]/80">
+              {myName} / {otherName}
+            </span>
           </div>
         </div>
 
         {/* Tile 4: Median Reply Time (Butter #FFF3C9) */}
-        <div className="p-6 bg-[#FFF3C9] rounded-[20px] flex flex-col justify-between">
-          <div className="font-heading font-bold text-[32px] sm:text-[40px] text-[#1C1A33] leading-tight">
-            {stats.replyMedianMinutes[myName] ?? 4}m{' '}
-            <span className="text-xl sm:text-2xl font-normal text-[#5A5873]">
+        <div className="p-4 sm:p-6 bg-[#FFF3C9] rounded-[18px] sm:rounded-[20px] flex flex-col justify-between">
+          <div className="flex items-baseline gap-1 font-heading font-bold text-[22px] xs:text-[26px] sm:text-[34px] md:text-[40px] text-[#1C1A33] leading-tight flex-wrap">
+            <span>{stats.replyMedianMinutes[myName] ?? 4}m</span>
+            <span className="text-sm sm:text-xl font-normal text-[#5A5873]">
               / {stats.replyMedianMinutes[otherName] ?? 6}m
             </span>
           </div>
-          <div className="text-sm font-semibold text-[#5A5873] mt-2">
-            Median reply time ({myName} / {otherName})
+          <div className="text-xs sm:text-sm font-semibold text-[#5A5873] mt-2 leading-snug">
+            Median reply time
+            <span className="block text-[11px] font-normal text-[#5A5873]/80">
+              {myName} / {otherName}
+            </span>
           </div>
         </div>
 
         {/* Tile 5: Longest Streak (Blush #FFE0E8) */}
-        <div className="p-6 bg-[#FFE0E8] rounded-[20px] flex flex-col justify-between">
-          <div className="font-heading font-bold text-[32px] sm:text-[40px] text-[#1C1A33] leading-tight">
+        <div className="p-4 sm:p-6 bg-[#FFE0E8] rounded-[18px] sm:rounded-[20px] flex flex-col justify-between">
+          <div className="font-heading font-bold text-[24px] xs:text-[28px] sm:text-[36px] md:text-[40px] text-[#1C1A33] leading-tight">
             {stats.longestStreakDays}{' '}
-            <span className="text-xl sm:text-2xl font-normal text-[#5A5873]">days</span>
+            <span className="text-base sm:text-2xl font-normal text-[#5A5873]">days</span>
           </div>
-          <div className="text-sm font-semibold text-[#5A5873] mt-2">
+          <div className="text-xs sm:text-sm font-semibold text-[#5A5873] mt-2 leading-snug">
             Longest streak
           </div>
         </div>
 
         {/* Tile 6: Longest Silence (Peach #FFE5D6) */}
-        <div className="p-6 bg-[#FFE5D6] rounded-[20px] flex flex-col justify-between">
-          <div className="font-heading font-bold text-[32px] sm:text-[40px] text-[#1C1A33] leading-tight">
+        <div className="p-4 sm:p-6 bg-[#FFE5D6] rounded-[18px] sm:rounded-[20px] flex flex-col justify-between">
+          <div className="font-heading font-bold text-[24px] xs:text-[28px] sm:text-[36px] md:text-[40px] text-[#1C1A33] leading-tight">
             {stats.longestSilenceDays}{' '}
-            <span className="text-xl sm:text-2xl font-normal text-[#5A5873]">days</span>
+            <span className="text-base sm:text-2xl font-normal text-[#5A5873]">days</span>
           </div>
-          <div className="text-sm font-semibold text-[#5A5873] mt-2">
+          <div className="text-xs sm:text-sm font-semibold text-[#5A5873] mt-2 leading-snug">
             Longest silence
           </div>
         </div>
 
         {/* Tile 7: Busiest Day (Sky #DCEBFF) */}
-        <div className="p-6 bg-[#DCEBFF] rounded-[20px] flex flex-col justify-between">
-          <div className="font-heading font-bold text-[32px] sm:text-[40px] text-[#1C1A33] leading-tight">
+        <div className="p-4 sm:p-6 bg-[#DCEBFF] rounded-[18px] sm:rounded-[20px] flex flex-col justify-between">
+          <div className="font-heading font-bold text-[24px] xs:text-[28px] sm:text-[36px] md:text-[40px] text-[#1C1A33] leading-tight">
             {stats.recordDay?.count ?? 0}{' '}
-            <span className="text-xl sm:text-2xl font-normal text-[#5A5873]">msgs</span>
+            <span className="text-base sm:text-2xl font-normal text-[#5A5873]">msgs</span>
           </div>
-          <div className="text-sm font-semibold text-[#5A5873] mt-2">
-            Busiest day ({stats.recordDay?.date ?? ''})
+          <div className="text-xs sm:text-sm font-semibold text-[#5A5873] mt-2 leading-snug">
+            Busiest day
+            <span className="block text-[11px] font-normal text-[#5A5873]/80 truncate">
+              {stats.recordDay?.date ?? ''}
+            </span>
           </div>
         </div>
 
         {/* Tile 8: Messages 10pm-4am (Lilac #E9E3FF) */}
-        <div className="p-6 bg-[#E9E3FF] rounded-[20px] flex flex-col justify-between">
-          <div className="font-heading font-bold text-[32px] sm:text-[40px] text-[#1C1A33] leading-tight">
+        <div className="p-4 sm:p-6 bg-[#E9E3FF] rounded-[18px] sm:rounded-[20px] flex flex-col justify-between">
+          <div className="font-heading font-bold text-[24px] xs:text-[28px] sm:text-[36px] md:text-[40px] text-[#1C1A33] leading-tight">
             {stats.lateNightPct}%
           </div>
-          <div className="text-sm font-semibold text-[#5A5873] mt-2">
+          <div className="text-xs sm:text-sm font-semibold text-[#5A5873] mt-2 leading-snug">
             Messages 10pm to 4am
           </div>
         </div>
       </div>
 
       {/* 2. Middle Row: Share of Messages Donut & Calendar Heatmap */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-6">
         {/* Share of Messages Donut (Recharts) */}
-        <div className="p-6 sm:p-8 bg-white border border-[#E7E5F0] rounded-[28px] flex flex-col justify-between">
+        <div className="p-5 sm:p-8 bg-white border border-[#E7E5F0] rounded-[22px] sm:rounded-[28px] flex flex-col justify-between">
           <div>
-            <h3 className="font-heading font-bold text-[22px] text-[#1C1A33]">
+            <h3 className="font-heading font-bold text-lg sm:text-[22px] text-[#1C1A33]">
               Share of messages
             </h3>
-            <p className="text-sm text-[#5A5873] mt-1">
+            <p className="text-xs sm:text-sm text-[#5A5873] mt-1">
               Who sent what percentage of the total conversation.
             </p>
           </div>
 
-          <div className="w-full h-48 my-2">
+          <div className="w-full h-44 sm:h-48 my-2">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={donutData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={50}
-                  outerRadius={75}
+                  innerRadius={45}
+                  outerRadius={70}
                   paddingAngle={3}
                   dataKey="value"
                 >
@@ -220,29 +232,34 @@ export const StatsDashboard: React.FC<StatsDashboardProps> = ({
           </div>
 
           {/* Legend */}
-          <div className="flex items-center justify-center gap-6 pt-2 border-t border-[#E7E5F0] text-sm font-semibold">
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 pt-3 border-t border-[#E7E5F0] text-xs sm:text-sm font-semibold">
             <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-[#3B5BDB]" />
+              <span className="w-3 h-3 rounded-full bg-[#3B5BDB] shrink-0" />
               <span className="text-[#1C1A33]">{myName} ({stats.shareOfVoice[myName] ?? 50}%)</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-[#F28C28]" />
+              <span className="w-3 h-3 rounded-full bg-[#F28C28] shrink-0" />
               <span className="text-[#1C1A33]">{otherName} ({stats.shareOfVoice[otherName] ?? 50}%)</span>
             </div>
           </div>
         </div>
 
         {/* Calendar Heatmap (2 cols on large screen) */}
-        <div className="lg:col-span-2 p-6 sm:p-8 bg-white border border-[#E7E5F0] rounded-[28px] flex flex-col justify-between">
-          <div>
-            <h3 className="font-heading font-bold text-[22px] text-[#1C1A33]">Daily activity</h3>
-            <p className="text-sm text-[#5A5873] mt-1">
-              Every day of the conversation, shaded from zero to peak messages.
-            </p>
+        <div className="lg:col-span-2 p-5 sm:p-8 bg-white border border-[#E7E5F0] rounded-[22px] sm:rounded-[28px] flex flex-col justify-between">
+          <div className="flex items-start justify-between gap-2">
+            <div>
+              <h3 className="font-heading font-bold text-lg sm:text-[22px] text-[#1C1A33]">Daily activity</h3>
+              <p className="text-xs sm:text-sm text-[#5A5873] mt-0.5 sm:mt-1">
+                Every day of the conversation, shaded from zero to peak messages.
+              </p>
+            </div>
+            <span className="sm:hidden text-[10px] font-semibold text-[#CF3A26] bg-[#FFE0E8] px-2 py-0.5 rounded-full shrink-0">
+              Swipe →
+            </span>
           </div>
 
-          {/* Grid Container */}
-          <div className="w-full overflow-x-auto py-6">
+          {/* Grid Container with smooth horizontal swipe on mobile */}
+          <div className="w-full overflow-x-auto touch-scroll py-4 sm:py-6">
             <div className="inline-grid grid-rows-7 grid-flow-col gap-1.5 min-w-[500px]">
               {heatmapDays.map((day, idx) => (
                 <div
@@ -256,7 +273,7 @@ export const StatsDashboard: React.FC<StatsDashboardProps> = ({
           </div>
 
           {/* 5-step Blue Legend */}
-          <div className="flex items-center justify-between text-xs font-semibold text-[#5A5873] pt-4 border-t border-[#E7E5F0]">
+          <div className="flex flex-wrap items-center justify-between text-[11px] sm:text-xs font-semibold text-[#5A5873] pt-3 sm:pt-4 border-t border-[#E7E5F0] gap-2">
             <span>{dateRange?.start || 'Start'}</span>
             <div className="flex items-center gap-1.5">
               <span>Fewer</span>
@@ -273,19 +290,19 @@ export const StatsDashboard: React.FC<StatsDashboardProps> = ({
         </div>
       </div>
 
-      {/* 3. Hourly Chart with Late-Night Shading (28px white panel) */}
-      <div className="p-6 sm:p-8 bg-white border border-[#E7E5F0] rounded-[28px] flex flex-col gap-5">
+      {/* 3. Hourly Chart with Late-Night Shading (28px white panel on desktop, 22px on mobile) */}
+      <div className="p-5 sm:p-8 bg-white border border-[#E7E5F0] rounded-[22px] sm:rounded-[28px] flex flex-col gap-4 sm:gap-5">
         <div>
-          <h3 className="font-heading font-bold text-[22px] text-[#1C1A33]">
+          <h3 className="font-heading font-bold text-lg sm:text-[22px] text-[#1C1A33]">
             Messages by hour of the day
           </h3>
-          <p className="text-sm text-[#5A5873] mt-1">
-            Hourly volume across 24 hours. Late-night hours (10pm to 4am) are highlighted.
+          <p className="text-xs sm:text-sm text-[#5A5873] mt-1">
+            Hourly volume across 24 hours. Late-night hours (10pm to 4am) are highlighted in coral.
           </p>
         </div>
 
         {/* Bar chart container */}
-        <div className="h-44 flex items-end justify-between gap-1.5 pt-6 pb-2 border-b border-[#E7E5F0]">
+        <div className="h-36 sm:h-44 flex items-end justify-between gap-1 sm:gap-1.5 pt-4 sm:pt-6 pb-2 border-b border-[#E7E5F0]">
           {(stats.hourly || Array(24).fill(0)).map((count, hour) => {
             const heightPct = Math.max(6, (count / maxHour) * 100);
             const isLateNight = hour >= 22 || hour <= 4;
@@ -293,7 +310,7 @@ export const StatsDashboard: React.FC<StatsDashboardProps> = ({
             return (
               <div key={hour} className="flex-1 flex flex-col items-center justify-end h-full group relative">
                 <div
-                  className="w-full rounded-t-md transition-all duration-150 hover:opacity-85"
+                  className="w-full rounded-t-sm sm:rounded-t-md transition-all duration-150 hover:opacity-85"
                   style={{
                     height: `${heightPct}%`,
                     backgroundColor: isLateNight ? '#CF3A26' : '#CFC3FF',
@@ -306,7 +323,7 @@ export const StatsDashboard: React.FC<StatsDashboardProps> = ({
         </div>
 
         {/* Hour Axis & Legend */}
-        <div className="flex items-center justify-between text-xs font-semibold text-[#5A5873]">
+        <div className="flex items-center justify-between text-[10px] sm:text-xs font-semibold text-[#5A5873]">
           <span>12am</span>
           <span>3am</span>
           <span>6am</span>
@@ -318,43 +335,43 @@ export const StatsDashboard: React.FC<StatsDashboardProps> = ({
           <span>11pm</span>
         </div>
 
-        <div className="flex items-center gap-6 text-xs font-semibold text-[#5A5873] pt-2">
+        <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-xs font-semibold text-[#5A5873] pt-2">
           <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-[3px] bg-[#CF3A26]" />
+            <span className="w-3 h-3 rounded-[3px] bg-[#CF3A26] shrink-0" />
             <span className="text-[#1C1A33]">10pm to 4am (late night)</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-[3px] bg-[#CFC3FF]" />
+            <span className="w-3 h-3 rounded-[3px] bg-[#CFC3FF] shrink-0" />
             <span className="text-[#1C1A33]">Daytime & evening</span>
           </div>
         </div>
       </div>
 
       {/* 4. Top Words and Emojis: Simple side-by-side lists per person */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         {/* Person 1 (Them) */}
-        <div className="p-6 sm:p-8 bg-white border border-[#E7E5F0] rounded-[28px] flex flex-col gap-6">
-          <div className="flex items-center justify-between border-b border-[#E7E5F0] pb-4">
+        <div className="p-5 sm:p-8 bg-white border border-[#E7E5F0] rounded-[22px] sm:rounded-[28px] flex flex-col gap-5 sm:gap-6">
+          <div className="flex items-center justify-between border-b border-[#E7E5F0] pb-3 sm:pb-4">
             <div className="flex items-center gap-2.5">
-              <span className="w-3.5 h-3.5 rounded-full bg-[#F28C28]" />
-              <h4 className="font-heading font-bold text-xl text-[#1C1A33]">
+              <span className="w-3.5 h-3.5 rounded-full bg-[#F28C28] shrink-0" />
+              <h4 className="font-heading font-bold text-lg sm:text-xl text-[#1C1A33]">
                 {otherName}
               </h4>
             </div>
-            <span className="text-xs font-semibold text-[#5A5873] uppercase tracking-wider">
+            <span className="text-[10px] sm:text-xs font-semibold text-[#5A5873] uppercase tracking-wider">
               Top vocabulary
             </span>
           </div>
 
           <div>
-            <div className="text-xs font-bold text-[#5A5873] uppercase tracking-wider mb-3">
+            <div className="text-xs font-bold text-[#5A5873] uppercase tracking-wider mb-2.5 sm:mb-3">
               Most used words
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5 sm:gap-2">
               {(stats.topWords[otherName] || []).map((word, i) => (
                 <span
                   key={i}
-                  className="px-3 py-1 bg-[#F1EDFF] text-[#1C1A33] rounded-full text-sm font-semibold"
+                  className="px-2.5 sm:px-3 py-1 bg-[#F1EDFF] text-[#1C1A33] rounded-full text-xs sm:text-sm font-semibold"
                 >
                   {word}
                 </span>
@@ -363,10 +380,10 @@ export const StatsDashboard: React.FC<StatsDashboardProps> = ({
           </div>
 
           <div className="pt-2 border-t border-[#E7E5F0]">
-            <div className="text-xs font-bold text-[#5A5873] uppercase tracking-wider mb-3">
+            <div className="text-xs font-bold text-[#5A5873] uppercase tracking-wider mb-2.5 sm:mb-3">
               Most used emojis
             </div>
-            <div className="flex items-center gap-3 text-3xl">
+            <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 text-2xl sm:text-3xl">
               {(stats.topEmojis[otherName] || []).map((emoji, i) => (
                 <span key={i} title={emoji} className="hover:scale-110 transition-transform">
                   {emoji}
@@ -377,28 +394,28 @@ export const StatsDashboard: React.FC<StatsDashboardProps> = ({
         </div>
 
         {/* Person 2 (You) */}
-        <div className="p-6 sm:p-8 bg-white border border-[#E7E5F0] rounded-[28px] flex flex-col gap-6">
-          <div className="flex items-center justify-between border-b border-[#E7E5F0] pb-4">
+        <div className="p-5 sm:p-8 bg-white border border-[#E7E5F0] rounded-[22px] sm:rounded-[28px] flex flex-col gap-5 sm:gap-6">
+          <div className="flex items-center justify-between border-b border-[#E7E5F0] pb-3 sm:pb-4">
             <div className="flex items-center gap-2.5">
-              <span className="w-3.5 h-3.5 rounded-full bg-[#3B5BDB]" />
-              <h4 className="font-heading font-bold text-xl text-[#1C1A33]">
+              <span className="w-3.5 h-3.5 rounded-full bg-[#3B5BDB] shrink-0" />
+              <h4 className="font-heading font-bold text-lg sm:text-xl text-[#1C1A33]">
                 {myName} (You)
               </h4>
             </div>
-            <span className="text-xs font-semibold text-[#5A5873] uppercase tracking-wider">
+            <span className="text-[10px] sm:text-xs font-semibold text-[#5A5873] uppercase tracking-wider">
               Top vocabulary
             </span>
           </div>
 
           <div>
-            <div className="text-xs font-bold text-[#5A5873] uppercase tracking-wider mb-3">
+            <div className="text-xs font-bold text-[#5A5873] uppercase tracking-wider mb-2.5 sm:mb-3">
               Most used words
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5 sm:gap-2">
               {(stats.topWords[myName] || []).map((word, i) => (
                 <span
                   key={i}
-                  className="px-3 py-1 bg-[#DCEBFF] text-[#1C1A33] rounded-full text-sm font-semibold"
+                  className="px-2.5 sm:px-3 py-1 bg-[#DCEBFF] text-[#1C1A33] rounded-full text-xs sm:text-sm font-semibold"
                 >
                   {word}
                 </span>
@@ -407,10 +424,10 @@ export const StatsDashboard: React.FC<StatsDashboardProps> = ({
           </div>
 
           <div className="pt-2 border-t border-[#E7E5F0]">
-            <div className="text-xs font-bold text-[#5A5873] uppercase tracking-wider mb-3">
+            <div className="text-xs font-bold text-[#5A5873] uppercase tracking-wider mb-2.5 sm:mb-3">
               Most used emojis
             </div>
-            <div className="flex items-center gap-3 text-3xl">
+            <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 text-2xl sm:text-3xl">
               {(stats.topEmojis[myName] || []).map((emoji, i) => (
                 <span key={i} title={emoji} className="hover:scale-110 transition-transform">
                   {emoji}
