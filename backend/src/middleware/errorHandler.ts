@@ -33,6 +33,13 @@ export function errorHandler(
     });
   }
 
+  if (err?.message === 'unsupported_file') {
+    return res.status(400).json({
+      error: 'unsupported_file',
+      message: 'Unsupported file type. Please upload a .txt or .zip file.',
+    });
+  }
+
   if (err?.name === 'MulterError') {
     if (err.code === 'LIMIT_FILE_SIZE') {
       return res.status(400).json({
