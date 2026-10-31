@@ -108,8 +108,16 @@ export async function runPipeline(
   narrative: Narrative;
 }> {
   const apiKey = process.env.ANTHROPIC_API_KEY?.trim();
-  const modelMap = process.env.MODEL_MAP || 'claude-haiku-5-5';
-  const modelReport = process.env.MODEL_REPORT || 'claude-sonnet-5-5';
+  let modelMap = process.env.MODEL_MAP || 'claude-haiku-5-5';
+  let modelReport = process.env.MODEL_REPORT || 'claude-sonnet-5-5';
+
+  // Normalize legacy or standard 3.5 names if configured in env
+  if (modelMap === 'claude-3-5-haiku-20241022' || modelMap.includes('3-5')) {
+    modelMap = 'claude-haiku-5-5';
+  }
+  if (modelReport === 'claude-3-5-sonnet-20241022' || modelReport.includes('3-5')) {
+    modelReport = 'claude-sonnet-5-5';
+  }
 
   // If no API key is provided, use the high-fidelity stub narrative
   if (!apiKey) {
@@ -173,11 +181,12 @@ Output JSON only in this format:
   "notableMessageIds": [<up to 5 message ids that show the tone or a turning point>]
 }`;
 
+      let activeModel = modelMap;
       let retries = 1;
       while (retries >= 0) {
         try {
           const resp = await anthropic.messages.create({
-            model: modelMap,
+            model: activeModel,
             max_tokens: 600,
             system: 'You are an analytical assistant. You extract structured metrics from chat logs. Always return valid JSON only with no markdown wrapping.',
             messages: [{ role: 'user', content: prompt }],
@@ -191,6 +200,9 @@ Output JSON only in this format:
           return;
         } catch (err: any) {
           retries--;
+          if (err?.status === 404 && activeModel !== 'claude-haiku-5-5') {
+            activeModel = 'claude-haiku-5-5';
+          }
           if (retries < 0) {
             console.error(`[LLM Map Error] Month ${mStats.month} failed (status: ${err?.status || 'unknown'}). Using fallback.`);
             // Fallback for this month if LLM fails
@@ -321,13 +333,14 @@ Output JSON only in this exact format:
   "safetyNote": null
 }`;
 
+  let activeReduceModel = modelReport;
   let reduceResult: z.infer<typeof reduceOutputSchema> | null = null;
   let reduceRetries = 1;
 
   while (reduceRetries >= 0) {
     try {
       const resp = await anthropic.messages.create({
-        model: modelReport,
+        model: activeReduceModel,
         max_tokens: 4000,
         system: personaSystem,
         messages: [{ role: 'user', content: reducePrompt }],
@@ -340,6 +353,9 @@ Output JSON only in this exact format:
       break;
     } catch (err: any) {
       console.error(`[LLM Reduce Error] Status ${err?.status || 'unknown'}: ${err?.message?.slice(0, 100) || 'error'}`);
+      if (err?.status === 404 && activeReduceModel !== 'claude-sonnet-5-5') {
+        activeReduceModel = 'claude-sonnet-5-5';
+      }
       reduceRetries--;
     }
   }
